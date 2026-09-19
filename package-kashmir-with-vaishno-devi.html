@@ -3,9 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://unpkg.com" crossorigin="anonymous">
+<link rel="preload" as="script" crossorigin="anonymous" href="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z">
+<link rel="preload" as="script" crossorigin="anonymous" href="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1">
+<link rel="preload" as="image" href="Site-logo1.svg">
 <style id="sx-critical">
   html, body { margin:0; background:#FAF6EF; }
   html:not(.sx-ready) #sh-mobile-nav { display:none !important; }
+  /* While the page swaps in its rendered markup, keep the closed drawer (and its photos) clipped away */
+  #sh-mobile-nav:not(.sh-open) { position:fixed !important; left:0; top:0; width:0; height:0; overflow:hidden; }
+  .sx-sub-img { width:28px; height:28px; object-fit:cover; }
   html:not(.sx-ready) body { visibility:hidden; }
   .sx-fast .hx-hero { --base:.1s !important; }
 </style>
@@ -1801,7 +1808,7 @@
           <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="1">
             <div style="{{ t.style }}">
               <div style="font-size:19px;color:#D9A441;letter-spacing:2px">★★★★★</div>
-              <p style="font-family:'Fraunces',serif;font-weight:300;font-size:23px;line-height:1.5;letter-spacing:-.01em;margin:18px 0 26px;color:#1B1A17">“{{ t.quote }}”</p>
+              <p style="font-family:'Fraunces',serif;font-weight:300;font-size:clamp(17px,1.7vw,20px);line-height:1.6;letter-spacing:-.005em;margin:18px 0 26px;color:#1B1A17">“{{ t.quote }}”</p>
               <div style="display:flex;align-items:center;gap:14px">
                 <span style="width:52px;height:52px;border-radius:99px;background:#DCEEE7;color:#2F7A63;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:20px">{{ t.initials }}</span>
                 <div><div style="font-weight:800;font-size:15px">{{ t.name }}</div><div style="font-size:13px;color:#6B655C">{{ t.city }}</div></div>
@@ -3104,8 +3111,8 @@
 </style>
 <footer class="site-footer">
     <div class="footer-media" aria-hidden="true">
-      <video class="footer-bg" autoplay muted loop playsinline preload="auto" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4f690bd1-881a-4192-82f2-d714d34c8fb9.png">
-        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260901_122529_931c22c8-8d2d-47c0-ad51-b97f56a91e42.mp4" type="video/mp4">
+      <video class="footer-bg" muted loop playsinline preload="none" data-poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4f690bd1-881a-4192-82f2-d714d34c8fb9.png">
+        <source data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260901_122529_931c22c8-8d2d-47c0-ad51-b97f56a91e42.mp4" type="video/mp4">
       </video>
     </div>
     <div class="footer-inner">
@@ -3269,9 +3276,9 @@ class Component extends DCLogic {
   ];
 
   testis = [
-    { name: 'Anjali Nair', city: 'Kochi', initials: 'AN', quote: 'Everything was arranged exactly as promised — the houseboat, the driver, the timings. We just showed up and enjoyed Kerala.' },
-    { name: 'Rahul Menon', city: 'Bengaluru', initials: 'RM', quote: 'Booked at short notice and still got a great rate. The team answered every question on WhatsApp within minutes.' },
-    { name: 'Priya & Arjun', city: 'Chennai', initials: 'PA', quote: 'Our honeymoon was planned with real care. The Munnar stay was the highlight of the whole year for us.' }
+    { name: 'Anjali Nair', city: 'Kochi', initials: 'AN', quote: 'Sahapathika Holidays planned our vacation perfectly from start to finish. The itinerary was well organized, the hotels were comfortable, and the entire journey was stress-free. Their team was always available to help, making our family trip truly memorable.' },
+    { name: 'Rahul Menon', city: 'Bengaluru', initials: 'RM', quote: 'We had an amazing experience with Sahapathika Holidays. Every detail was taken care of professionally, from transportation to sightseeing. The package was affordable without compromising on quality. I highly recommend them for anyone planning a holiday.' },
+    { name: 'Priya & Arjun', city: 'Chennai', initials: 'PA', quote: 'Our tour exceeded all expectations thanks to Sahapathika Holidays. The staff was friendly, responsive, and genuinely cared about making our trip enjoyable. Their personalized service and attention to detail made every moment special. We look forward to traveling with them again.' }
   ];
 
   destinations = [
@@ -5714,7 +5721,7 @@ class Component extends DCLogic {
   // Force muted + loop on all videos — React/template engines sometimes
   // don't forward boolean DOM properties like muted to the real DOM node.
   function fixVideos() {
-    document.querySelectorAll('video').forEach(function(v) {
+    document.querySelectorAll('video:not(.footer-bg)').forEach(function(v) {
       v.muted = true;
       v.loop = true;
       v.playsInline = true;
@@ -5977,6 +5984,24 @@ class Component extends DCLogic {
       }
     });
   </script>
+<script>
+  /* Footer background video: fetch it only when the footer comes near the screen */
+  (function () {
+    function check() {
+      var v = document.querySelector('video.footer-bg'); if (!v || v.dataset.on) return;
+      if (!document.documentElement.classList.contains('sx-ready') || v.getBoundingClientRect().top > innerHeight + 800) return;
+      v.dataset.on = '1';
+      v.muted = true; v.loop = true; v.playsInline = true;
+      if (v.dataset.poster) v.poster = v.dataset.poster;
+      v.querySelectorAll('source[data-src]').forEach(function (s) { s.src = s.dataset.src; s.removeAttribute('data-src'); });
+      var play = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+      v.addEventListener('canplay', play, { once: true });
+      v.preload = 'auto'; v.load(); play();
+    }
+    addEventListener('scroll', check, { passive: true });
+    addEventListener('load', check);
+  })();
+</script>
 </body>
 
 </html>
