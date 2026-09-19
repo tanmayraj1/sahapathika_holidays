@@ -7295,20 +7295,31 @@ class Component extends DCLogic {
   })();
 </script>
 <script>
-  /* Home redesign: scroll reveal for .hx-reveal (re-scans as the template renders) */
+  /* Home redesign: scroll reveal for .hx-reveal / .hx-stagger.
+     Fail-safe: anything whose top has reached the screen (or is above it) gets .in, and .in is
+     restored if a re-render rewrites the element's classes. */
   (function () {
-    var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }) : null;
-    function scan() {
-      document.querySelectorAll('.hx-reveal:not(.hx-seen)').forEach(function (el) {
-        el.classList.add('hx-seen');
-        if (io) io.observe(el); else el.classList.add('in');
+    var SEL = '.hx-reveal:not(.in), .hx-stagger:not(.in)';
+    function pass() {
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      document.querySelectorAll(SEL).forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < h - 40 || r.bottom <= 0) el.classList.add('in');
       });
     }
-    var t; new MutationObserver(function () { clearTimeout(t); t = setTimeout(scan, 60); })
-      .observe(document.body, { childList: true, subtree: true });
-    scan();
+    var queued = false;
+    function soon() {
+      if (queued) return; queued = true;
+      setTimeout(function () { queued = false; pass(); }, 40);
+    }
+    addEventListener('scroll', soon, { passive: true });
+    addEventListener('resize', soon);
+    addEventListener('load', pass);
+    document.addEventListener('visibilitychange', pass);
+    new MutationObserver(soon).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    pass();
+    /* last resort: never leave content hidden for long */
+    setTimeout(function () { document.querySelectorAll('.hx-reveal, .hx-stagger').forEach(function (el) { if (el.getBoundingClientRect().top < (window.innerHeight || 800) * 1.5) el.classList.add('in'); }); }, 2500);
   })();
 </script>
 
@@ -7404,6 +7415,30 @@ class Component extends DCLogic {
       var done = function () { f.innerHTML = '<p style="margin:0;padding:14px 0;font-weight:700">Thank you — you\'re on the list.</p>'; };
       fetch('https://formsubmit.co/ajax/sahapathika@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ email: v, _subject: 'New newsletter sign-up (website footer)', _template: 'table' }) }).then(done, done);
     });
+  })();
+</script>
+<script>
+  /* Reveal safety net (all pages): sections and cards whose top has reached the screen, or that were
+     scrolled past, are always shown, even if a re-render stripped their reveal classes. */
+  (function () {
+    var pairs = [['.sh-section:not(.sh-visible)', 'sh-visible'], ['.sh-card:not(.sh-grid-visible), .sh-testi:not(.sh-grid-visible)', 'sh-grid-visible']];
+    function pass() {
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      pairs.forEach(function (p) {
+        document.querySelectorAll(p[0]).forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < h - 30 || r.bottom <= 0) el.classList.add(p[1]);
+        });
+      });
+    }
+    var q = false;
+    function soon() { if (q) return; q = true; setTimeout(function () { q = false; pass(); }, 40); }
+    addEventListener('scroll', soon, { passive: true });
+    addEventListener('resize', soon);
+    addEventListener('load', pass);
+    document.addEventListener('visibilitychange', pass);
+    new MutationObserver(soon).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    setTimeout(pass, 600); setTimeout(pass, 2500);
   })();
 </script>
 </body>

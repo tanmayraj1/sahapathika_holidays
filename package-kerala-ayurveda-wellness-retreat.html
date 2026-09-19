@@ -6004,6 +6004,30 @@ class Component extends DCLogic {
     });
   })();
 </script>
+<script>
+  /* Reveal safety net (all pages): sections and cards whose top has reached the screen, or that were
+     scrolled past, are always shown, even if a re-render stripped their reveal classes. */
+  (function () {
+    var pairs = [['.sh-section:not(.sh-visible)', 'sh-visible'], ['.sh-card:not(.sh-grid-visible), .sh-testi:not(.sh-grid-visible)', 'sh-grid-visible']];
+    function pass() {
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      pairs.forEach(function (p) {
+        document.querySelectorAll(p[0]).forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < h - 30 || r.bottom <= 0) el.classList.add(p[1]);
+        });
+      });
+    }
+    var q = false;
+    function soon() { if (q) return; q = true; setTimeout(function () { q = false; pass(); }, 40); }
+    addEventListener('scroll', soon, { passive: true });
+    addEventListener('resize', soon);
+    addEventListener('load', pass);
+    document.addEventListener('visibilitychange', pass);
+    new MutationObserver(soon).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    setTimeout(pass, 600); setTimeout(pass, 2500);
+  })();
+</script>
 </body>
 
 </html>
