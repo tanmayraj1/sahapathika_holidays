@@ -1,0 +1,2006 @@
+class Component extends DCLogic {
+  state = {
+    page: 'home', menu: null, field: null,
+    dest: '', exp: '', date: null, month: null,
+    fRegion: 'All', fCat: 'All', fSort: 'Featured',
+    slug: 'kerala-ayurveda-wellness-retreat', day: 1, faq: 0, adults: 2, kids: 0, hdr: 78,
+    testi: 0, light: -1, email: '', subscribed: false,
+    loading: true, wiping: false, scrolled: false, sy: 0,
+    counts: { travellers: 0, destinations: 0, packages: 0, years: 0 },
+    form: { name: '', email: '', phone: '', pkg: '', dates: '', message: '', whatsapp: true }, sent: false
+  };
+
+  catColor = {
+    'Ayurveda & Wellness': '#2E6E6A', 'Heritage & Temple': '#B5822A', 'Heritage': '#B5822A',
+    'Beach & Coastal': '#3C6F63', 'Hill & Backwater': '#2F7A63', 'Signature': '#E5483D', 'Honeymoon': '#C4362C', 'Pilgrimage Yatra': '#B5822A'
+  };
+
+  packages = [
+    { slug: 'shimla-manali', title: 'Shimla Manali', regions: 'Shimla Manali', region: 'North India', duration: '6 Days   5 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/shimla.jpg', hint: 'Shimla Manali' },
+    { slug: 'shimla-kullu-manali', title: 'Shimla Kullu Manali', regions: 'Shimla Kullu Manali', region: 'North India', duration: '7 Days   6 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/kullu.jpg', hint: 'Shimla Kullu Manali' },
+    { slug: 'himachal-devi-yatra-with-vaishno-devi-mansa-devi', title: 'Himachal Devi Yatra with Vaishno Devi & Mansa Devi', regions: 'Himachal Devi Yatra with Vaishno Devi & Mansa Devi', region: 'North India', duration: '7 Days   6 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/mansadevi.jpg', hint: 'Himachal Devi Yatra with Vaishno Devi & Mansa Devi' },
+    { slug: 'shimla-manali-amritsar', title: 'Shimla Manali & Amritsar', regions: 'Shimla Manali & Amritsar', region: 'North India', duration: '8 Days 7 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/amritsar.jpg', hint: 'Shimla Manali & Amritsar' },
+    { slug: 'himachal-pradesh', title: 'Himachal Pradesh', regions: 'Himachal Pradesh', region: 'North India', duration: '9 Days 8 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/himachal_pradesh.jpg', hint: 'Himachal Pradesh' },
+
+    { slug: 'puri-jagannath-konark-chilika-bhubaneswar', title: 'Puri Jagannath Konark Chilika Bhubaneswar', regions: 'Puri Jagannath Konark Chilika Bhubaneswar', region: 'East India', duration: '5 Days 4 Nights', cat: 'Heritage & Temple', photo: 'packages_cards/jaganathpuri.jpg', hint: 'Puri Jagannath Konark Chilika Bhubaneswar' },
+    { slug: 'lucknow-naimisharanya-ayodhya-prayagraj-varanasi-y', title: 'Lucknow Naimisharanya Ayodhya Prayagraj Varanasi Yatra', regions: 'Lucknow Naimisharanya Ayodhya Prayagraj Varanasi Yatra', region: 'North India', duration: '6 Days 5 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/ayodhya.jpg', hint: 'Lucknow Naimisharanya Ayodhya Prayagraj Varanasi Yatra' },
+    { slug: 'kashi-gaya-prayag-ayodhya-pitru-moksha-yatra', title: 'Kashi Gaya Prayag Ayodhya Pitru Moksha Yatra', regions: 'Kashi Gaya Prayag Ayodhya Pitru Moksha Yatra', region: 'North India', duration: '7 Days 6 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/kashi.jpg', hint: 'Kashi Gaya Prayag Ayodhya Pitru Moksha Yatra' },
+    { slug: 'kashi-prayag-chitrakoot-ayodhya-divya-yatra', title: 'Kashi Prayag Chitrakoot Ayodhya Divya Yatra', regions: 'Kashi Prayag Chitrakoot Ayodhya Divya Yatra', region: 'North India', duration: '5 Days 4 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/chitrakoot.jpg', hint: 'Kashi Prayag Chitrakoot Ayodhya Divya Yatra' },
+    { slug: 'kashi-prayag-chitrakoot-ayodhya-yatra', title: 'Kashi Prayag Chitrakoot Ayodhya Yatra', regions: 'Kashi Prayag Chitrakoot Ayodhya Yatra', region: 'North India', duration: '6 Days 5 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/prayagraj.jpg', hint: 'Kashi Prayag Chitrakoot Ayodhya Yatra' },
+    { slug: 'kashmir-5-days-srinagar-sonmarg-gulmarg-pahalgam-j', title: 'Kashmir 5 Days Srinagar Sonmarg Gulmarg & Pahalgam Jammu to Jammu', regions: 'Kashmir 5 Days Srinagar Sonmarg Gulmarg & Pahalgam Jammu to Jammu', region: 'North India', duration: '5 Days 4 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/srinagar.jpg', hint: 'Kashmir 5 Days Srinagar Sonmarg Gulmarg & Pahalgam Jammu to Jammu' },
+    { slug: 'kashmir-6-days-srinagar-sonmarg-gulmarg-pahalgam', title: 'Kashmir 6 Days Srinagar Sonmarg Gulmarg & Pahalgam', regions: 'Kashmir 6 Days Srinagar Sonmarg Gulmarg & Pahalgam', region: 'North India', duration: '6 Days 5 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/gulmarg.jpg', hint: 'Kashmir 6 Days Srinagar Sonmarg Gulmarg & Pahalgam' },
+    { slug: 'kashmir-honeymoon', title: 'Kashmir Honeymoon', regions: 'Kashmir Honeymoon', region: 'North India', duration: '7 Days 6 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/sonamarg.jpg', hint: 'Kashmir Honeymoon' },
+    { slug: 'kashmir-with-vaishno-devi', title: 'Kashmir with Vaishno Devi', regions: 'Kashmir with Vaishno Devi', region: 'North India', duration: '7 Days 6 Nights', cat: 'Hill & Backwater', photo: 'packages_cards/vaishnodevi.jpg', hint: 'Kashmir with Vaishno Devi' },
+    { slug: 'mathura-vrindavan-braj-agra-yatra', title: 'Mathura Vrindavan Braj & Agra Yatra', regions: 'Mathura Vrindavan Braj & Agra Yatra', region: 'North India', duration: '4 Days 3 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/mathura(janambhoomi).jpg', hint: 'Mathura Vrindavan Braj & Agra Yatra' },
+    { slug: 'varanasi-tour-packages-from-kerala', title: 'Varanasi Tour Packages from Kerala', regions: 'Varanasi Tour Packages from Kerala', region: 'North India', duration: 'On enquiry', cat: 'Pilgrimage Yatra', photo: 'packages_cards/varanasi(aarti).jpg', hint: 'Varanasi Tour Packages from Kerala' },
+
+    { slug: 'kerala-ayurveda-wellness-retreat', title: 'Kerala Ayurveda & Wellness Retreat', regions: 'Kovalam · Poovar · Trivandrum', region: 'South India', duration: '5N / 6D', cat: 'Ayurveda & Wellness', photo: 'https://i.pinimg.com/736x/24/8a/88/248a8829446ddc4864ba2093a40713b2.jpg', hint: 'Ayurveda therapy table with brass vessels, Kovalam' },
+    { slug: 'munnar-thekkady-alleppey', title: 'Munnar – Thekkady – Alleppey Tour', regions: 'Munnar · Thekkady · Alleppey', region: 'South India', duration: 'TBC', cat: 'Hill & Backwater', photo: 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg', hint: 'Munnar tea terraces at sunrise' },
+    { slug: 'waterfalls-hills-backwaters', title: 'A Perfect Blend of Waterfalls, Hills & Backwaters', regions: 'Alleppey · Munnar · Athirappilly', region: 'South India', duration: '4N (TBC)', cat: 'Hill & Backwater', photo: 'https://i.pinimg.com/736x/75/1e/96/751e9636e5a9f3b2ef002932b1817d3d.jpg', hint: 'Athirappilly falls in monsoon' },
+    { slug: 'kerala-temple-tour', title: 'Kerala Temple Tour', regions: 'Guruvayur · Kalady · Chottanikkara · Sabarimala (seasonal) · Trivandrum', region: 'South India', duration: '5N (TBC)', cat: 'Heritage & Temple', photo: 'https://i.pinimg.com/736x/a8/39/4f/a8394fa9408e2472f0672f2bb515d9db.jpg', hint: 'Temple gopuram exterior at dawn' },
+    { slug: 'kovalam-varkala-tour', title: 'Kovalam & Varkala Tour', regions: 'Kovalam · Varkala', region: 'South India', duration: '2N / 3D', cat: 'Beach & Coastal', photo: 'https://i.pinimg.com/1200x/1f/cc/f1/1fccf111a972587d9c072f8381018c70.jpg', hint: 'Varkala cliff at sunset' },
+    { slug: 'north-kerala-heritage-tour', title: 'North Kerala Heritage Tour', regions: 'Bekal · Kannur · Wayanad · Kozhikode', region: 'South India', duration: '6N (TBC)', cat: 'Heritage', photo: 'https://i.pinimg.com/1200x/1e/00/bb/1e00bb9fa2160c94d8b9fd5aa079874b.jpg', hint: 'Bekal fort against the Arabian Sea' },
+    { slug: 'beach-and-backwater-tour', title: 'Beach and Backwater Tour', regions: 'Varkala · Backwaters', region: 'South India', duration: 'TBC', cat: 'Beach & Coastal', photo: 'https://i.pinimg.com/1200x/9c/4d/7b/9c4d7b7354f5deff64a143cd3ee10583.jpg', hint: 'Fishing boats on a Kerala beach at dawn' },
+    { slug: 'enchanting-captivating-kerala', title: 'Enchanting & Captivating Kerala', regions: 'Multi-region', region: 'South India', duration: '7 Days', cat: 'Signature', photo: 'https://i.pinimg.com/originals/87/8b/84/878b841ad38d1d59cbefa547e995f363.png', hint: 'Kathakali performer close-up' },
+    { slug: 'scenic-beautiful-kerala', title: 'Scenic and Beautiful Kerala', regions: 'Multi-region', region: 'South India', duration: '8 Days', cat: 'Signature', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', hint: 'Chinese fishing nets, Fort Kochi' },
+    { slug: 'kerala-short-honeymoon-tour', title: 'Kerala Short Honeymoon Tour', regions: 'Multi-region', region: 'South India', duration: 'TBC', cat: 'Honeymoon', photo: 'https://i.pinimg.com/1200x/7d/92/4c/7d924cc4489932afa59b881fc9f2a523.jpg', hint: 'Private houseboat deck set for two' }
+  ];
+
+  galleryItems = [
+    { id: 'sh-g1', photo: 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg', hint: 'Houseboat convoy, Alleppey', span: 'grid-column:span 2;grid-row:span 2', cap: 'Kettuvallam convoy · Alleppey backwaters' },
+    { id: 'sh-g2', photo: 'https://i.pinimg.com/1200x/9c/4d/7b/9c4d7b7354f5deff64a143cd3ee10583.jpg', hint: 'Kathakali eyes, close-up', span: 'grid-column:span 1;grid-row:span 1', cap: 'Kathakali · Kochi' },
+    { id: 'sh-g3', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', hint: 'Tea pickers, Munnar', span: 'grid-column:span 2;grid-row:span 1', cap: 'Tea gardens · Munnar' },
+    { id: 'sh-g4', photo: 'https://i.pinimg.com/1200x/b9/74/0a/b9740a34ba67edb133591cb297723efa.jpg', hint: 'Spice market stall', span: 'grid-column:span 1;grid-row:span 2', cap: 'Spice market · Fort Kochi' },
+    { id: 'sh-g5', photo: 'https://i.pinimg.com/736x/a8/39/4f/a8394fa9408e2472f0672f2bb515d9db.jpg', hint: 'Temple gopuram at dusk', span: 'grid-column:span 1;grid-row:span 1', cap: 'Gopuram at dusk' },
+    { id: 'sh-g6', photo: 'https://i.pinimg.com/1200x/1e/00/bb/1e00bb9fa2160c94d8b9fd5aa079874b.jpg', hint: 'Varkala cliff sunset', span: 'grid-column:span 2;grid-row:span 1', cap: 'Cliff sunset · Varkala' }
+  ];
+
+  testis = [
+    { name: 'Anjali Nair', city: 'Kochi', initials: 'AN', quote: 'Everything was arranged exactly as promised — the houseboat, the driver, the timings. We just showed up and enjoyed Kerala.' },
+    { name: 'Rahul Menon', city: 'Bengaluru', initials: 'RM', quote: 'Booked at short notice and still got a great rate. The team answered every question on WhatsApp within minutes.' },
+    { name: 'Priya & Arjun', city: 'Chennai', initials: 'PA', quote: 'Our honeymoon was planned with real care. The Munnar stay was the highlight of the whole year for us.' }
+  ];
+
+  destinations = [
+    { name: 'Munnar', tag: 'Tea hills', initial: 'M' }, { name: 'Alleppey', tag: 'Backwaters', initial: 'A' },
+    { name: 'Kovalam', tag: 'Beaches', initial: 'K' }, { name: 'Wayanad', tag: 'Forests', initial: 'W' },
+    { name: 'Kochi', tag: 'Heritage', initial: 'C' }, { name: 'Varkala', tag: 'Cliffs', initial: 'V' }
+  ];
+
+  componentDidMount() {
+    this.setState({ month: new Date(2026, 8, 1) });
+    const params = new URLSearchParams(window.location.search);
+    const updates = {};
+    if (params.has('cat')) updates.fCat = params.get('cat');
+    if (params.has('region')) updates.fRegion = params.get('region');
+    if (Object.keys(updates).length > 0) this.setState(updates);
+    if (this.headerEl && 'ResizeObserver' in window) {
+      this.ro = new ResizeObserver(() => { if (this._measure) this._measure(); });
+      this.ro.observe(this.headerEl);
+    }
+    this.timer = setInterval(() => this.setState(s => ({ testi: (s.testi + 1) % 3 })), 6000);
+    this._pre = setTimeout(() => this.setState({ loading: false }), 1750);
+    this._measure = () => {
+      if (!this.headerEl) return;
+      const hh = Math.round(this.headerEl.getBoundingClientRect().height);
+      if (hh && hh !== this.state.hdr) this.setState({ hdr: hh });
+    };
+    requestAnimationFrame(this._measure);
+    this._onResize = () => this._measure();
+    window.addEventListener('resize', this._onResize);
+    this._onScroll = () => {
+      const y = window.scrollY || 0;
+      const sc = y > 40;
+      this._measure();
+      if (sc !== this.state.scrolled || Math.abs(y - this.state.sy) > 6) this.setState({ scrolled: sc, sy: y });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    const el = this.statsEl;
+    const run = () => {
+      const t0 = performance.now(), dur = 1600;
+      const tick = now => {
+        const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        this.setState({ counts: { travellers: Math.round(e * 100), destinations: Math.round(e * 125), packages: Math.round(e * 35), years: Math.round(e * 10) } });
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    if (el && 'IntersectionObserver' in window) {
+      this.io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting) { run(); this.io.disconnect(); } }); }, { threshold: .3 });
+      this.io.observe(el);
+    } else run();
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer); clearTimeout(this._pre); clearTimeout(this._t1); clearTimeout(this._t2);
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onResize);
+    if (this.io) this.io.disconnect(); if (this.ro) this.ro.disconnect();
+  }
+
+  go = (page, extra) => {
+    if (this.state.loading) return;
+    let url = '';
+    if (page === 'home') url = 'index.html';
+    else if (page === 'about') url = 'about.html';
+    else if (page === 'contact') url = 'contact.html';
+    else if (page === 'packages') {
+      url = 'packages.html';
+      if (extra && (extra.fCat || extra.fRegion)) {
+        const params = new URLSearchParams();
+        if (extra.fCat && extra.fCat !== 'All') params.set('cat', extra.fCat);
+        if (extra.fRegion && extra.fRegion !== 'All') params.set('region', extra.fRegion);
+        if (params.toString()) url += '?' + params.toString();
+      }
+    }
+    else if (page === 'detail') {
+      url = 'package-' + (extra && extra.slug ? extra.slug : 'kerala-ayurveda-wellness-retreat') + '.html';
+    }
+
+    if (url) {
+      const isPackagesToPackages = page === 'packages' && window.location.pathname.includes('packages.html');
+      const isDetailToSameDetail = page === 'detail' && window.location.pathname.includes(url);
+      
+      if (isPackagesToPackages || isDetailToSameDetail) {
+         this.setState(Object.assign({ page }, extra || {}, { menu: null, field: null }));
+         window.history.pushState({}, '', url);
+         window.scrollTo({ top: 0, behavior: 'smooth' });
+         return;
+      }
+      
+      this.setState({ wiping: true, menu: null, field: null });
+      setTimeout(() => {
+        window.location.href = url;
+      }, 200);
+    }
+  };
+  filterTo = (cat, region) => this.go('packages', { fCat: cat || 'All', fRegion: region || 'All' });
+
+  chip(cat) {
+    return 'position:absolute;top:14px;left:14px;background:' + (this.catColor[cat] || '#E5483D') + ';color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.08em;padding:7px 12px;border-radius:99px;text-transform:uppercase';
+  }
+
+  field(active) {
+    return 'display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1.5px solid ' + (active ? '#E5483D' : 'rgba(22,33,29,.1)') + ';padding:14px 18px;border-radius:16px;cursor:pointer;transition:border-color .2s';
+  }
+
+  monthCells() {
+    const m = this.state.month || new Date(2026, 8, 1);
+    const first = new Date(m.getFullYear(), m.getMonth(), 1);
+    const start = new Date(first); start.setDate(1 - first.getDay());
+    const today = new Date(2026, 8, 4);
+    const out = [];
+    for (let i = 0; i < 42; i++) {
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const other = d.getMonth() !== m.getMonth();
+      const iso = d.toISOString().slice(0, 10);
+      const sel = this.state.date === iso;
+      const past = d < today;
+      out.push({
+        label: String(d.getDate()), iso,
+        style: 'border:0;border-radius:10px;height:34px;cursor:' + (past ? 'default' : 'pointer') + ';font-size:13px;font-weight:' + (sel ? '800' : '600') +
+          ';background:' + (sel ? '#E5483D' : 'transparent') + ';color:' + (sel ? '#fff' : other || past ? 'rgba(107,101,92,.45)' : '#1B1A17'),
+        pick: past ? () => {} : () => this.setState({ date: iso, field: null })
+      });
+    }
+    return out;
+  }
+
+  itineraries = {
+    'puri-jagannath-konark-chilika-bhubaneswar': [
+      { title: 'Day 1: Bhubaneswar Arrival – Sakhigopal – Raghurajpur – Puri', body: ['Meals: Breakfast', 'Overnight: Puri Arrive at Bhubaneswar Airport, Bhubaneswar Railway Station or Puri Railway Station in the morning. Meet the Sahapathika Holidays representative and begin your road journey towards Puri. En route, visit Sakhigopal Temple, an important pilgrimage stop, followed by Raghurajpur Craft Village, renowned for its traditional artistic heritage and handicraft traditions. Continue to Puri and check in at your hotel. After some time to refresh, proceed for a visit to the revered Shri Jagannath Temple, one of Odisha\'s most important pilgrimage centres. Return to the hotel after your temple visit. Overnight stay in Puri.'] },
+      { title: 'Day 2: Chilika Lake at Satapada – Dolphins, Birds & Coastal Experiences', body: ['Meals: Breakfast', 'Overnight: Puri After breakfast, set out for Satapada, located on the Chilika Lake. Chilika is renowned for its extensive lagoon ecosystem, seasonal migratory birds and the presence of the endangered Irrawaddy dolphin. Enjoy a motorboat excursion across the lake, offering opportunities to experience its natural surroundings, observe local birdlife and see the traditional fishing environment of the region. Return to Puri after the excursion. Later, visit Puri\'s Blue Flag Beach and spend some time exploring the nearby beach market and local shopping opportunities. Return to the hotel for the night. Overnight stay in Puri.'] },
+      { title: 'Day 3: Puri Temple Heritage – Konark Sun Temple – Chandrabhaga', body: ['Meals: Breakfast', 'Overnight: Puri After breakfast, begin another day of exploration around Puri. Visit Sonar Gauranga Temple, Bedi Hanuman Temple, Sudarshan Patnaik Sand Art Museum and Mausi Maa Temple. You will also have the opportunity for Mahaprasad at the Lord Jagannath Temple, as specified in the itinerary. Later, travel towards Konark to visit the magnificent Konark Sun Temple, an outstanding example of Odisha\'s temple architecture. Enjoy the light and sound show at Konark as per the operating schedule. Continue towards Chandrabhaga Beach, where you can experience the coastal landscape and sunset. The day concludes with a visit to Ramchandi Temple before returning to Puri. Overnight stay in Puri.'] },
+      { title: 'Day 4: Puri – Pipli – Dhauli – Bhubaneswar Temple Trail', body: ['Meals: Breakfast', 'Overnight: Bhubaneswar After breakfast, check out from the Puri hotel by around 9:00 AM and begin the journey towards Bhubaneswar. En route, stop at Pipli Appliqué Market, known for its colourful traditional appliqué handicrafts. Continue to Dhauli Shanti Stupa, an important historical and peaceful landmark. On reaching Bhubaneswar, explore some of the city\'s celebrated temples, including Lingaraj Temple, Rajarani Temple and Mukteshwar Temple. After sightseeing, check in to your Bhubaneswar hotel. The remaining time can be used for local shopping. Overnight stay in Bhubaneswar.'] },
+      { title: 'Day 5: Bhubaneswar Sightseeing – Departure', body: ['Meals: Breakfast', 'Overnight: Not applicable After breakfast, check out from the hotel and continue with your final day of Bhubaneswar sightseeing. Visit Nandankanan Zoological Park, followed by the historic Khandagiri and Udayagiri Caves. Complete the sightseeing programme with a visit to Kala Bhoomi Museum, subject to its operating schedule. Later, proceed to Bhubaneswar Airport or Railway Station for your onward journey. Tour concludes with memorable experiences of Odisha\'s temples, heritage and coastline. Why Choose This Puri & Odisha Tour Package? This itinerary brings together several of Odisha\'s most appealing experiences within five days. Key highlights include: Spiritual experience at Shri Jagannath Temple, Puri Sakhigopal Temple and Raghurajpur Craft Village Chilika Lake and Satapada Opportunity for an Irrawaddy dolphin viewing boat excursion Puri\'s Blue Flag Beach Konark Sun Temple and light & sound experience Chandrabhaga Beach and Ramchandi Temple Traditional handicrafts at Pipli Dhauli Shanti Stupa Bhubaneswar\'s historic temples Khandagiri and Udayagiri Caves Nandankanan and Kala Bhoomi Museum The route combines pilgrimage, heritage, nature, architecture and local culture, making it particularly appealing for travellers who want more than a temple-only holiday. Why Book With Sahapathika Holidays? A multi-destination Odisha journey involves coordinating hotels, road transportation, sightseeing and different types of experiences across Puri and Bhubaneswar. Sahapathika Holidays can organise these components into one coordinated travel plan. Why travellers from Kerala can consider Sahapathika Holidays: Kerala-based travel support Understanding of travel preferences of Kerala families and groups Professionally structured multi-destination itineraries Hotel and transportation coordination Options suitable for families, couples, senior travellers and groups Assistance in planning travel from different parts of Kerala Customisation based on travel dates and traveller requirements Coordination of applicable flight or train arrangements when requested Assistance during the journey according to the services booked Whether you are travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam or Thiruvananthapuram, your Odisha holiday can be planned around your preferred dates and travel arrangements. Who Is This Package Suitable For? This Puri tour package from Kerala is suitable for: Families Hindu pilgrimage travellers Senior citizens Couples Friends and small groups Cultural and heritage enthusiasts Travellers interested in nature and wildlife Group travellers Best Time to Visit Puri, Konark & Bhubaneswar The Odisha itinerary can be planned during different seasons, but the more comfortable period for extensive sightseeing is generally during the cooler months from October to March. The winter period is also particularly attractive for the Chilika Lake experience because the region is known for seasonal migratory bird activity. Summer can be hot, particularly during daytime sightseeing, so travellers visiting during warmer months should plan outdoor activities accordingly. Travellers visiting during major festivals, particularly around Puri Jagannath Temple, should expect increased crowds and should plan accommodation and transportation well in advance.'] },
+    ],
+    'lucknow-naimisharanya-ayodhya-prayagraj-varanasi-y': [
+      { title: 'Day 1: Arrive in Lucknow – Lucknow Sightseeing – Naimisharanya', body: ['Meals: None', 'Overnight: Naimisharanya Your spiritual journey begins with your arrival at Lucknow Airport or Railway Station. Meet our representative and proceed to your hotel. After check-in and some time to freshen up, begin exploring the historic and architectural treasures of Lucknow. Visit Bara Imambara and Bhool Bhulaiya, an impressive example of Lucknow\'s Nawabi-era architecture and famous for its maze-like passageways. Continue to the Lucknow Clock Tower, one of the city\'s prominent historical landmarks. Later, admire the magnificent Rumi Darwaza and visit Chota Imambara, known for its distinctive architecture and elaborate interiors. After sightseeing, proceed towards Naimisharanya, an ancient pilgrimage destination associated with Hindu religious traditions. Distance from Lucknow toNaimisharanya is 96 Km Check in to your accommodation and relax.  Overnight stay in Naimisharanya.'] },
+      { title: 'Day 2: Naimisharanya Pilgrimage – Journey to Ayodhya', body: ['Meals: Breakfast', 'Overnight: Ayodhya Begin your morning by exploring the sacred places of Naimisharanya, an important pilgrimage destination with deep connections to Hindu traditions and mythology. Visit Neemsaar Tirth, one of the principal sacred sites of Naimisharanya. Continue to Chakra Tirth, a revered pilgrimage spot associated with ancient Hindu traditions. Explore other spiritual landmarks included in the itinerary, including Hanuman Garhi, Pandav Kila, Yyas Gaddi, Havan Kund and Sita Kund, subject to local accessibility and the day\'s schedule. After completing the Naimisharanya visit, continue your journey towards Ayodhya, approximately 250 km away. On arrival, check in to your Ayodhya hotel and relax. Overnight stay in Ayodhya.'] },
+      { title: 'Day 3: Ayodhya Dham Darshan – Prayagraj', body: ['Meals: Breakfast', 'Overnight: Prayagraj After breakfast, begin exploring Ayodhya Dham, one of India\'s most revered pilgrimage destinations and traditionally associated with the life and legacy of Lord Rama. Begin your visit along the sacred Saryu River. Devotees may take part in holy rituals or a sacred dip according to their personal traditions and prevailing local conditions. Visit Hanuman Garhi, one of Ayodhya\'s most important temples dedicated to Lord Hanuman. Continue to Shri Ram Janmabhoomi, the revered birthplace associated with Lord Rama and home to the magnificent Ram Temple. Later, visit Kanak Bhawan and Ramkot, important spiritual landmarks of Ayodhya. Spend some peaceful moments at Swarg Dwar, another site associated with the spiritual heritage of the city. In the evening, proceed towards Prayagraj, approximately 170 km from Ayodhya. Check in to your hotel on arrival. Overnight stay in Prayagraj.'] },
+      { title: 'Day 4: Prayagraj Pilgrimage – Triveni Sangam – Varanasi', body: ['Meals: Breakfast', 'Overnight: Varanasi After breakfast, explore the sacred and historic side of Prayagraj. Proceed to Triveni Sangam, the revered meeting point of the Ganga, Yamuna and the traditionally believed Saraswati. Devotees may take a holy dip and offer prayers according to their traditions. Continue to the famous Bade Hanuman Temple, where Hanuman Ji is worshipped in a distinctive reclining form. Later, visit Anand Bhawan, the historic residence associated with the Nehru family and now a museum presenting an important chapter of India\'s modern history. After sightseeing, continue by road towards Varanasi, approximately 120 km away. On reaching Kashi, check in to your hotel and relax. Overnight stay in Varanasi.'] },
+      { title: 'Day 5: Kashi Darshan – Sacred Temples & Ganga Aarti', body: ['Meals: Breakfast', 'Overnight: Varanasi Today is dedicated to exploring the spiritual heart of Varanasi – Kashi. Begin with Shri Kashi Vishwanath Temple, one of the twelve revered Jyotirlingas of Lord Shiva. Seek the blessings of Mahadev and experience the unique spiritual atmosphere of the temple city. Continue to Maa Annapurna Temple, traditionally revered as the goddess of nourishment and abundance. Visit Shri Vishalakshi Mata Temple, one of the prominent Shakti pilgrimage sites associated with Kashi. Later, seek blessings at Kaal Bhairav Mandir, a highly revered shrine dedicated to Kaal Bhairav, traditionally regarded as the guardian deity of Kashi. In the evening, experience the sacred Ganga. Enjoy a boat ride on the Ganga, subject to availability and weather conditions. The boat ride is at the guest\'s own expense unless specifically included in the selected package. Conclude the evening by witnessing the magnificent Ganga Aarti at Dashashwamedh Ghat, one of the most memorable spiritual experiences in Varanasi. Return to your hotel. Overnight stay in Varanasi.'] },
+      { title: 'Day 6: Varanasi – Departure', body: ['Meals: Breakfast After breakfast, check out from your hotel. Proceed to Varanasi Airport or Railway Station for your onward journey. Your Lucknow–Naimisharanya–Ayodhya–Prayagraj–Varanasi Yatra concludes with the blessings of the sacred temples, holy rivers and spiritual destinations experienced along the way. Yatra concludes. Why Choose This Uttar Pradesh Yatra? This itinerary brings together a remarkable combination of Hindu pilgrimage, mythology, spirituality, heritage and culture in a single journey. 🕉️ Naimisharanya Explore one of the ancient pilgrimage centres of Uttar Pradesh and its important sacred sites. 🛕 Ayodhya Experience the spiritual atmosphere of Shri Ram Janmabhoomi, Hanuman Garhi, Kanak Bhawan and other revered landmarks. 🌊 Prayagraj Visit the sacred Triveni Sangam, one of India\'s most important pilgrimage destinations. 🔱 Varanasi Complete your journey in Kashi with Kashi Vishwanath Darshan, temple visits and the divine Ganga Aarti. 🏛️ Lucknow Add a cultural dimension to the pilgrimage with the magnificent Nawabi architecture and historic landmarks of Lucknow. Why Book This Package from Kerala with Sahapathika Holidays? Planning a multi-city pilgrimage from Kerala to Uttar Pradesh involves coordinating flights or trains, hotels, road transportation, sightseeing and local arrangements. Sahapathika Holidays brings these elements together into one professionally planned travel experience. Kerala-Based Travel Support Get assistance from a travel company with an established presence in Kerala and experience in planning journeys for travellers from the state. Designed for Travellers from Kerala Whether you are travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam, Thiruvananthapuram or elsewhere in Kerala, your journey can be planned around your preferred departure point. One Coordinated Pilgrimage Instead of arranging each destination separately, this package connects Lucknow, Naimisharanya, Ayodhya, Prayagraj and Varanasi into one planned route. Comfortable Private Travel Private transportation can make a multi-city pilgrimage more convenient, particularly for families, senior citizens and small groups. Flexible Itinerary Options The journey can be customized with different hotel categories, additional nights, transportation options or extensions to other North Indian destinations. Support Throughout the Journey From the initial planning stage to your final departure from Varanasi, Sahapathika Holidays can assist with the travel arrangements included in your selected package. Who Is This Package Suitable For? This Uttar Pradesh pilgrimage tour from Kerala is suitable for: Families planning a spiritual holiday Hindu pilgrimage groups Senior citizens travelling with family Couples seeking a spiritual and cultural journey Friends and community groups Travellers interested in Ayodhya and Kashi Devotees wishing to combine multiple sacred destinations in one trip Best Time to Visit The cooler months are generally more comfortable for visiting Lucknow, Naimisharanya, Ayodhya, Prayagraj and Varanasi, particularly for temple visits and outdoor sightseeing. Travellers planning their journey around major Hindu festivals should expect larger crowds and increased demand for hotels and transportation. Advance planning is recommended during important religious periods.'] },
+    ],
+    'kashi-gaya-prayag-ayodhya-pitru-moksha-yatra': [
+      { title: 'Day 1: Arrival in Kashi – Temple Darshan & Ganga Aarti', body: ['Meals: None', 'Overnight: Varanasi Welcome to Varanasi – the sacred city of Kashi and abode of Lord Shiva. On arrival at Varanasi, meet our representative and proceed to your hotel. After check-in and some time to freshen up, begin your first experience of the holy city. Visit Kaal Bhairav Temple, one of the most revered shrines of Kashi and traditionally worshipped as the guardian deity of the city. Continue to Sankat Mochan Hanuman Temple, followed by a visit to Shri Vishalakshi Mata Temple, one of the revered Shakti Peethas associated with Kashi. As evening approaches, proceed towards the Ganga to witness the spectacular Ganga Aarti at Dashashwamedh Ghat. The illuminated lamps, devotional chants and sacred atmosphere along the river create a memorable beginning to your Kashi pilgrimage. Return to the hotel after the Aarti. Overnight stay in Varanasi.'] },
+      { title: 'Day 2: Kashi Rituals – Journey to Gaya', body: ['Meals: Breakfast', 'Overnight: Gaya Begin the day with your planned Pitru-related rituals and ancestral offerings at the sacred ghats of Varanasi, according to your family\'s religious traditions and the arrangements made for the pilgrimage. The morning is dedicated primarily to the spiritual purpose of the journey. Devotees undertaking ancestral rites may follow their family\'s customary procedures with the assistance of the appropriate priest/purohit. After completing the morning rituals, have lunch and prepare for your onward journey. Around 1:00 PM, proceed by road towards Gaya, one of India\'s most important destinations for ancestral rites and Hindu pilgrimage. On arrival in Gaya, check in to your hotel and relax after the journey. Overnight stay in Gaya.'] },
+      { title: 'Day 3: Gaya Pitru Shradh & Spiritual Darshan – Return to Varanasi', body: ['Meals: Breakfast', 'Overnight: Varanasi Begin the day with a visit to the revered Vishnupad Temple, one of the principal pilgrimage sites of Gaya. The temple is traditionally associated with the sacred footprint of Lord Vishnu. Devotees undertaking Pitru Shradh / ancestral rituals can perform the prescribed ceremonies and offerings according to their religious requirements and arrangements with the local priest. These rites are traditionally performed for the peace and spiritual wellbeing of departed ancestors. Later, visit Dungeshwari Cave Temple, located near Gaya and associated with the period when Gautama Buddha is believed to have practised severe austerities before attaining enlightenment. Continue to the Japanese Temple and Monastery near the Mahabodhi Temple area, known for its peaceful surroundings and Japanese-style Buddhist architecture. Spend some time exploring the surrounding area and shopping for local souvenirs, subject to available time. Later, proceed by road back to Varanasi. On arrival, check in to your hotel and relax. Overnight stay in Varanasi.'] },
+      { title: 'Day 4: Kashi Vishwanath Darshan – Sarnath', body: ['Meals: Breakfast', 'Overnight: Varanasi Begin the day with the most important darshan of your Kashi pilgrimage — Shri Kashi Vishwanath Temple, one of the twelve revered Jyotirlingas of Lord Shiva. Seek the blessings of Mahadev and experience the spiritual atmosphere surrounding the ancient temple precinct. Later, proceed to Sarnath, located approximately 10 km from Varanasi. Sarnath is a major Buddhist pilgrimage destination and is traditionally recognized as the place where Gautama Buddha delivered his first sermon after attaining enlightenment. Explore the important heritage sites of Sarnath, including: Dhamek Stupa Chaukhandi Stupa Ancient Buddhist archaeological remains Other important sites in the Sarnath area, subject to available time Return to Varanasi after sightseeing. Overnight stay in Varanasi.'] },
+      { title: 'Day 5: Prayagraj Pilgrimage – Triveni Sangam – Ayodhya', body: ['Meals: Breakfast', 'Overnight: Ayodhya After breakfast, check out from your Varanasi hotel and proceed towards Prayagraj. Your pilgrimage continues at the sacred Triveni Sangam, traditionally regarded as the confluence of the Ganga, Yamuna and the mystical Saraswati. Subject to weather, river conditions and local regulations, enjoy a boat ride towards the Sangam and spend time in prayer and reflection. Continue to other important places of interest: Akshayavat Visit the ancient sacred banyan tree associated with Hindu religious traditions. Bade Hanuman Mandir Seek blessings at the famous temple where Hanuman Ji is worshipped in a distinctive reclining form. Khusro Bagh Explore this historic garden complex and its Mughal-era tombs, providing a cultural dimension to your Prayagraj visit. After completing the Prayagraj sightseeing, continue your journey towards Ayodhya. On arrival, check in to your hotel and relax. Overnight stay in Ayodhya.'] },
+      { title: 'Day 6: Ayodhya Dham – Shri Ram Janmabhoomi & Sacred Temples', body: ['Meals: Breakfast', 'Overnight: Ayodhya Today is dedicated to exploring the sacred city of Ayodhya Dham, traditionally associated with Lord Rama. Begin with Hanuman Garhi, one of the most prominent temples in Ayodhya and an important place of worship for devotees. Continue to Shri Ram Janmabhoomi Temple for darshan and prayers. Later, visit Dasharath Mahal, associated with the royal heritage of Ayodhya and the traditions surrounding King Dasharath. Proceed to Kanak Bhawan, one of the city\'s beautifully revered temples dedicated to Shri Ram and Mata Sita. Spend the remainder of the day experiencing the spiritual atmosphere of Ayodhya and its ancient temple traditions. Overnight stay in Ayodhya.'] },
+      { title: 'Day 7: Ayodhya – Departure', body: ['Meals: Breakfast After breakfast, check out from your hotel. Proceed to Ayodhya Airport for your onward journey. Your Kashi–Gaya–Prayag–Ayodhya Pitru Moksha Yatra concludes with prayers and blessings for you and your family. Yatra concludes. Why Choose This Pitru Moksha Yatra? This itinerary brings together some of North India\'s most significant Hindu pilgrimage destinations in one carefully coordinated journey. 🕉️ Kashi Seek the blessings of Kashi Vishwanath Mahadev and experience the sacred Ganga and Ganga Aarti. 🙏 Gaya Undertake traditional Pitru Shradh and ancestral offerings at one of India\'s most important destinations for Pitru-related rituals. 🌊 Prayagraj Visit the sacred Triveni Sangam, where the Ganga, Yamuna and traditionally believed invisible Saraswati meet. 🛕 Ayodhya Complete the journey in the sacred city of Shri Ram, with darshan at Ram Janmabhoomi, Hanuman Garhi, Kanak Bhawan and other important temples. Why Book This Package from Kerala with Sahapathika Holidays? A pilgrimage involving Varanasi, Gaya, Prayagraj and Ayodhya requires careful coordination of road travel, accommodation, temple visits and religious rituals. Sahapathika Holidays can organize these elements into one coordinated journey for travellers from Kerala. Kerala-Based Travel Support Get assistance from a travel company with an established presence in Kerala. Designed for Kerala Travellers We can assist travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam, Thiruvananthapuram and other parts of Kerala. Pilgrimage-Focused Planning The itinerary is designed around the spiritual purpose of the journey rather than treating these destinations as ordinary sightseeing stops. Assistance with Multi-City Travel Varanasi, Gaya, Prayagraj and Ayodhya are coordinated as one journey, reducing the need to arrange each destination independently. Suitable for Families & Groups The package can be planned for families, senior citizens, couples, friends and organized pilgrimage groups. Customizable Travel Additional nights, different hotel categories, transportation options and other requirements can be incorporated according to your needs. Assistance Throughout the Journey Our team can coordinate your travel arrangements from arrival through departure, helping make the pilgrimage more organized and comfortable. Who Is This Yatra Suitable For? This pilgrimage is particularly suitable for: Families wishing to perform Pitru-related rituals Devotees undertaking ancestral pilgrimage Hindu pilgrimage groups Senior citizens travelling with family Families visiting Kashi and Gaya together Devotees wishing to combine Kashi with Prayagraj and Ayodhya Travellers interested in Hindu spiritual and cultural heritage Best Time to Undertake the Yatra The pilgrimage can be undertaken throughout much of the year. The cooler months are generally more comfortable for temple visits, outdoor sightseeing and road journeys. Travellers planning specific Pitru rituals or ceremonies should also consider the religious calendar and consult their family priest/purohit regarding suitable dates and ritual requirements. Festival and important religious periods can attract significantly larger crowds, so advance planning is recommended.'] },
+    ],
+    'kashi-prayag-chitrakoot-ayodhya-divya-yatra': [
+      { title: 'Day 1: Arrival in Varanasi – Kashi Temple Darshan & Ganga Aarti', body: ['Meals: None', 'Overnight: Varanasi Welcome to Varanasi – Kashi, the eternal city of Lord Shiva. On arrival at Varanasi Junction, meet our representative and proceed to your hotel. Complete check-in and take some time to freshen up. Begin your spiritual experience with a visit to Kaal Bhairav Temple, one of the most revered temples of Kashi and dedicated to Lord Shiva in his powerful form as Kaal Bhairav. Continue to Sankat Mochan Hanuman Temple, an important place of worship for devotees of Lord Hanuman, followed by a visit to the sacred Durga Temple. As evening approaches, proceed to the banks of the River Ganga to witness the spectacular Ganga Aarti at Dashashwamedh Ghat. The sight of priests performing the elaborate Aarti amidst the sound of bells, chants and devotional music creates one of the most memorable spiritual experiences of a Varanasi pilgrimage. Return to your hotel after the Aarti. Overnight stay in Varanasi.'] },
+      { title: 'Day 2: Kashi Vishwanath Darshan – Sarnath – Prayagraj', body: ['Meals: Breakfast', 'Overnight: Prayagraj Begin the day with the much-awaited darshan of Shri Kashi Vishwanath Ji, one of the twelve sacred Jyotirlingas of Lord Shiva. Visit Maa Annapurna Temple and spend some time experiencing the spiritual atmosphere of the Kashi temple area. After the temple visit, proceed towards Sarnath, located approximately 10 km from Varanasi. Sarnath is one of the most important Buddhist heritage sites in India and is traditionally associated with the place where Gautama Buddha delivered his first sermon after attaining enlightenment. Explore important attractions including: Dhamek Stupa Chaukhandi Stupa The ancient Buddhist archaeological remains Other important heritage sites of Sarnath, subject to time Later, drive to Prayagraj, one of India\'s most sacred pilgrimage cities. On arrival, check in to your hotel and relax. Overnight stay in Prayagraj.'] },
+      { title: 'Day 3: Prayagraj Pilgrimage – Triveni Sangam – Chitrakoot', body: ['Meals: Breakfast', 'Overnight: Chitrakoot Begin your day with a visit to the sacred Triveni Sangam, the revered confluence of the Ganga, Yamuna and the mystical Saraswati. Enjoy a boat ride towards the Sangam, subject to weather, river conditions and local regulations. For Hindu devotees, taking part in rituals and prayers at the Sangam can be a deeply spiritual experience. Continue your pilgrimage with visits to: Akshayavat Visit the ancient sacred banyan tree, traditionally regarded as an important spiritual landmark associated with Hindu mythology. Bade Hanuman Mandir Seek blessings at the famous temple where Hanuman Ji is worshipped in a distinctive reclining form. Alopi Shankari Shakti Peeth Visit this revered Shakti pilgrimage site associated with Goddess Shakti. Bharadwaj Ashram Explore the sacred site associated with Sage Bharadwaj and Hindu religious traditions. Later, proceed towards Chitrakoot, a destination deeply connected with the Ramayana and the life of Shri Ram. Check in to your hotel on arrival. In the evening, visit Ram Ghat and experience the peaceful atmosphere of the riverside Aarti, with illuminated lamps and devotional chanting. Overnight stay in Chitrakoot.'] },
+      { title: 'Day 4: Chitrakoot Darshan – Sacred Ramayana Sites – Ayodhya', body: ['Meals: Breakfast', 'Overnight: Ayodhya Start your day with a visit to the sacred Ram Ghat, traditionally associated with Lord Rama, followed by Kamadgiri Parikrama, one of the most important spiritual experiences in Chitrakoot. Continue exploring the sacred places associated with the Ramayana: Hanuman Dhara Visit this revered hilltop shrine where a natural stream flows over the idol of Lord Hanuman. Sati Anusuya Temple Pay respects at the sacred temple associated with Mata Anusuya, wife of Sage Atri. Janaki Kund Visit this beautiful riverside location traditionally associated with Maa Sita. Gupta Godavari Explore the fascinating caves traditionally connected with Lord Rama and the period of his exile. Sphatik Shila Visit this sacred spot associated with Shri Ram and Maa Sita. Bharat Milap Mandir Pay homage at the place associated with the emotional reunion of Lord Rama and his brother Bharata. After completing the Chitrakoot pilgrimage, proceed towards Ayodhya. On arrival, check in to your hotel. Overnight stay in Ayodhya.'] },
+      { title: 'Day 5: Ayodhya Darshan – Saryu Aarti – Departure', body: ['Meals: Breakfast Your final day begins with the spiritual heritage of Ayodhya Dham, the sacred city associated with Lord Rama. Visit the magnificent Shri Ram Janmabhoomi Temple and seek the blessings of Shri Ram. Continue to Hanuman Garhi, one of Ayodhya\'s most important temples and a major pilgrimage stop for devotees. Proceed to Dasharath Mahal, associated with King Dasharath and the royal heritage of Ayodhya. Visit the beautiful Kanak Bhawan, dedicated to Lord Rama and Mata Sita. Later, proceed towards the sacred banks of the Saryu River. Experience the serene atmosphere of Saryu Ghat and, subject to timing, witness the Saryu Aarti, when lamps illuminate the river amidst devotional prayers. Conclude the pilgrimage with a visit to Nageshwarnath Temple, another important temple in Ayodhya. Later, proceed to Ayodhya Junction Railway Station or Airport for your onward journey. Your sacred Kashi–Prayag–Chitrakoot–Ayodhya Yatra concludes with the blessings of Mahadev and Shri Ram. Package Inclusions 4 Nights accommodation in selected hotels on twin/double sharing basis Daily breakfast at the hotel AC vehicle for transfers and sightseeing as per the itinerary Pickup from Varanasi Junction and drop at Ayodhya Junction / Airport Sightseeing in Varanasi, Prayagraj, Chitrakoot and Ayodhya as per itinerary Ganga Aarti at Dashashwamedh Ghat Triveni Sangam visit in Prayagraj Local sightseeing and temple visits as mentioned in the itinerary Assistance from Sahapathika Holidays during the tour Applicable hotel taxes and service charges'] },
+    ],
+    'kashi-prayag-chitrakoot-ayodhya-yatra': [
+      { title: 'Day 1: Arrive in Varanasi – Experience the Divine Ganga Aarti', body: ['Meals: None', 'Overnight: Varanasi Welcome to Varanasi – Kashi, the Eternal City of Lord Shiva. On arrival at Varanasi Airport or Railway Station, meet our representative and proceed to your hotel for check-in and relaxation. Later in the evening, proceed towards the sacred banks of the River Ganga. Enjoy a memorable Ganga boat ride, followed by the spectacular Ganga Aarti at Dashashwamedh Ghat. As hundreds of lamps illuminate the Ganga and devotional chants fill the air, experience one of the most powerful spiritual ceremonies in India. Dashashwamedh Ghat, located close to the revered Kashi Vishwanath Temple, is regarded as one of the most important and visually spectacular ghats of Varanasi. Return to the hotel after the spiritual experience. Overnight stay in Varanasi.'] },
+      { title: 'Day 2: Kashi Temple Darshan – Sarnath – Varanasi Local Experience', body: ['Meals: Breakfast', 'Overnight: Varanasi Begin your day with an early morning visit to the sacred temples of Kashi. Seek blessings at: Shri Kashi Vishwanath Temple Maa Annapurna Temple Kaal Bhairav Temple Sankat Mochan Hanuman Temple Durga Temple Tulsi Manas Temple Subject to availability and applicable arrangements, devotees may also have the opportunity to participate in Rudrabhishek Puja at Kashi Vishwanath. Later, visit Banaras Hindu University (BHU) and proceed towards Sarnath, one of the most important Buddhist pilgrimage sites in India. It is traditionally regarded as the place where Gautama Buddha delivered his first sermon after attaining enlightenment. Explore the important attractions of Sarnath, including: Sarnath Museum Ashokan heritage and archaeological remains Ancient Buddhist ruins Mahabodhi Society Temple Return to Varanasi in the evening. The rest of the evening is free to experience the vibrant lanes of the city, shop for traditional Banarasi products and savour the famous flavours of Banaras street food. Overnight stay in Varanasi.'] },
+      { title: 'Day 3: Varanasi to Prayagraj – Sacred Triveni Sangam', body: ['Meals: Breakfast', 'Overnight: Prayagraj After breakfast, check out from your Varanasi hotel and proceed to Prayagraj, one of India\'s most sacred pilgrimage cities. Prayagraj, historically known as Prayag, holds a special place in Hindu tradition because of the revered Triveni Sangam, where the Ganga and Yamuna meet, along with the invisible Saraswati. On arrival, proceed for a visit to the Triveni Sangam. Experience the spiritual atmosphere of the confluence and, subject to local conditions, enjoy a boat ride towards the Sangam. Continue your pilgrimage with visits to important sacred sites including: Bade Hanuman Mandir – famous for its unique reclining form of Hanuman Ji Alopi Shankari Shakti Peeth Bharadwaj Ashram Akshayavat The sacred Akshayavat is an ancient banyan tree associated with Hindu religious traditions and mythology. After completing the day\'s pilgrimage, proceed to your hotel. Overnight stay in Prayagraj.'] },
+      { title: 'Day 4: Chitrakoot Darshan – The Sacred Land of Shri Rama', body: ['Meals: Breakfast', 'Overnight: Prayagraj After breakfast, embark on a full-day excursion from Prayagraj to Chitrakoot, one of the most spiritually significant destinations associated with the Ramayana. Nestled amidst the Vindhyan landscape, Chitrakoot is revered as a place where Lord Rama, Maa Sita and Lakshmana spent a significant period during their exile. The sacred surroundings of Chitrakoot are closely associated with several episodes and personalities from Hindu tradition, including Sage Atri and Mata Anasuya. Spend the day exploring the spiritual heritage of Chitrakoot and experiencing the peaceful atmosphere of this ancient pilgrimage destination. Chitrakoot is also deeply connected with Goswami Tulsidas, the revered poet traditionally associated with the composition of the Ramcharitmanas. After completing the excursion, return to Prayagraj. Overnight stay in Prayagraj.'] },
+      { title: 'Day 5: Prayagraj to Ayodhya – Enter the Sacred Land of Shri Ram', body: ['Meals: Breakfast', 'Overnight: Ayodhya After breakfast, check out from your Prayagraj hotel and proceed towards Ayodhya – the sacred city of Lord Rama. On arrival, check in to your hotel and freshen up. Begin your Ayodhya pilgrimage with a visit to the revered Shri Ram Janmabhoomi Temple, associated with the birthplace of Lord Rama. Continue to Hanuman Garhi, one of the most prominent temples in Ayodhya and an important place of worship for devotees visiting the city. Later, visit: Dasharath Mahal Kanak Bhawan Other important spiritual landmarks around Ayodhya, subject to time and local conditions In the evening, visit the beautifully developed Saryu Ghat and spend some peaceful moments beside the sacred Saryu River. Witness the devotional atmosphere of Ayodhya as the city comes alive with temple bells, prayers and spiritual traditions. Overnight stay in Ayodhya.'] },
+      { title: 'Day 6: Ayodhya – Yatra Concludes', body: ['Meals: Breakfast After breakfast, check out from the hotel. Your spiritually enriching Kashi–Prayag–Chitrakoot–Ayodhya Yatra comes to an end. Proceed for your onward journey from Ayodhya or the designated departure point as per your travel arrangements. Yatra concludes with the blessings of Mahadev and Shri Ram. Why Choose This Kashi–Ayodhya Yatra? This is more than a conventional North India sightseeing tour. It brings together four profoundly sacred destinations in one carefully planned pilgrimage: Kashi – the eternal city of Lord Shiva', 'Prayagraj – the sacred Triveni Sangam', 'Chitrakoot – the land associated with Shri Ram\'s exile', 'Ayodhya – the sacred city of Lord Rama The itinerary gives pilgrims the opportunity to experience important temples, sacred rivers, spiritual ceremonies and Ramayana-linked destinations without having to independently coordinate hotels, transfers and local sightseeing. Certainly. For the first 6 Days / 5 Nights Kashi–Prayag–Chitrakoot–Ayodhya Yatra, I would replace the earlier long inclusions/exclusions with this concise version: Package Inclusions 5 Nights accommodation in selected hotels on twin/double sharing basis Daily breakfast at the hotel AC vehicle for transfers and sightseeing as per the itinerary Pickup from Varanasi Airport / Railway Station and drop at Ayodhya Airport / Railway Station Sightseeing in Varanasi, Prayagraj, Chitrakoot and Ayodhya as per itinerary Ganga boat ride and Ganga Aarti at Dashashwamedh Ghat, as mentioned in the itinerary Triveni Sangam visit in Prayagraj Temple visits and sightseeing at all destinations as mentioned in the itinerary Assistance from Sahapathika Holidays during the tour Applicable hotel taxes and service charges'] },
+    ],
+    'kashmir-5-days-srinagar-sonmarg-gulmarg-pahalgam-j': [
+      { title: 'Day 1: Jammu to Srinagar – Scenic Journey to the Kashmir Valley', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar Your Kashmir journey begins with pickup from Jammu Railway Station or the designated Jammu arrival point. Proceed towards Srinagar by road. The journey takes approximately 5 hours, subject to traffic, road and weather conditions. On arrival in Srinagar, begin local sightseeing depending on the available time. Later, check in to your hotel and settle in for a relaxing evening. Enjoy dinner and prepare for the beautiful Kashmir experiences ahead. Overnight stay in Srinagar.'] },
+      { title: 'Day 2: Srinagar to Sonmarg – Into the Valley of Glaciers', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, leave Srinagar for Sonmarg, one of Kashmir\'s spectacular mountain destinations. Surrounded by imposing Himalayan peaks, Sonmarg offers dramatic scenery with mountain landscapes, open meadows and the Sindh River flowing through the valley. During the summer season, visitors may also choose to hire ponies for an excursion towards the Thajiwas Glacier area, subject to local conditions and at an additional cost. Spend time enjoying the natural surroundings before returning to Srinagar. Overnight stay in Srinagar.'] },
+      { title: 'Day 3: Srinagar to Gulmarg – Meadows, Mountains & Gondola Experience', body: ['Meals: Breakfast & Dinner', 'Overnight: Houseboat After breakfast, check out and proceed towards Gulmarg, popularly known for its expansive meadows and spectacular mountain surroundings. Gulmarg is a major year-round destination, particularly popular for its winter snow experiences and adventure activities. During your visit, enjoy the beautiful scenery around the resort area. For an elevated mountain experience, you may opt for the famous Gulmarg Gondola cable car ride, subject to availability. Gondola tickets are not included and should be arranged in advance where applicable. After exploring Gulmarg, proceed back towards Srinagar and check in to your Kashmir houseboat. Overnight stay on a houseboat in Srinagar.'] },
+      { title: 'Day 4: Srinagar to Pahalgam – The Valley of Shepherds', body: ['Meals: Breakfast & Dinner', 'Overnight: Pahalgam After breakfast, check out and travel towards Pahalgam, one of Kashmir\'s most scenic valley destinations. Known for its beautiful mountain surroundings and pastoral landscapes, Pahalgam provides a refreshing contrast to the busier sightseeing areas. Explore the celebrated ABC Valley circuit, covering: Aru Valley Betaab Valley Chandanwari These locations offer opportunities to experience Kashmir\'s mountain scenery, lush landscapes and peaceful valley environment. Return to Pahalgam after sightseeing. Overnight stay in Pahalgam.'] },
+      { title: 'Day 5: Pahalgam – Final Sightseeing & Departure', body: ['Meals: Breakfast', 'Overnight: Not applicable After breakfast, check out from your hotel and spend some time exploring the remaining sightseeing areas of Pahalgam, depending on your departure schedule. Later, begin your onward journey towards Srinagar or Jammu, according to your confirmed departure arrangements. Your Kashmir holiday concludes with beautiful memories of the valley, its mountains, meadows and traditional houseboat experience. End of the tour. Why Choose This Kashmir Package? This compact Kashmir itinerary is designed to cover four of the valley\'s most popular destinations without making the journey excessively long. Highlights include: Scenic Jammu–Srinagar road journey Srinagar local sightseeing Mountain landscapes of Sonmarg Optional Thajiwas Glacier pony excursion Picturesque Gulmarg Optional Gondola cable car experience Traditional Kashmir houseboat stay Scenic Pahalgam Aru Valley, Betaab Valley and Chandanwari A balanced combination of mountains, valleys, snow experiences and leisure It is an excellent choice for travellers who want to experience the essence of Kashmir within a 5-day holiday package. Why Book With Sahapathika Holidays? Planning a Kashmir holiday involves coordinating transportation across several mountain destinations, accommodation, sightseeing and optional activities. Sahapathika Holidays can bring these elements together into one organised travel plan. Travelling with Sahapathika Holidays means you can benefit from: Kerala-based travel support Understanding of the requirements of travellers from Kerala Professionally planned Kashmir itineraries Hotel and transportation coordination Multi-destination travel planning Options for families, couples, senior travellers and groups Customisable travel plans Assistance with flight/train and arrival arrangements when applicable Support during the journey according to the services booked Whether your journey begins from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur or another part of Kerala, we can help coordinate the Kashmir holiday around your preferred dates and travel requirements. Who Is This Kashmir Package Suitable For? This Kashmir tour package from Kerala is suitable for: Families Couples Honeymooners Friends and small groups Senior travellers Nature lovers Snow and mountain enthusiasts First-time Kashmir visitors Best Time to Visit Kashmir Kashmir offers a different experience in every season. March to June is attractive for travellers who want pleasant weather, green valleys and comfortable sightseeing. July to September offers lush landscapes, although mountain travel can be influenced by weather conditions. October to February is particularly appealing to travellers looking for winter scenery and snow experiences, especially around destinations such as Gulmarg. Winter travel can also involve colder conditions and weather-related changes to road accessibility. For travellers specifically interested in snow, the exact experience depends on the prevailing weather and seasonal conditions.'] },
+    ],
+    'kashmir-6-days-srinagar-sonmarg-gulmarg-pahalgam': [
+      { title: 'Day 1: Jammu Arrival – Scenic Drive to Srinagar', body: ['Meals: Dinner', 'Overnight: Srinagar Arrive at Jammu Railway Station where you will be met and assisted for your transfer to Srinagar. Begin the scenic road journey towards the Kashmir Valley. As you leave Jammu behind, the landscape gradually changes as you approach the mountains and the beautiful surroundings of Srinagar. On arrival, check in to your hotel and relax after the journey. Enjoy dinner and settle in for your first night in Kashmir. Overnight stay in Srinagar.'] },
+      { title: 'Day 2: Srinagar Sightseeing – Temples, Mughal Gardens & Dal Lake', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, begin your exploration of Srinagar. Visit the Shankaracharya Temple, located on a hill overlooking the city, followed by Srinagar\'s renowned Mughal-era gardens. The sightseeing programme includes: Chashme Shahi Nishat Garden Shalimar Garden Pari Mahal Local handicraft shopping The gardens provide an opportunity to experience Kashmir\'s distinctive combination of landscaped greenery, mountain views and water features. Later, explore local Kashmiri handicrafts and browse products such as shawls, jackets, carpets, papier-mâché articles and other traditional items. In the evening, enjoy a 60-minute Shikara ride on Dal Lake, included in the package. The experience offers a peaceful way to appreciate the lake and its surrounding mountain scenery. Return to the hotel for dinner. Overnight stay in Srinagar.'] },
+      { title: 'Day 3: Sonmarg Excursion – A Day Amidst the Mountains', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, set out for a full-day excursion to Sonmarg, one of Kashmir\'s most scenic mountain destinations. Surrounded by impressive Himalayan landscapes, Sonmarg is known for its meadows, mountain scenery and the Sindh River flowing through the valley. Spend time enjoying the natural surroundings and capturing photographs of the spectacular landscape. Travellers may also choose an optional pony ride towards the glacier/snow areas, subject to local conditions and availability. This activity is payable separately. After completing the excursion, return to Srinagar. Overnight stay in Srinagar.'] },
+      { title: 'Day 4: Gulmarg – Meadows, Snow & Mountain Views', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, drive from Srinagar to Gulmarg, one of Kashmir\'s most popular mountain destinations. The journey itself offers beautiful views as the landscape gradually transforms into the open meadows and mountain scenery for which Gulmarg is famous. Gulmarg is particularly popular for snow experiences during winter, while its green meadows and pleasant mountain surroundings attract visitors during the warmer months. Enjoy time exploring the destination and, if desired, take the famous Gulmarg Gondola cable car ride at an additional cost and subject to ticket availability. Optional activities such as horse riding and other adventure experiences can also be arranged separately where available. Later, return to Srinagar. Overnight stay in Srinagar.'] },
+      { title: 'Day 5: Srinagar – Pahalgam Valley Experience', body: ['Meals: Breakfast & Dinner', 'Overnight: Pahalgam After an early breakfast, check out and proceed towards Pahalgam, popularly associated with the picturesque landscapes of the Kashmir Valley. En route, visit the Awantipura ruins, an important archaeological site associated with the region\'s historic temple heritage. Continue towards Pahalgam and enjoy the beautiful scenery surrounding the valley. The sightseeing programme includes the celebrated Aru Valley, Betaab Valley and Chandanwari. These locations offer contrasting views of rivers, forests, meadows and mountain landscapes. Local sightseeing to these areas may require a local union vehicle, for which applicable charges are payable separately. You may also spend some leisure time enjoying Pahalgam\'s peaceful surroundings. Overnight stay in Pahalgam.'] },
+      { title: 'Day 6: Pahalgam – Jammu Departure', body: ['Meals: Breakfast', 'Overnight: Not applicable After breakfast, check out from the hotel. Depending on your confirmed departure arrangements, proceed towards Jammu Airport or Jammu Railway Station for your onward journey. Take home memories of Kashmir\'s magnificent mountains, beautiful gardens, tranquil Dal Lake and scenic valleys. End of the Kashmir tour. Why Choose This Kashmir Tour Package? This six-day itinerary gives you the opportunity to experience several of Kashmir\'s most sought-after destinations in a single journey. Major highlights include: Srinagar city sightseeing Shankaracharya Temple Chashme Shahi, Nishat and Shalimar Gardens Pari Mahal Traditional Kashmiri handicraft shopping 60-minute Shikara ride on Dal Lake Sonmarg mountain excursion Gulmarg\'s famous meadows Optional Gondola experience Historic Awantipura ruins Pahalgam Aru Valley Betaab Valley Chandanwari The itinerary is suitable for travellers looking for a combination of nature, sightseeing, culture, leisure and mountain experiences. Why Book With Sahapathika Holidays? A Kashmir holiday involves more than simply booking a hotel. Multiple destinations, mountain transfers, local sightseeing arrangements and optional activities need to work together smoothly. With Sahapathika Holidays, travellers from Kerala can plan the journey through a travel team familiar with the requirements of Kerala customers. Our package planning can include: Kerala-based travel support Assistance for travellers from different parts of Kerala Professionally structured Kashmir itineraries Hotel and transportation coordination Multi-destination travel planning Family, couple, honeymoon and group options Senior-traveller-friendly planning Customisation according to travel dates and requirements Assistance with flight/train arrangements when requested Support during the journey according to the services booked Whether you are travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam or Thiruvananthapuram, your Kashmir holiday can be planned around your preferred travel arrangements. Who Is This Kashmir Package Suitable For? This Kashmir holiday package from Kerala is suitable for: Families Couples Honeymooners Senior citizens Friends and small groups Nature lovers Snow enthusiasts Photography enthusiasts First-time Kashmir travellers Best Time to Visit Kashmir Kashmir is a year-round destination, but each season offers a different experience. March to June A good period for comfortable sightseeing, green landscapes, gardens and valley experiences. July to September The valley remains scenic and lush, although mountain travel can be affected by weather conditions. October to February Ideal for travellers interested in winter landscapes and snow experiences, particularly around destinations such as Gulmarg. Temperatures can be very cold, and weather conditions may influence road travel. If snow is your primary reason for visiting Kashmir, the actual snow conditions depend on the weather during your travel dates.'] },
+    ],
+    'kashmir-honeymoon': [
+      { title: 'Day 1: Arrive in Srinagar – Your Kashmir Love Story Begins', body: ['Meals: Dinner', 'Overnight: Srinagar Arrive at Srinagar Airport, where you will be received and transferred to your hotel. Your Kashmir honeymoon begins with a relaxed introduction to the beautiful surroundings of Srinagar. After checking in, take some time to unwind after your journey and enjoy the atmosphere of the Kashmir Valley. The evening is free for you to relax together and settle into your holiday. Overnight stay in Srinagar.'] },
+      { title: 'Day 2: Srinagar – Mughal Gardens, Temple & Dal Lake', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, begin your Srinagar sightseeing. Visit the Shankaracharya Temple, situated on a hill overlooking Srinagar, followed by some of the city\'s renowned Mughal gardens. Explore: Chashme Shahi Nishat Garden Shalimar Garden Pari Mahal These beautifully landscaped gardens offer couples opportunities to enjoy peaceful surroundings and scenic views. Later, explore a local handicraft outlet where you can browse traditional Kashmiri products such as shawls, carpets, jackets and papier-mâché articles. In the evening, enjoy a 60-minute Shikara ride on Dal Lake, included in your package. Glide across the peaceful waters while taking in the surrounding mountains and the distinctive atmosphere of Srinagar. Return to your hotel for dinner. Overnight stay in Srinagar.'] },
+      { title: 'Day 3: Sonmarg Excursion – A Romantic Day in the Mountains', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, set out on a full-day excursion to Sonmarg, one of Kashmir\'s spectacular mountain destinations. Known for its alpine scenery, open landscapes and mountain surroundings, Sonmarg provides a beautiful setting for couples to spend time together and capture memorable photographs. The Sindh River adds to the natural charm of the valley, while the surrounding mountain scenery changes dramatically with the seasons. Couples who wish to experience the snow and glacier areas can opt for a pony ride towards the glacier, subject to local conditions and availability. This is an optional activity and is payable separately. Later, return to Srinagar. Overnight stay in Srinagar.'] },
+      { title: 'Day 4: Srinagar to Gulmarg – The Meadow of Flowers', body: ['Meals: Breakfast & Dinner', 'Overnight: Gulmarg After breakfast, check out and drive towards Gulmarg. The journey through the Kashmir countryside is itself an enjoyable part of the day, with changing landscapes leading towards Gulmarg\'s expansive meadows and mountain scenery. Gulmarg is particularly popular during winter for snow activities, while its green landscapes and pleasant surroundings make it attractive during other seasons as well. Spend time exploring the destination at your own pace and enjoy the beautiful mountain environment together. Optional activities such as the Gulmarg Gondola cable car ride, horse riding and other experiences can be arranged separately, subject to availability and applicable charges. Overnight stay in Gulmarg.'] },
+      { title: 'Day 5: Gulmarg to Pahalgam – Through Kashmir\'s Scenic Landscapes', body: ['Meals: Breakfast & Dinner', 'Overnight: Pahalgam After an early breakfast, check out and proceed towards Pahalgam, one of the most picturesque destinations in the Kashmir Valley. En route, visit the Awantipura ruins, an important historical site associated with the ancient temple heritage of the region. Continue towards Pahalgam and check in to your hotel. Spend the rest of the day enjoying the peaceful surroundings. Couples can take a leisurely walk, explore the local area or simply relax amidst the valley scenery. The beautiful landscapes and quieter atmosphere make Pahalgam a particularly appealing part of a Kashmir honeymoon. Overnight stay in Pahalgam.'] },
+      { title: 'Day 6: Pahalgam – Aru Valley, Betaab Valley & Chandanwari', body: ['Meals: Breakfast & Dinner', 'Overnight: Pahalgam After breakfast, set out to explore some of the most scenic areas around Pahalgam. Visit: Aru Valley A beautiful mountain village surrounded by forests, meadows and dramatic Himalayan scenery. Betaab Valley Known for its attractive natural surroundings and mountain backdrop, making it a popular stop for sightseeing and photography. Chandanwari A scenic destination surrounded by mountains and associated with the route towards the Amarnath region. The sightseeing to these locations may require a local vehicle, and applicable charges are payable separately. Return to Pahalgam after the excursion. Overnight stay in Pahalgam.'] },
+      { title: 'Day 7: Pahalgam to Srinagar – Departure with Beautiful Memories', body: ['Meals: Breakfast', 'Overnight: Not applicable After breakfast, check out from your hotel. Proceed towards Srinagar Airport for your onward flight, according to your confirmed departure schedule. As your honeymoon journey comes to an end, take with you memories of Kashmir\'s mountains, gardens, valleys, Dal Lake and the special moments shared together. End of the Kashmir honeymoon tour. Why Choose This Kashmir Honeymoon Package? This itinerary has been designed for couples who want to experience the major highlights of Kashmir while also having time to enjoy the journey together. Romantic highlights include: Beautiful Srinagar and Dal Lake 60-minute Shikara ride Mughal gardens and panoramic city views Scenic Sonmarg excursion Snow and mountain experiences at Gulmarg Optional Gondola ride Romantic landscapes of Pahalgam Aru Valley, Betaab Valley and Chandanwari Comfortable multi-night stays A combination of sightseeing and leisure The itinerary offers couples a chance to experience Kashmir\'s changing landscapes, from lakes and gardens to meadows, snow-covered mountains and peaceful valleys. Why Book Your Kashmir Honeymoon With Sahapathika Holidays? Your honeymoon should be about enjoying the destination together rather than spending your time coordinating hotels, vehicles and sightseeing arrangements. Sahapathika Holidays provides Kerala-based travel support and can help couples organise the different components of their Kashmir journey. With Sahapathika Holidays, couples can benefit from: Travel support from Kerala Understanding of the travel preferences of Kerala couples Professionally planned honeymoon itineraries Hotel and transportation coordination Multi-destination Kashmir planning Customisation according to your preferred travel style Assistance with flight/train arrangements when applicable Options for different hotel categories Support during the journey according to the services booked Whether you are departing from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur or another part of Kerala, your honeymoon can be planned around your preferred dates and travel requirements. Who Is This Kashmir Honeymoon Package Suitable For? This package is ideal for: Newly married couples Honeymooners Couples celebrating an anniversary Couples looking for a romantic mountain holiday Couples interested in snow experiences Couples who enjoy nature and photography Couples seeking a combination of sightseeing and leisure Best Time for a Kashmir Honeymoon Kashmir is beautiful throughout the year, but the ideal season depends on the experience you want as a couple. March to June A pleasant period for exploring Srinagar\'s gardens, enjoying valley scenery and travelling through the mountain destinations. July to September The landscape is generally lush and green, offering attractive valley views, although mountain weather can influence travel plans. October to February Ideal for couples looking for a winter and snow experience, particularly around Gulmarg. Winter conditions can be cold, and mountain roads may be affected by weather. If seeing snow is a major priority for your honeymoon, the actual snow conditions will depend on the weather during your travel dates.'] },
+    ],
+    'kashmir-with-vaishno-devi': [
+      { title: 'Day 1: Jammu Arrival & Transfer to Katra', body: ['Meals: Dinner', 'Overnight: Katra Arrive at Jammu, where our representative will receive you and assist with the transfer to Katra. Settle into your hotel and take some time to relax before beginning your Vaishno Devi pilgrimage the following day. The evening can be used to prepare for the pilgrimage and keep essential items ready for the journey.'] },
+      { title: 'Day 2: Mata Vaishno Devi Darshan', body: ['Meals: Breakfast & Dinner', 'Overnight: Katra After breakfast, proceed towards Banganga, the starting point for the pilgrimage to the Mata Vaishno Devi Shrine. The traditional pilgrimage route involves approximately 13 km one way, making it around 26 km for the return journey. Guests can undertake the trek according to their ability and pace. For those who require assistance, pony, pithoo and palki services are available at additional cost. A valid Yatra Slip needs to be obtained from Katra before commencing the pilgrimage. After completing the darshan and returning to Katra, rest at the hotel.'] },
+      { title: 'Day 3: Katra to Srinagar – Enter the Valley of Kashmir', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, check out and begin the road journey from Katra towards Srinagar. As the landscape changes from the Jammu region to the Kashmir Valley, the journey gradually introduces you to the dramatic mountain scenery for which Kashmir is renowned. On arrival in Srinagar, check in to the hotel and relax.'] },
+      { title: 'Day 4: Srinagar Sightseeing – Mughal Gardens, Temples & Dal Lake', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar Begin your Srinagar sightseeing after breakfast. Visit Shankaracharya Temple, located on a hill overlooking Srinagar, followed by the celebrated gardens of Kashmir including Chashme Shahi, Nishat Garden, Shalimar Garden, Tulip Garden and Pari Mahal, as applicable to the travel season. The gardens offer a beautiful combination of landscaped terraces, mountain views and Kashmir\'s distinctive heritage. You can also explore local handicraft outlets featuring traditional products such as shawls, jackets, bed covers, papier-mâché articles and carpets. Later, spend leisure time around Dal Lake and the nearby local markets, experiencing the atmosphere of Srinagar at your own pace.'] },
+      { title: 'Day 5: Gulmarg Excursion – Meadows, Mountains & Optional Gondola', body: ['Meals: Breakfast & Dinner', 'Overnight: Srinagar After breakfast, set out for Gulmarg, one of Kashmir\'s most celebrated mountain destinations. The drive from Srinagar offers beautiful views as you approach the green meadows and surrounding Himalayan landscape. Gulmarg is also well known for its winter snow activities, including skiing and snowboarding during the appropriate season. Enjoy time exploring the destination, taking photographs and experiencing its mountain setting. Horse riding and the Gulmarg Gondola cable car are optional activities at additional cost. Guests interested in the Gondola may experience the cable car towards the higher mountain areas, subject to operating conditions and ticket availability. After sightseeing, return to Srinagar for the night.'] },
+      { title: 'Day 6: Srinagar to Pahalgam – Valley Landscapes & Scenic Excursions', body: ['Meals: Breakfast & Dinner', 'Overnight: Pahalgam After breakfast, depart for Pahalgam, travelling through the scenic Kashmir countryside. En route, visit the Awantipura ruins, an important historic site associated with the ancient temple complex built during the reign of King Awantivarman. Continue towards Pahalgam, known for its beautiful mountain surroundings and the Lidder River landscape. After arrival, enjoy the natural setting of Pahalgam. Guests may explore Baisaran depending on local conditions and personal preference. The itinerary also covers Aru Valley, Betaab Valley and Chandanwari, with local sightseeing transportation payable separately as applicable. Aru is surrounded by mountains and scenic landscapes, while the route towards Chandanwari offers another perspective of the valley. Enjoy the peaceful atmosphere before returning to your accommodation.'] },
+      { title: 'Day 7: Pahalgam to Jammu – Departure', body: ['Meals: Breakfast', 'Overnight: Not applicable After breakfast, check out from the hotel and proceed towards Jammu Railway Station for your onward journey. Take home memories of a trip that combines the spiritual experience of Vaishno Devi with the scenic beauty of Kashmir. Why Choose This Package? Combines Vaishno Devi pilgrimage and Kashmir sightseeing in one holiday. Covers Katra, Srinagar, Gulmarg and Pahalgam. Includes time for both spiritual experiences and leisure travel. Experience Srinagar\'s famous gardens and Dal Lake. Includes a 60-minute Shikara ride as specified in the package. Offers optional experiences such as pony rides and Gondola rides for guests who wish to add them. Suitable for families, couples and groups looking for a combination of pilgrimage and Himalayan sightseeing. Why Book With Sahapathika Holidays? Planning a Kashmir trip along with Vaishno Devi involves coordinating accommodation, intercity transfers, sightseeing and pilgrimage requirements. Sahapathika Holidays can bring these elements together into one planned itinerary. As a travel company serving travellers from Kerala, we understand the practical requirements of customers travelling from different parts of the state. We can assist with: Professionally structured Kashmir and pilgrimage itineraries Hotel and transportation arrangements Multi-destination coordination between Jammu, Katra and Kashmir Family, couple, senior citizen and group travel requirements Customized travel plans according to dates and preferences Assistance with flight/train coordination when required Support during the journey as per the services booked Whether you are travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam or Thiruvananthapuram, you can enquire with Sahapathika Holidays for a suitable travel plan. Who Is This Package Suitable For? Families seeking a Kashmir holiday with Vaishno Devi Couples and honeymooners interested in combining pilgrimage and sightseeing Senior citizens and families planning a spiritual journey with Kashmir sightseeing Friends and small groups Pilgrimage groups Travellers looking for a Kashmir trip from Kerala with a Vaishno Devi visit Best Time to Visit March to June: A pleasant period for Kashmir sightseeing, gardens and valley experiences. July to September: Suitable for travellers interested in the greener side of Kashmir, subject to weather and road conditions. Winter months: Ideal for travellers hoping to experience snow at destinations such as Gulmarg, although snowfall, road conditions and attraction operations can vary. For the Vaishno Devi pilgrimage, weather and crowd levels can vary considerably during festival and holiday periods. Travel dates should therefore be selected according to your preferred experience and physical comfort.'] },
+    ],
+    'mathura-vrindavan-braj-agra-yatra': [
+      { title: 'Day 1: Mathura & Gokul – Enter the Sacred Land of Krishna', body: ['Meals: As per package plan', 'Overnight: Mathura Arrive at Mathura Railway Station or the agreed arrival point from the Delhi NCR side, where our representative will assist you with the transfer to your hotel. After check-in and some time to freshen up, begin your exploration of Gokul, a place deeply associated with the childhood traditions and stories of Lord Krishna. Visit Raman Reti, Chinta Haran Temple and Brahmand Ghat, followed by important spiritual landmarks of Mathura. Continue with visits to Dwarkadhish Temple, one of Mathura\'s prominent temples, and Shri Krishna Janmabhoomi, traditionally revered as the birthplace of Lord Krishna. Later, visit Vishram Ghat, an important sacred ghat on the Yamuna. Return to the hotel after the day\'s sightseeing and relax. Overnight stay in Mathura.'] },
+      { title: 'Day 2: Vrindavan – Temples, Devotion & Evening Illumination', body: ['Meals: Breakfast', 'Overnight: Mathura After breakfast, proceed towards Vrindavan, one of the most revered pilgrimage destinations in the Braj region. Begin your temple visits with the famous Banke Bihari Temple, followed by ISKCON Temple. Continue exploring other notable temples and spiritual landmarks including Rangji Temple, Kanch Ka Mandir and Mata Vaishno Devi Temple. Later, visit Pagal Baba Temple and the atmospheric Nidhivan, a place strongly associated with local Krishna traditions and beliefs. In the evening, enjoy the illuminated atmosphere and light show at Prem Mandir, one of Vrindavan\'s popular visitor experiences. Return to Mathura after the day\'s sightseeing. Overnight stay in Mathura.'] },
+      { title: 'Day 3: Govardhan – Nandgaon – Barsana: Discover the Sacred Braj Landscape', body: ['Meals: Breakfast', 'Overnight: Hotel Start the day after an early breakfast and proceed towards Govardhan, an important pilgrimage destination in the Braj region. Visit Govardhan Temple, Radha Kund and Kusum Sarovar, experiencing the peaceful spiritual atmosphere surrounding these sacred places. Continue towards Nandgaon, traditionally associated with the childhood years of Lord Krishna. Visit Nand Bhawan before proceeding to Barsana. In Barsana, visit the revered Radha Rani Temple and Rangili Mahal. The day\'s journey offers a deeper experience of the religious traditions and cultural landscape of Braj. After sightseeing, proceed to the hotel for your overnight stay. Overnight stay at the hotel.'] },
+      { title: 'Day 4: Agra Heritage Tour – Taj Mahal & Agra Fort | Departure', body: ['Meals: Breakfast', 'Overnight: Not applicable After an early breakfast, check out from the hotel and proceed towards Agra. Explore the magnificent Taj Mahal, one of India\'s most iconic monuments and a globally recognised symbol of Mughal architecture. Continue to Agra Fort, a historic fortified complex that offers an insight into India\'s rich imperial heritage. You will also visit Sikandra, known for the tomb complex of Emperor Akbar. After completing the Agra sightseeing programme, proceed for your transfer to Mathura Railway Station or the Delhi NCR departure point, according to your onward travel arrangements. End of the Braj–Agra journey with cherished memories. Why Choose This Mathura–Vrindavan Package? This itinerary combines the major spiritual highlights of the Braj region with the architectural heritage of Agra in just four days. Highlights include: Mathura, the sacred heart of Braj Gokul and its Krishna-associated spiritual landmarks Vrindavan\'s famous temples Govardhan and Radha Kund Nandgaon and Barsana Radha Rani Temple Evening experience at Prem Mandir Taj Mahal and Agra Fort A convenient multi-destination route covering both pilgrimage and heritage experiences For travellers from Kerala, it offers an opportunity to experience several important North Indian destinations in one professionally coordinated journey. Why Book With Sahapathika Holidays? Planning a Braj pilgrimage involves coordinating multiple towns, temples, sightseeing locations, hotel stays and road transfers. Sahapathika Holidays can help make the journey more organised and convenient. With Sahapathika Holidays, you can benefit from: Kerala-based travel support and assistance Itineraries designed around the needs of Kerala travellers Coordinated hotel and transportation arrangements Multi-destination tour planning Options for families, couples, groups and senior travellers Assistance with customised travel plans Support with applicable flight/train and transfer arrangements Assistance during the journey as per the services booked Whether you are travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam or Thiruvananthapuram, the journey can be planned according to your preferred travel dates and departure arrangements. Who Is This Package Suitable For? This Mathura–Vrindavan tour package from Kerala is particularly suitable for: Hindu pilgrimage travellers Families Senior citizens travelling with family Couples Devotional groups Friends and small groups Travellers interested in Indian culture and heritage Travellers wishing to combine pilgrimage with Agra sightseeing Best Time to Visit Mathura & Vrindavan The Braj region can be visited throughout much of the year, but the experience varies by season. October to March is generally more comfortable for extensive sightseeing because of the relatively pleasant weather. Holi season is especially significant in the Braj region and attracts large numbers of visitors because of the area\'s famous Holi traditions. Travellers visiting during major festivals should expect larger crowds and higher demand for accommodation and transportation. Summer months can be considerably warmer, so travellers should plan sightseeing accordingly and remain hydrated.'] },
+    ],
+    'varanasi-tour-packages-from-kerala': [
+    ],
+
+    'kerala-ayurveda-wellness-retreat': [
+      { title: 'Arrival — Kovalam', body: ['Met at Trivandrum airport and driven to your Ayurveda resort in Kovalam. Initial consultation with the resident vaidya, who sets your therapy plan for the week. Evening free on the beach.'] },
+      { title: 'Ayurveda Therapy & Yoga', body: ['Sunrise yoga and pranayama, followed by your first prescribed therapies. Sattvic meals through the day. Afternoon at leisure; guided meditation before dinner.'] },
+      { title: 'Kovalam to Poovar — where the backwaters, the river and the Arabian Sea meet. Sunset boat ride through the mangroves.' },
+      { title: 'Wellness & Nature', body: ['A slower day: therapies, a floating-cottage breakfast, and time on the golden sand bar. Optional Ayurvedic cooking demonstration in the afternoon.'] },
+      { title: 'Poovar to Trivandrum Sightseeing', body: ['Drive to Trivandrum for the Sree Padmanabhaswamy Temple exterior, the Napier Museum and Kanakakkunnu Palace grounds. Evening at leisure.'] },
+      { title: 'Departure', body: ['Closing consultation and take-home regimen from the vaidya, then transfer to Trivandrum airport for your onward flight.'] }
+    ]
+  };
+
+  faqData = [
+    { q: 'How do I book a package?', a: 'Send an enquiry through the form or WhatsApp with your dates and group size. We reply with a firm quote and hold your dates; the booking is confirmed on advance payment.' },
+    { q: 'Can the itinerary be customised?', a: 'Yes — every package here is a starting point. Swap stays, add nights, change the pace. Tell us what matters and we rebuild around it.' },
+    { q: 'What payment methods do you accept?', a: 'Bank transfer and UPI today. An online card gateway is planned — flagged as a v2 enhancement.' },
+    { q: 'What is the cancellation policy?', a: 'The exact free-cancellation window is being confirmed with the agency. Refunds are processed within 5–10 business days, and medical emergencies are refunded against a certificate.' }
+  ];
+
+  detailFor(slug) {
+    const p = this.packages.find(x => x.slug === slug) || this.packages[0];
+    
+    // Default placeholder data
+    let data = {
+      p,
+      overview: 'The full overview for this package is being carried across verbatim from the live Sahapathika site. The Ayurveda & Wellness Retreat below shows the complete, populated detail template.',
+      highlights: ['Highlights pending — pull from live package page'],
+      lodging: 'Confirm from source',
+      tourType: 'Confirm from source',
+      includes: ['Inclusions pending — pull from live package page'],
+      excludes: ['Exclusions pending — pull from live package page'],
+      notes: ['Prices are per person and subject to change', 'Booking is confirmed only on advance payment', 'Itinerary may be adjusted for weather, temple timings or road conditions', 'Sabarimala and some temple visits are seasonal — confirm before booking'],
+      faqs: this.faqData
+    };
+
+    if (p.slug === 'varanasi-tour-packages-from-kerala') {
+      data.mapUrl = 'https://maps.google.com/maps?q=Varanasi,+Uttar+Pradesh&t=&z=6&ie=UTF8&iwloc=&output=embed';
+      data.overview = 'Planning a Varanasi tour from Kerala? Whether you are travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam or Thiruvananthapuram, Sahapathika Holidays can arrange your journey to the sacred city of Kashi with a carefully planned private tour.\n\nVaranasi is one of India\'s most revered pilgrimage destinations, attracting devotees who come to seek the blessings of Kashi Vishwanath, experience the sacred Ganga, attend the divine Ganga Aarti and explore the spiritual heritage of Kashi.\n\nFor travellers from Kerala, flying is generally the most time-efficient option, while travelling by train offers a different experience for pilgrims who prefer an extended rail journey. Sahapathika Holidays can coordinate the journey from Kerala and arrange your Varanasi pilgrimage package, including local transfers, accommodation and sightseeing.';
+      data.highlights = [
+        'Kashi Vishwanath Darshan and spiritual rituals',
+        'Kaal Bhairav Temple',
+        'Ganga Aarti experience at Dashashwamedh Ghat',
+        'Sunrise boat ride on the sacred Ganga',
+        'Sarnath sightseeing',
+        'Customizable Varanasi–Ayodhya–Prayagraj journey options',
+        'Dedicated Kerala-based travel assistance for flights or trains'
+      ];
+      data.lodging = 'Customizable (Varanasi / Ayodhya / Prayagraj)';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group, Custom';
+      data.includes = [
+        'Private AC vehicle for airport/railway station transfers and local sightseeing',
+        'Selected hotel accommodation in Varanasi',
+        'Daily breakfast',
+        'Varanasi sightseeing as per itinerary',
+        'Kashi Vishwanath Temple visit',
+        'Ganga boat ride, where included in the selected package',
+        'Ganga Aarti experience at Dashashwamedh Ghat',
+        'Sarnath excursion',
+        'Local assistance during the pilgrimage',
+        'Pickup and departure transfer',
+        'Toll, parking, fuel and driver-related charges as applicable to the selected package'
+      ];
+      data.excludes = [
+        'Airfare and train tickets',
+        'Lunch and dinner unless specifically mentioned',
+        'Personal expenses, shopping and laundry',
+        'Temple donations and offerings',
+        'Special/VIP/priority darshan or special puja charges',
+        'Monument/temple entry fees unless specifically included',
+        'Travel insurance',
+        'Any local transportation (e-rickshaws in old Varanasi) or service not specifically included',
+        'Anything not mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Varanasi is famous for its ancient lanes and dense temple areas. Vehicles cannot reach the entrance of some temples because of narrow lanes and restricted vehicle access.',
+        'Depending on the location, guests may need to use an e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples and pilgrimage points. Any applicable local transportation charges will be payable directly by the guests unless specifically included.',
+        'Many travellers from Kerala visit Varanasi primarily for specific religious purposes. If you have particular temple, ritual or darshan requirements, tell us while planning the package.',
+        'Senior citizens and travellers with mobility concerns should inform Sahapathika Holidays in advance so that the itinerary and transportation arrangements can be planned appropriately.',
+        'Travel schedules (flight/train) are dynamic. Please confirm current schedules and fares before finalizing your travel dates.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Varanasi tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange Varanasi tour packages from Kerala for families, couples, senior citizens, individuals and groups.' },
+        { q: 'What is the best way to travel from Kerala to Varanasi?', a: 'For most travellers, flying is the quickest and most convenient option. Train travel is also possible, particularly for travellers who prefer a rail journey.' },
+        { q: 'Can I fly from Kochi to Varanasi?', a: 'Yes. Current schedules include Kochi–Varanasi flight options, including direct services on selected days and connecting alternatives.' },
+        { q: 'Can I travel by train from Ernakulam to Varanasi?', a: 'Yes. A direct Ernakulam–Varanasi rail service is currently listed, taking around 49 hours 50 minutes. Service frequency is limited, so availability should be checked.' },
+        { q: 'Can I book a Varanasi package from Kozhikode or Kannur?', a: 'Yes. Travellers from North Kerala can enquire about suitable flight and travel arrangements from nearby airports and railway stations.' },
+        { q: 'Can travellers from Thiruvananthapuram book this package?', a: 'Yes. Travellers from Thiruvananthapuram and other parts of South Kerala can book the package.' },
+        { q: 'Does the package include Kashi Vishwanath Darshan?', a: 'The itinerary can include a visit to Kashi Vishwanath Temple. Actual darshan arrangements are subject to temple rules, timings and applicable procedures.' },
+        { q: 'Can I add Ayodhya or Prayagraj to my Varanasi trip?', a: 'Yes. You can extend your Varanasi holiday into a larger Varanasi–Ayodhya–Prayagraj pilgrimage circuit.' },
+        { q: 'Is a Varanasi package suitable for senior citizens?', a: 'Yes. We can design a more comfortable itinerary for senior travellers, including suitable hotels, private transportation and a less rushed sightseeing schedule.' },
+        { q: 'Can the package be customized?', a: 'Yes. The duration, hotel category, transportation, sightseeing and additional destinations can be customized according to your requirements.' }
+      ];
+    } else if (p.slug === 'shimla-manali-amritsar') {
+      data.overview = 'Experience the best of the Himalayas and Punjab with this thoughtfully planned Himachal and Amritsar tour package from Kerala. The journey combines the cool mountain landscapes of Shimla and Manali with the cultural and spiritual highlights of Amritsar, creating a holiday that offers scenery, sightseeing, adventure, heritage and devotion in one itinerary.\\n\\nStarting with a scenic drive from Delhi to Shimla, the tour takes you through Kufri, Manali, Solang Valley, Kullu and Amritsar, before concluding with visits to the iconic Golden Temple and the Attari-Wagah Border ceremony. It is an excellent choice for families, couples, friends and groups travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam and Thiruvananthapuram.';
+      data.highlights = [
+        'Shimla and Kufri for Himalayan scenery and hill-station experiences.',
+        'Manali and Solang Valley for mountain landscapes and optional adventure activities.',
+        'Kullu and Mandi for a scenic Himalayan road journey.',
+        'Amritsar for spirituality, history and Punjabi culture.',
+        'Golden Temple for a deeply meaningful cultural and spiritual experience.',
+        'Attari-Wagah Border for its distinctive ceremonial atmosphere.'
+      ];
+      data.lodging = '2 Nights Shimla | 3 Nights Manali | 2 Nights Amritsar';
+      data.tourType = 'Family, Couple, Group';
+      data.includes = [
+        '7 nights accommodation in selected hotels on double-sharing basis',
+        '7 breakfasts and 7 dinners',
+        'Private vehicle for the 8-day itinerary as per family/group size',
+        'Fuel, tolls, permits, parking and driver allowance',
+        'Welcome drink at the hotel on arrival',
+        'Transfers and sightseeing as specified in the itinerary'
+      ];
+      data.excludes = [
+        'Airfare or train tickets',
+        'Personal expenses, laundry, telephone calls and beverages',
+        'Mineral water and other items of personal consumption',
+        'Monument, garden and sightseeing entry fees',
+        'River rafting, paragliding and other optional activities',
+        'Rohtang Pass transportation and related activities',
+        'Tips for drivers, guides, hotel staff and other service personnel',
+        'Any service, activity or expense not specifically mentioned under inclusions'
+      ];
+      data.notes = [
+        'The itinerary includes several long road journeys, particularly Delhi–Shimla, Shimla–Manali, Manali–Amritsar and Amritsar–Delhi.',
+        'Mountain travel times are approximate and may change because of traffic, weather, road conditions or local restrictions.',
+        'Rohtang Pass is not included. Any applicable local transportation and activity charges are payable separately by guests.',
+        'River rafting at Kullu is an optional activity and is subject to suitable weather conditions and direct payment.',
+        'Adventure activities at Solang Valley are optional and payable separately.',
+        'Monument, garden and other applicable entry charges are not included unless specifically mentioned.',
+        'Guests should carry suitable warm clothing for the Himalayan portions of the journey, particularly during colder months.',
+        'The Wagah Border ceremony is subject to prevailing local arrangements and regulations.',
+        'Final accommodation, vehicle and departure arrangements should be confirmed at the time of booking.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Himachal and Amritsar tour package from Kerala?', a: 'Yes. Sahapathika Holidays can coordinate this North India holiday for travellers originating from Kerala, with travel arrangements discussed according to your preferred dates and requirements.' },
+        { q: 'What is the duration of this Himachal–Amritsar package?', a: 'The itinerary is designed as an 8 Days / 7 Nights holiday covering Shimla, Manali and Amritsar.' },
+        { q: 'Can I start the trip from Kochi?', a: 'Yes. Flight or train arrangements can be discussed separately according to your preferred departure point in Kerala. The supplied itinerary itself begins with arrival at Delhi Airport or Railway Station.' },
+        { q: 'Which places are covered in the package?', a: 'The itinerary covers Delhi, Shimla, Kufri, Manali, Solang Valley, Kullu, Amritsar, Golden Temple, Jallianwala Bagh and the Attari-Wagah Border.' },
+        { q: 'Is Rohtang Pass included?', a: 'No. Rohtang Pass sightseeing is specifically excluded from the supplied package and requires separate local transportation arrangements and applicable charges.' },
+        { q: 'Is river rafting included at Kullu?', a: 'No. River rafting is an optional activity and is payable directly by the guest, subject to weather conditions.' },
+        { q: 'Is this package suitable for families?', a: 'Yes. The itinerary can work well for families who want to combine Himalayan sightseeing with Amritsar\\'s cultural and spiritual attractions.' },
+        { q: 'Can senior citizens travel on this itinerary?', a: 'Senior citizens can consider the package, but they should be comfortable with several long road journeys and Himalayan terrain. The itinerary can be discussed and customized according to the group\\'s requirements.' },
+        { q: 'Can the accommodation or itinerary be customized?', a: 'Yes. Hotel preferences, travel dates and certain arrangements can be discussed with Sahapathika Holidays while planning the trip.' },
+        { q: 'Can I end the trip at Amritsar instead of Delhi?', a: 'The supplied itinerary allows the final drop at Amritsar Airport/Railway Station or Delhi, depending on the travel requirement.' }
+      ];
+    } else if (p.slug === 'himachal-devi-yatra-with-vaishno-devi-mansa-devi') {
+      data.overview = 'Embark on a spiritually enriching Devi temple pilgrimage from Chandigarh, covering some of the most revered Shakti temples of Himachal Pradesh along with the sacred pilgrimage to Mata Vaishno Devi and Mata Mansa Devi. This carefully planned 7-day journey brings together ancient temples, devotional experiences and the beautiful mountain landscapes around Kangra and Dharamshala.\\n\\nThe pilgrimage takes you through Naina Devi, Chintpurni, Jwala Ji, Baglamukhi, Kangra Devi and Chamunda Devi, followed by Dharamshala sightseeing and the onward journey to Katra for Vaishno Devi Darshan. The return journey includes a visit to Mansa Devi Temple near Panchkula before concluding at Chandigarh.\\n\\nFor Malayalis and travellers from Kerala looking for a Himachal Devi Yatra package from Kerala, this itinerary can be planned with suitable flight or train arrangements to Chandigarh. Sahapathika Holidays can coordinate the pilgrimage, accommodation and private transportation according to your travel dates and group requirements.';
+      data.highlights = [
+        'Combines several important Devi temples of Himachal Pradesh with Mata Vaishno Devi and Mansa Devi.',
+        'Covers the major pilgrimage circuit from Chandigarh through Himachal Pradesh to Katra and back.',
+        'Includes visits to Naina Devi, Chintpurni, Jwala Ji, Baglamukhi, Kangra and Chamunda Devi temples.',
+        'Adds the spiritual experience of Mata Vaishno Devi Darshan.',
+        'Includes Dharamshala and McLeod Ganj sightseeing for a cultural and scenic break.',
+        'Suitable for families, devotees and pilgrimage groups seeking a structured multi-temple journey.'
+      ];
+      data.lodging = '1N Chintpurni | 2N Dharamshala/Kangra | 2N Katra | 1N Chandigarh';
+      data.tourType = 'Pilgrimage, Family, Group';
+      data.includes = [
+        'Hotel accommodation on double/triple sharing basis',
+        'Daily breakfast and dinner',
+        'Private AC vehicle for the complete itinerary',
+        'Chandigarh pickup and drop as applicable',
+        'Sightseeing and temple visits as per itinerary',
+        'Toll, parking, fuel and applicable state taxes',
+        'Driver allowances',
+        'Assistance throughout the tour',
+        'Temple darshan guidance as specified',
+        'Customer support during the journey'
+      ];
+      data.excludes = [
+        'Flights or train tickets to/from Chandigarh',
+        'Lunch and personal snacks',
+        'Ropeway/cable car charges where applicable',
+        'Pony, palki, battery car or helicopter charges for Vaishno Devi',
+        'Entry fees and boating/adventure activities not specifically included',
+        'Personal expenses, shopping, tips and laundry',
+        'Medical expenses and travel insurance',
+        'Any special puja, donation or offering not specifically included',
+        'Any service or expense not mentioned under inclusions'
+      ];
+      data.notes = [
+        'Temple entry, darshan procedures, queues and operating arrangements can vary. Travellers should follow the prevailing instructions of the respective temple authorities on the day of visit.',
+        'The Vaishno Devi visit involves a significant pilgrimage journey. Travellers should consider their physical fitness and comfort when planning the trek.',
+        'The source itinerary specifically excludes pony, palki, battery car and helicopter charges. These should therefore be treated as optional/additional expenses rather than included services.',
+        'Road journeys through Himachal Pradesh can take longer depending on traffic, weather and road conditions. The itinerary should therefore be followed with reasonable flexibility.',
+        'The supplied package includes pickup and drop at Chandigarh Airport/Railway Station or home, depending on the selected arrangement.'
+      ];
+      data.faqs = [
+        { q: 'Can I book this Devi Yatra from Kerala?', a: 'Yes. Sahapathika Holidays can arrange the land package for travellers from Kerala, with the journey beginning and ending at Chandigarh. Flight or train arrangements from Kerala can be coordinated separately if required.' },
+        { q: 'What temples are covered in this pilgrimage?', a: 'The detailed itinerary covers Naina Devi, Chintpurni, Jwala Ji, Baglamukhi, Kangra Devi, Chamunda Devi, Mata Vaishno Devi and Mansa Devi.' },
+        { q: 'Is Mata Vaishno Devi included in the itinerary?', a: 'Yes. The programme includes a dedicated day for Mata Vaishno Devi Darshan from Katra.' },
+        { q: 'Is helicopter travel to Vaishno Devi included?', a: 'No. Helicopter charges are excluded and would be an additional expense if selected.' },
+        { q: 'Is this itinerary suitable for senior citizens?', a: 'It can be suitable for senior travellers depending on their mobility and ability to manage the pilgrimage and road journeys. Individual assistance options can be discussed before booking.' },
+        { q: 'Are accommodation and meals included?', a: 'Yes. The package includes hotel accommodation on double/triple sharing and daily breakfast and dinner.' },
+        { q: 'Is transportation included?', a: 'Yes. The supplied itinerary includes a private AC vehicle for the complete journey, with vehicle size based on group strength.' },
+        { q: 'Can the package be customized?', a: 'Yes. Travel dates, hotel preferences, group requirements and other practical arrangements can be discussed with Sahapathika Holidays.' },
+        { q: 'Can Sahapathika Holidays arrange flights from Kochi or other Kerala airports?', a: 'Yes. You can discuss flight or train coordination from Kochi or other suitable airports/railway stations in Kerala while planning the complete journey.' },
+        { q: 'How do I book this pilgrimage package?', a: 'Share your preferred travel dates, number of travellers and accommodation preference with Sahapathika Holidays. The team can check availability and prepare the applicable quotation.' }
+      ];
+    } else if (p.slug === 'kashi-prayag-chitrakoot-ayodhya-divya-yatra') {
+      data.overview = 'Embark on a spiritually enriching North India pilgrimage tour from Kerala covering four of India\\'s most revered sacred destinations — Varanasi, Prayagraj, Chitrakoot and Ayodhya.\\n\\nBegin your journey in the ancient city of Kashi, seek the blessings of Lord Shiva at Kashi Vishwanath and experience the divine Ganga Aarti. Continue to the sacred Triveni Sangam at Prayagraj, explore the Ramayana-linked spiritual heritage of Chitrakoot, and conclude your pilgrimage in Ayodhya, the sacred city of Shri Ram.\\n\\nThis carefully planned Varanasi–Prayagraj–Chitrakoot–Ayodhya tour package from Kerala is ideal for families, devotees, senior travellers and pilgrimage groups looking for a meaningful spiritual journey through North India.';
+      data.highlights = [
+        'Kashi – The City of Mahadev: Experience Kashi Vishwanath Darshan, Kaal Bhairav Temple, Ganga Aarti and the spiritual atmosphere of the holy Ganga.',
+        'Prayagraj – The Sacred Triveni Sangam: Visit the confluence of the Ganga, Yamuna and the mystical Saraswati and explore important pilgrimage sites.',
+        'Chitrakoot – The Land of Shri Ram: Follow the Ramayana trail through sacred places traditionally associated with the exile of Shri Ram, Maa Sita and Lakshmana.',
+        'Ayodhya – The Sacred City of Lord Rama: Seek blessings at Shri Ram Janmabhoomi, Hanuman Garhi, Kanak Bhawan and other important temples.',
+        'Designed for Kerala Travellers with complete multi-destination planning.'
+      ];
+      data.lodging = '1 Night Varanasi | 1 Night Prayagraj | 1 Night Chitrakoot | 1 Night Ayodhya';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '4 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast at the hotel',
+        'AC vehicle for transfers and sightseeing as per the itinerary',
+        'Pickup from Varanasi Junction and drop at Ayodhya Junction / Airport',
+        'Sightseeing in Varanasi, Prayagraj, Chitrakoot and Ayodhya as per itinerary',
+        'Ganga Aarti at Dashashwamedh Ghat',
+        'Triveni Sangam visit in Prayagraj',
+        'Local sightseeing and temple visits as mentioned in the itinerary',
+        'Assistance from Sahapathika Holidays during the tour',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Varanasi and from Ayodhya',
+        'Lunch, dinner and beverages',
+        'Personal expenses, shopping and laundry',
+        'Temple donations, offerings and special pujas',
+        'VIP / priority darshan charges, wherever applicable',
+        'Boat rides unless specifically mentioned in the quotation',
+        'Monument / museum entry fees unless specifically mentioned',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Important Note on Varanasi Local Travel: Due to the narrow lanes and restricted vehicle access in parts of Varanasi, the vehicle cannot reach the entrance of some temples. Guests may need to travel by e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples and pilgrimage sites. Any such local transportation charges, if applicable, are payable directly by the guests.',
+        'Temple darshan is subject to the rules, timings and security procedures of the respective temple authorities.',
+        'Special pujas or priority darshan, wherever applicable, are subject to availability and prevailing temple procedures.',
+        'Boat rides at the Ganga and Triveni Sangam depend on weather, river conditions and local regulations.',
+        'The sightseeing sequence may be modified depending on temple timings, traffic, local conditions and operational requirements.',
+        'Travel time between destinations can vary according to road and traffic conditions.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Varanasi–Prayagraj–Chitrakoot–Ayodhya package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this North India pilgrimage tour from Kerala for individuals, families and groups travelling from different parts of Kerala.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be customized for senior travellers by selecting suitable hotels, transportation and a comfortable sightseeing pace.' },
+        { q: 'Does this package include Kashi Vishwanath Temple Darshan?', a: 'The itinerary includes Kashi Vishwanath Temple Darshan. Temple entry, darshan procedures and timings remain subject to the rules and regulations of the temple authorities.' },
+        { q: 'Can I get a customized package from Kerala?', a: 'Yes. You can customize the duration, hotels, transportation and travel arrangements according to your requirements.' },
+        { q: 'Can Sahapathika arrange flights from Kerala?', a: 'Flight arrangements can be included depending on your chosen package and travel requirements. You can enquire about options from airports such as Kochi, Kozhikode, Kannur or Thiruvananthapuram.' },
+        { q: 'Can this package be booked for a family or group?', a: 'Yes. The itinerary is suitable for families, friends, pilgrimage groups and community groups. Group-specific arrangements can be planned based on the number of travellers.' },
+        { q: 'Which places are covered in this pilgrimage package?', a: 'The main destinations covered are Varanasi, Prayagraj, Chitrakoot and Ayodhya, along with important temples, ghats and spiritual landmarks in each destination.' },
+        { q: 'Is Sarnath included in the Varanasi itinerary?', a: 'Yes. The package includes a visit to Sarnath, including important Buddhist heritage sites such as Dhamek Stupa and Chaukhandi Stupa, subject to the available time.' },
+        { q: 'Can I extend the trip beyond 5 days?', a: 'Yes. Additional nights can be added in Varanasi, Prayagraj, Chitrakoot or Ayodhya depending on your travel plans.' },
+        { q: 'How can I enquire about this package?', a: 'You can contact Sahapathika Holidays for availability, travel dates, hotel options and a customized quotation.' }
+      ];
+    } else if (p.slug === 'himachal-pradesh') {
+      data.overview = 'Discover the diverse beauty of Himachal Pradesh with this thoughtfully planned Himachal tour package from Kerala, taking you across four of the state\\'s most popular mountain destinations — Shimla, Manali, Dharamshala and Dalhousie. Beginning in Delhi, the journey gradually moves through pine-covered hills, scenic valleys, mountain towns and peaceful landscapes.\\n\\nExplore the colonial charm of Shimla and the scenic surroundings of Kufri, travel through the beautiful Kullu Valley to Manali, and experience the mountain atmosphere of Solang Valley. The journey then continues towards Dharamshala and McLeod Ganj before reaching the picturesque hill station of Dalhousie and the meadow landscapes of Khajjiar.\\n\\nThis Himachal Pradesh holiday package from Kerala is ideal for families, couples, honeymooners, friends and groups who want to experience several iconic destinations in one Himalayan journey. Sahapathika Holidays can also assist travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam and Thiruvananthapuram with suitable travel arrangements to Delhi.';
+      data.highlights = [
+        'Experience four major Himachal destinations in one extended holiday.',
+        'Explore the contrasting landscapes of Shimla, Manali, Dharamshala and Dalhousie.',
+        'Visit popular attractions around Kufri, Solang Valley and Khajjiar.',
+        'Combine temples, monasteries, heritage landmarks, mountain scenery and local markets.',
+        'Includes dedicated time in both Manali and Dalhousie.',
+        'Ideal for travellers who want more than a short Shimla–Manali trip.',
+        'Offers a balanced Himalayan experience for families, couples and groups.'
+      ];
+      data.lodging = '2 Nights Shimla | 3 Nights Manali | 1 Night Dharamshala | 2 Nights Dalhousie';
+      data.tourType = 'Family, Couple, Honeymoon, Group';
+      data.includes = [
+        '8 nights accommodation on twin-sharing basis',
+        'Daily breakfast and dinner',
+        'Private vehicle for transfers and sightseeing as per itinerary',
+        'Delhi pickup and drop',
+        'Local sightseeing as specified',
+        'Toll taxes, parking charges and driver allowances',
+        'Applicable hotel taxes',
+        'Assistance on arrival and departure'
+      ];
+      data.excludes = [
+        'Flights or train tickets to/from Delhi',
+        'Lunch and additional meals',
+        'Optional tours and activities',
+        'Adventure rides and other personal-choice activities',
+        'Monument and attraction entrance fees',
+        'Camera fees',
+        'Personal expenses, shopping, laundry and telephone charges',
+        'Alcoholic and non-alcoholic beverages',
+        'Unplanned transportation expenses',
+        'Vehicle service during leisure periods when not part of the itinerary',
+        'Medical and travel insurance',
+        'Expenses arising from natural calamities, landslides, road blockages, strikes or similar unforeseen circumstances',
+        'Anything not specifically mentioned under inclusions'
+      ];
+      data.notes = [
+        'Long Mountain Journeys: This is a comprehensive Himachal circuit involving several intercity road transfers. Some travel days can be lengthy, particularly the final Dalhousie–Delhi journey.',
+        'Weather & Road Conditions: Mountain weather can change quickly. Rain, snowfall, traffic, road maintenance or unforeseen disruptions may affect journey times or sightseeing.',
+        'Adventure Activities: Activities at Solang Valley, including skiing, paragliding, snow-bike rides, zorbing and horse riding, are optional and payable separately.',
+        'Sightseeing Flexibility: The actual order of sightseeing may be adjusted depending on road conditions, local accessibility, weather and the available time on a particular day.',
+        'Vehicle Usage: The vehicle is provided for the transfers and sightseeing specified in the itinerary. It is not intended to remain at the guests\\' disposal throughout leisure periods unless separately arranged.',
+        'Hotel Check-in / Check-out: The supplied package specifies standard hotel check-in and check-out at 12:00 noon. Early check-in or late check-out is subject to hotel availability and additional charges.'
+      ];
+      data.faqs = [
+        { q: 'Can I book this Himachal tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange the Himachal land package for travellers from Kerala, with arrival and departure through New Delhi.' },
+        { q: 'Can I travel from Kochi to Delhi for this package?', a: 'Yes. The package begins from New Delhi, and Sahapathika Holidays can assist with coordinating flights or trains from Kochi or other suitable locations in Kerala if required.' },
+        { q: 'How many nights are included?', a: 'The itinerary includes 8 nights and 9 days, with 2 nights in Shimla, 3 nights in Manali, 1 night in Dharamshala and 2 nights in Dalhousie.' },
+        { q: 'Does the package include Solang Valley?', a: 'Yes. Solang Valley is included in the sightseeing itinerary. However, individual adventure activities and rides are payable separately.' },
+        { q: 'Is Khajjiar included?', a: 'Yes. Day 8 is dedicated to the Khajjiar excursion from Dalhousie.' },
+        { q: 'Is Rohtang Pass included?', a: 'No. This particular itinerary does not include a Rohtang Pass excursion. It focuses on Solang Valley instead.' },
+        { q: 'Is this package suitable for honeymoon couples?', a: 'Yes. The combination of Shimla, Manali, Dharamshala and Dalhousie makes this a suitable extended Himalayan holiday for couples and honeymooners.' },
+        { q: 'Is the vehicle available throughout the day?', a: 'The vehicle is provided according to the planned transfer and sightseeing programme. Availability during leisure periods or for unplanned sightseeing is not included.' },
+        { q: 'Can senior citizens travel on this itinerary?', a: 'Yes, provided they are comfortable with the long road journeys and hill travel involved. The itinerary contains several extended transfers, so individual mobility and comfort should be considered.' },
+        { q: 'Can Sahapathika Holidays customize this itinerary?', a: 'Yes. You can discuss travel dates, hotel category, group size, transportation preferences and other requirements while requesting your quotation.' }
+      ];
+    } else if (p.slug === 'kashi-gaya-prayag-ayodhya-pitru-moksha-yatra') {
+      data.overview = 'Undertake a deeply spiritual journey through four of North India\\'s most revered pilgrimage destinations with our Kashi–Gaya–Prayag–Ayodhya Pitru Moksha Yatra.\\n\\nThis specially planned pilgrimage combines the sacred traditions of Kashi, ancestral rituals at Gaya, prayers at the holy Triveni Sangam in Prayagraj, and darshan at the revered temples of Ayodhya.\\n\\nFrom the banks of the sacred Ganga and the divine presence of Kashi Vishwanath to the ancestral rites of Gaya and the holy land of Shri Ram, this journey offers devotees an opportunity to connect with some of India\\'s most important spiritual traditions.';
+      data.highlights = [
+        'Kashi: Seek the blessings of Kashi Vishwanath Mahadev and experience the sacred Ganga and Ganga Aarti.',
+        'Gaya: Undertake traditional Pitru Shradh and ancestral offerings at one of India\\'s most important destinations for Pitru-related rituals.',
+        'Prayagraj: Visit the sacred Triveni Sangam, where the Ganga, Yamuna and traditionally believed invisible Saraswati meet.',
+        'Ayodhya: Complete the journey in the sacred city of Shri Ram, with darshan at Ram Janmabhoomi, Hanuman Garhi, Kanak Bhawan and other important temples.',
+        'Professionally planned multi-city journey covering Varanasi, Gaya, Prayagraj and Ayodhya.'
+      ];
+      data.lodging = '3 Nights Varanasi | 1 Night Gaya | 2 Nights Ayodhya';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '6 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Pickup and drop as specified in the itinerary',
+        'Sightseeing in Varanasi, Gaya, Prayagraj and Ayodhya as per itinerary',
+        'Assistance for the pilgrimage and local sightseeing arrangements',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Varanasi and from Ayodhya',
+        'Lunch, dinner and beverages',
+        'Pitru Shradh / Pind Daan / special puja charges unless specifically mentioned',
+        'Priest/purohit charges and religious offerings unless specifically included',
+        'Temple donations and special/VIP/priority darshan charges',
+        'E-rickshaw/auto-rickshaw charges in restricted areas unless specifically included',
+        'Boat ride charges at Prayagraj unless specifically included',
+        'Monument/museum entry fees unless mentioned',
+        'Personal expenses, shopping and laundry',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Pitru Rituals: Pitru Shradh, Pind Daan and other ancestral ceremonies should be performed according to the devotee\\'s family tradition and religious requirements. Guests should communicate their specific ritual requirements while booking so suitable arrangements can be discussed.',
+        'Temple Darshan: Temple entry, darshan timings, security procedures and special darshan facilities are subject to the respective temple authorities.',
+        'Varanasi Local Transportation: Due to narrow lanes and restricted vehicle access in several parts of old Varanasi, the main vehicle may not be able to reach some temples directly. Guests may need to use an e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples. Applicable local transportation charges, if any, will be payable directly by the guests unless specifically included in the quotation.',
+        'Triveni Sangam Boat Ride: Boat rides at Prayagraj are dependent on weather, river conditions, local regulations and availability.',
+        'Travel Schedule: The sightseeing sequence may be adjusted depending on temple timings, traffic, local conditions and operational requirements.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Kashi–Gaya Pitru Moksha Yatra from Kerala?', a: 'Yes. Sahapathika Holidays can arrange Kashi–Gaya pilgrimage packages from Kerala for individuals, families and groups, with the itinerary extended to Prayagraj and Ayodhya as included in this package.' },
+        { q: 'Does this package include Pitru Shradh or Pind Daan?', a: 'The itinerary is designed to accommodate Pitru-related rituals at Varanasi and Gaya. Specific priest, puja, Shradh or Pind Daan arrangements and charges should be confirmed at the time of booking according to your family\\'s requirements.' },
+        { q: 'Can the rituals be performed according to our family tradition?', a: 'Yes. Pilgrims should provide their specific requirements while planning the trip. The appropriate local arrangements can then be discussed and coordinated.' },
+        { q: 'Is Kashi Vishwanath Darshan included?', a: 'The itinerary includes a visit to Kashi Vishwanath Temple. Actual temple entry and darshan are subject to the prevailing rules, timings and procedures of the temple authorities.' },
+        { q: 'Can I travel from Kochi to Varanasi for this pilgrimage?', a: 'Yes. Travellers from Kochi and other parts of Kerala can plan the journey to Varanasi by air or rail, depending on their preferred travel dates and available schedules. Sahapathika Holidays can assist with the overall travel plan.' },
+        { q: 'Can people from Kozhikode, Kannur or Thiruvananthapuram book this package?', a: 'Yes. The package is available to travellers from across Kerala. The journey can be planned around the most convenient airport or railway station for your location.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be adapted for senior travellers with suitable accommodation, private transportation and a more comfortable sightseeing schedule.' },
+        { q: 'Can we add more days to the pilgrimage?', a: 'Yes. Additional nights can be added in Varanasi, Gaya or Ayodhya, depending on your requirements.' },
+        { q: 'Can Ayodhya and Prayagraj be removed if we only want Kashi and Gaya?', a: 'Yes. The itinerary can be customized depending on the purpose and duration of your pilgrimage.' },
+        { q: 'Can Sahapathika Holidays arrange a complete pilgrimage package from Kerala?', a: 'Yes. Depending on your requirements, Sahapathika Holidays can coordinate accommodation, local transportation, sightseeing and other travel arrangements for your pilgrimage from Kerala.' }
+      ];
+    } else if (p.slug === 'kashi-prayag-chitrakoot-ayodhya-yatra') {
+      data.overview = 'Embark on a spiritually enriching journey through some of the most revered pilgrimage destinations in North India. This specially planned Kashi–Prayag–Chitrakoot–Ayodhya Yatra takes you from the eternal city of Lord Shiva to the sacred birthplace of Lord Rama, covering the divine destinations of Varanasi, Prayagraj, Chitrakoot and Ayodhya.\\n\\nExperience the sacred Ganga Aarti at Dashashwamedh Ghat, seek blessings at Kashi Vishwanath Temple, offer prayers at the holy Triveni Sangam, explore the Ramayana-linked spiritual heritage of Chitrakoot and conclude your pilgrimage in Ayodhya, the sacred city associated with Shri Ram.\\n\\nThis itinerary is thoughtfully designed for pilgrims and families travelling from Kerala, combining important temple visits, spiritual experiences and comfortable intercity travel.';
+      data.highlights = [
+        'Kashi – the eternal city of Lord Shiva',
+        'Prayagraj – the sacred Triveni Sangam',
+        'Chitrakoot – the land associated with Shri Ram\\'s exile',
+        'Ayodhya – the sacred city of Lord Rama',
+        'Experience important temples, sacred rivers, spiritual ceremonies and Ramayana-linked destinations',
+        'Professionally coordinated holiday with Kerala-based travel assistance'
+      ];
+      data.lodging = '2 Nights Varanasi | 2 Nights Prayagraj | 1 Night Ayodhya';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '5 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast at the hotel',
+        'AC vehicle for transfers and sightseeing as per the itinerary',
+        'Pickup from Varanasi Airport / Railway Station and drop at Ayodhya Airport / Railway Station',
+        'Sightseeing in Varanasi, Prayagraj, Chitrakoot and Ayodhya as per itinerary',
+        'Ganga boat ride and Ganga Aarti at Dashashwamedh Ghat, as mentioned in the itinerary',
+        'Triveni Sangam visit in Prayagraj',
+        'Temple visits and sightseeing at all destinations as mentioned in the itinerary',
+        'Assistance from Sahapathika Holidays during the tour',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Varanasi and from Ayodhya',
+        'Lunch, dinner and beverages',
+        'Personal expenses, shopping and laundry',
+        'Temple donations, offerings and special pujas',
+        'Rudrabhishek / special puja charges, if applicable',
+        'VIP / priority darshan charges, wherever applicable',
+        'Boat rides at Prayagraj / Triveni Sangam unless specifically mentioned in the quotation',
+        'Monument / museum entry fees unless specifically mentioned',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Important Note on Varanasi Local Travel: Due to the narrow lanes and restricted vehicle access in parts of Varanasi, the vehicle cannot reach the entrance of some temples. Guests may need to travel by e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples and pilgrimage sites. Any such local transportation charges, if applicable, are payable directly by the guests.',
+        'Temple entry and darshan procedures are subject to the rules and regulations of the respective temple authorities.',
+        'Special pujas such as Rudrabhishek are subject to availability and applicable temple procedures.',
+        'Boat rides at the Sangam and Ganga may depend on weather, river conditions and local regulations.',
+        'The sequence of sightseeing may be adjusted according to local conditions, temple timings and operational requirements.',
+        'The final package price and inclusions depend on the selected hotel category, transportation, travel dates and other services.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Varanasi–Ayodhya tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange Varanasi, Prayagraj, Chitrakoot and Ayodhya tour packages for travellers from Kerala, including customized travel arrangements based on your requirements.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be customized for senior citizens with suitable hotels, transportation and a more relaxed sightseeing schedule wherever possible.' },
+        { q: 'Does the package include Kashi Vishwanath Temple darshan?', a: 'The itinerary includes a visit for Kashi Vishwanath Temple darshan. Actual darshan arrangements are subject to temple rules, timings and applicable booking procedures.' },
+        { q: 'Can Rudrabhishek Puja be arranged at Kashi Vishwanath?', a: 'Rudrabhishek may be arranged subject to availability and the prevailing temple procedures.' },
+        { q: 'Can this package be customized?', a: 'Yes. The number of nights, hotel category, transportation, sightseeing and travel arrangements can be customized according to your group and travel requirements.' },
+        { q: 'Can travellers from different parts of Kerala book this package?', a: 'Yes. Travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam, Thiruvananthapuram and other parts of Kerala can enquire about the package.' },
+        { q: 'Is this a good pilgrimage package for a family?', a: 'Yes. The combination of Kashi, Prayagraj, Chitrakoot and Ayodhya makes this an excellent North India spiritual tour for families interested in temples, Hindu heritage and sacred places.' }
+      ];
+    } else if (p.slug === 'kashmir-5-days-srinagar-sonmarg-gulmarg-pahalgam-j') {
+      data.overview = 'Experience the breathtaking landscapes of the Kashmir Valley with a specially planned Kashmir tour package from Kerala covering Srinagar, Sonmarg, Gulmarg and Pahalgam. From snow-covered mountain scenery and peaceful valleys to the famous meadows of Gulmarg and the picturesque landscapes of Pahalgam, this short Kashmir holiday brings together some of the region\\'s most sought-after experiences.\\n\\nThe journey begins with a scenic drive from Jammu to Srinagar before exploring the natural beauty around Srinagar, Sonmarg, Gulmarg and Pahalgam. A stay on a traditional Kashmir houseboat adds a distinctive element to the holiday, making this itinerary suitable for families, couples, friends and travellers looking for a memorable North India escape from Kerala.';
+      data.highlights = [
+        'Scenic Jammu–Srinagar road journey',
+        'Srinagar local sightseeing',
+        'Mountain landscapes of Sonmarg',
+        'Optional Thajiwas Glacier pony excursion',
+        'Picturesque Gulmarg',
+        'Optional Gondola cable car experience',
+        'Traditional Kashmir houseboat stay',
+        'Scenic Pahalgam: Aru Valley, Betaab Valley and Chandanwari'
+      ];
+      data.lodging = '2 Nights Srinagar | 1 Night Houseboat | 1 Night Pahalgam';
+      data.tourType = 'Family, Couples, Honeymoon, Group';
+      data.includes = [
+        'Accommodation in selected hotels/houseboat as per itinerary',
+        'Breakfast and dinner as specified',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Jammu pickup and applicable departure drop',
+        'Srinagar, Sonmarg, Gulmarg and Pahalgam sightseeing as planned',
+        'Driver allowance, tolls, parking and applicable permits',
+        'Welcome arrangements as specified',
+        'Trip coordination and assistance from Sahapathika Holidays'
+      ];
+      data.excludes = [
+        'Airfare and train tickets',
+        'Lunch',
+        'Gondola/cable car tickets',
+        'Pony rides',
+        'Adventure activities',
+        'Entry tickets wherever applicable',
+        'Guide charges unless specifically included',
+        'Personal expenses, laundry and telephone expenses',
+        'Travel insurance',
+        'Alcoholic beverages',
+        'Any sightseeing, activity, or service not included in the itinerary'
+      ];
+      data.notes = [
+        'Kashmir\\'s mountain roads are subject to weather, traffic and local conditions, so actual travel times may vary.',
+        'Gulmarg Gondola tickets are not included and should be pre-booked where applicable.',
+        'Pony rides, including excursions towards areas such as Thajiwas Glacier, are optional and payable separately.',
+        'Snow availability is seasonal and cannot be guaranteed on a particular travel date.',
+        'Certain sightseeing areas around Pahalgam and Gulmarg may require local transportation arrangements depending on prevailing local regulations.',
+        'Guests should carry warm clothing during colder months, particularly when visiting higher-altitude areas.',
+        'Houseboat accommodation is subject to availability and the category confirmed at the time of booking.',
+        'Guests with mobility concerns should inform Sahapathika Holidays before booking, as some sightseeing locations involve walking and uneven terrain.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Kashmir tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this 5-day Kashmir tour package from Kerala, with travel arrangements planned according to your preferred dates and departure location.' },
+        { q: 'What places are covered in this Kashmir package?', a: 'The itinerary covers Srinagar, Sonmarg, Gulmarg and Pahalgam, beginning with arrival at Jammu and a road journey to Srinagar.' },
+        { q: 'Is this a good Kashmir package for a first-time visitor?', a: 'Yes. The itinerary covers several of Kashmir\\'s most popular destinations and combines mountain scenery, valleys, sightseeing and a houseboat stay within five days.' },
+        { q: 'Is the Gulmarg Gondola ride included?', a: 'No. The Gondola ride is specifically listed as an exclusion. It can be added separately subject to availability and applicable charges.' },
+        { q: 'Is the pony ride at Sonmarg included?', a: 'No. The source itinerary specifies the pony excursion towards Thajiwas Glacier as an optional activity at the traveller\\'s own cost.' },
+        { q: 'Does the package include a houseboat stay?', a: 'Yes. The itinerary includes a houseboat stay in Srinagar on Day 3.' },
+        { q: 'Is this Kashmir package suitable for senior citizens?', a: 'It can be suitable for senior travellers, but Kashmir involves mountain roads, walking and changes in altitude. Guests should share any mobility requirements with Sahapathika Holidays before booking so the itinerary can be planned appropriately.' },
+        { q: 'Can couples or honeymooners book this Kashmir package?', a: 'Yes. The combination of Srinagar, Gulmarg, Pahalgam and a houseboat stay makes this itinerary suitable for couples and honeymoon travellers as well.' },
+        { q: 'Can Sahapathika Holidays arrange flights or trains from Kerala?', a: 'Travel tickets are not included in the base package. However, Sahapathika Holidays can discuss and coordinate suitable flight/train arrangements based on your departure city and travel dates.' },
+        { q: 'Can this Kashmir itinerary be customised?', a: 'Yes. The itinerary can be customised depending on your travel dates, group size, hotel category, preferred arrival/departure point and optional activities.' }
+      ];
+    } else if (p.slug === 'kashmir-6-days-srinagar-sonmarg-gulmarg-pahalgam') {
+      data.overview = 'Experience the breathtaking beauty of the Kashmir Valley with this thoughtfully planned Kashmir tour package from Kerala. Covering Srinagar, Sonmarg, Gulmarg and Pahalgam, this six-day journey combines scenic mountain landscapes, historic gardens, traditional Kashmiri culture and the unforgettable experience of a Shikara ride on Dal Lake.\\n\\nYour journey begins in Jammu before continuing to Srinagar, the gateway to some of Kashmir\\'s most celebrated destinations. Explore the Mughal gardens and Shankaracharya Temple, experience the mountain scenery of Sonmarg, discover the meadows of Gulmarg and spend a memorable day amid the valleys of Pahalgam.\\n\\nIdeal for families, couples, honeymooners, senior travellers and groups from Kerala, this itinerary offers a balanced introduction to Kashmir without rushing through its major destinations.';
+      data.highlights = [
+        'Srinagar city sightseeing including Shankaracharya Temple and Mughal Gardens (Chashme Shahi, Nishat, Shalimar)',
+        'Traditional Kashmiri handicraft shopping',
+        '60-minute Shikara ride on Dal Lake',
+        'Sonmarg mountain excursion',
+        'Gulmarg\\'s famous meadows and optional Gondola experience',
+        'Historic Awantipura ruins',
+        'Pahalgam sightseeing including Aru Valley, Betaab Valley, and Chandanwari'
+      ];
+      data.lodging = '4 Nights Srinagar | 1 Night Pahalgam';
+      data.tourType = 'Family, Couples, Honeymoon, Group';
+      data.includes = [
+        '5 nights\\' accommodation in selected hotels as per itinerary',
+        'Daily breakfast and dinner',
+        'Transportation for the complete tour as per itinerary',
+        'Sightseeing as specified',
+        '60-minute Shikara ride on Dal Lake',
+        'Toll taxes, parking charges and driver allowance',
+        'Applicable hotel and transportation taxes',
+        'Permits where applicable',
+        'Welcome arrangements',
+        'Trip coordination and assistance from Sahapathika Holidays'
+      ];
+      data.excludes = [
+        'Airfare and train fare',
+        '5% GST',
+        'Garden and monument entrance fees',
+        'Guide charges wherever applicable',
+        'Gulmarg Gondola/cable car tickets',
+        'Pony/horse rides',
+        'Local union vehicle charges where applicable',
+        'Skiing, skating, rafting and other adventure activities',
+        'Helicopter rides',
+        'Additional sightseeing or excursions outside the itinerary',
+        'Insurance',
+        'Personal expenses, tips, gratuities, laundry, room service, telephone expenses, room heaters, beverages',
+        'Camera/video camera charges wherever applicable',
+        'Anything not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Mountain travel times can vary due to weather, traffic and road conditions. The Jammu–Srinagar road journey can take longer than the planned duration.',
+        'Shikara ride for 60 minutes on Dal Lake is included.',
+        'Gondola/cable car rides at Gulmarg are not included and require separate tickets. Pony rides and horse rides are optional and payable separately.',
+        'Local union vehicles may be required for sightseeing around parts of Pahalgam, including Aru Valley, Betaab Valley and Chandanwari.',
+        'Garden entrance charges and applicable guide charges are excluded.',
+        'Adventure activities such as skiing, skating, rafting are not included. Snow availability cannot be guaranteed for a particular travel date.',
+        'Guests should carry suitable warm clothing during winter and for visits to higher-altitude destinations. Some sightseeing locations involve walking and uneven surfaces.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Kashmir tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this 6-day Kashmir tour package from Kerala, with the itinerary and travel arrangements planned around your preferred dates.' },
+        { q: 'Which places are covered in this Kashmir package?', a: 'The package covers Jammu, Srinagar, Sonmarg, Gulmarg and Pahalgam, with sightseeing at the major attractions mentioned in the itinerary.' },
+        { q: 'Is the Shikara ride included?', a: 'Yes. A 60-minute Shikara ride on Dal Lake is included in the package.' },
+        { q: 'Is the Gulmarg Gondola ride included?', a: 'No. The Gondola cable car ride is excluded and can be taken separately at the applicable cost, subject to availability.' },
+        { q: 'Is a pony ride included at Sonmarg or Pahalgam?', a: 'No. Pony/horse rides are optional and excluded from the package price.' },
+        { q: 'Is this Kashmir tour suitable for honeymoon couples?', a: 'Yes. Srinagar, Dal Lake, Gulmarg and Pahalgam make this itinerary well suited to couples and honeymoon travellers.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes, with appropriate planning. However, Kashmir involves mountain travel, walking and sightseeing at different elevations. Senior travellers should inform us about mobility requirements before booking.' },
+        { q: 'Can Sahapathika Holidays arrange travel from Kochi or other cities in Kerala?', a: 'Yes. The Kashmir package can be planned around your departure arrangements from Kochi or other suitable airports/railway stations in Kerala.' },
+        { q: 'Can the Kashmir itinerary be customised?', a: 'Yes. Depending on your travel dates, group size, hotel category, arrival/departure arrangements and optional activities, the itinerary can be customised.' },
+        { q: 'What is the best time to book this Kashmir package?', a: 'Kashmir can be visited throughout the year. Travellers seeking greenery and comfortable sightseeing generally prefer the warmer months, while those specifically looking for snow often choose the winter season.' }
+      ];
+    } else if (p.slug === 'kashmir-honeymoon') {
+      data.overview = 'Begin your married life with an unforgettable journey through the breathtaking landscapes of Kashmir. This Kashmir honeymoon package from Kerala is designed for couples who want to combine beautiful mountain scenery, peaceful lakes, romantic valleys and leisurely sightseeing in one memorable holiday.\\n\\nFrom the tranquil surroundings of Srinagar and Dal Lake to the snow-covered landscapes of Sonmarg and Gulmarg, followed by the scenic beauty of Pahalgam, the itinerary introduces you to some of Kashmir\\'s most celebrated destinations. The experience also includes a 60-minute Shikara ride on Dal Lake, creating a special moment for couples amidst the beautiful surroundings of Srinagar.';
+      data.highlights = [
+        'Beautiful Srinagar and Dal Lake',
+        '60-minute Shikara ride',
+        'Mughal gardens and panoramic city views',
+        'Scenic Sonmarg excursion',
+        'Snow and mountain experiences at Gulmarg (optional Gondola ride)',
+        'Romantic landscapes of Pahalgam',
+        'Aru Valley, Betaab Valley and Chandanwari',
+        'A combination of sightseeing and leisure'
+      ];
+      data.lodging = '3 Nights Srinagar | 1 Night Gulmarg | 2 Nights Pahalgam';
+      data.tourType = 'Honeymoon, Couples';
+      data.includes = [
+        '6 nights\\' accommodation in selected hotels as per itinerary',
+        'Daily breakfast and dinner',
+        'Transportation for the complete tour as per itinerary',
+        'Srinagar, Sonmarg, Gulmarg and Pahalgam sightseeing',
+        '60-minute Shikara ride on Dal Lake',
+        'Toll taxes, parking charges and driver allowance',
+        'Applicable hotel and transportation taxes',
+        'Trip coordination and assistance from Sahapathika Holidays'
+      ];
+      data.excludes = [
+        'Airfare and train fare',
+        '5% GST',
+        'Garden and monument entrance fees',
+        'Guide charges wherever applicable',
+        'Gulmarg Gondola/cable car ride',
+        'Pony/horse rides',
+        'Local union vehicle charges wherever applicable',
+        'Skiing, skating, rafting and other adventure activities',
+        'Helicopter rides',
+        'Additional sightseeing and excursions outside the itinerary',
+        'Travel insurance',
+        'Tips and gratuities, laundry, room service, telephone expenses, room heaters, beverages',
+        'Camera/video camera charges wherever applicable',
+        'Any personal expenses or anything not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Kashmir\\'s mountain roads can be affected by weather, traffic and local conditions, so actual travel times may vary.',
+        'Some sightseeing around Pahalgam may require transportation operated by the local vehicle union. Applicable charges are separate unless specifically included.',
+        'The 60-minute Shikara ride on Dal Lake is included in the package.',
+        'Gondola/cable car rides at Gulmarg are excluded and require separate tickets. Pony and horse rides are optional and payable separately.',
+        'Adventure activities such as skiing, skating, rafting and similar experiences are not included. Snow is a seasonal natural phenomenon and cannot be guaranteed on a particular travel date.',
+        'Any special celebration, room decoration or additional honeymoon arrangements should be confirmed separately and are not automatically included.',
+        'Couples travelling during winter should carry adequate warm clothing.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Kashmir honeymoon package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this Kashmir honeymoon package from Kerala for couples travelling from Kochi and other cities and districts of Kerala.' },
+        { q: 'How many days is this Kashmir honeymoon package?', a: 'The itinerary is designed for 7 Days / 6 Nights, covering Srinagar, Sonmarg, Gulmarg and Pahalgam.' },
+        { q: 'Is the Shikara ride included?', a: 'Yes. A 60-minute Shikara ride on Dal Lake is included in the package.' },
+        { q: 'Is the Gulmarg Gondola included?', a: 'No. The Gondola cable car ride is excluded. Couples can choose to take the ride separately, subject to availability and applicable charges.' },
+        { q: 'Is this package suitable for a winter honeymoon?', a: 'Yes. Winter can be particularly attractive for couples who want to experience snow, especially around Gulmarg. However, actual snow conditions depend on the weather during the travel period.' },
+        { q: 'Are Aru Valley, Betaab Valley and Chandanwari included?', a: 'Yes. These three Pahalgam sightseeing locations are included in the itinerary. Local transportation charges, where applicable, are separate.' },
+        { q: 'Can we customise this Kashmir honeymoon package?', a: 'Yes. The itinerary can be customised according to your travel dates, preferred hotel category, number of nights, arrival/departure arrangements and other requirements.' },
+        { q: 'Can Sahapathika Holidays arrange flights from Kerala?', a: 'Flight tickets are not included in the base package. However, suitable flight arrangements can be discussed based on your departure city and travel dates.' },
+        { q: 'Is this Kashmir package suitable for couples celebrating an anniversary?', a: 'Yes. The itinerary is suitable not only for newlyweds but also for couples planning an anniversary or romantic Kashmir holiday.' },
+        { q: 'How can we book this Kashmir honeymoon package?', a: 'Contact Sahapathika Holidays with your travel dates, departure city, number of travellers and preferred hotel category. Our team can prepare a suitable honeymoon quotation.' }
+      ];
+    } else if (p.slug === 'kashmir-with-vaishno-devi') {
+      data.overview = 'Combine the blessings of Mata Vaishno Devi with the breathtaking landscapes of Kashmir on this specially planned Kashmir with Vaishno Devi tour package from Kerala. The journey begins at Katra with the pilgrimage to the revered Vaishno Devi Shrine before taking you towards the serene lakes, gardens, snow-covered mountains and picturesque valleys of Kashmir.\\n\\nFrom the spiritual atmosphere of Katra and the Vaishno Devi pilgrimage to the beauty of Srinagar, Gulmarg and Pahalgam, this itinerary brings together devotion, nature and memorable holiday experiences in one journey. Enjoy Srinagar\\'s famous Mughal Gardens, spend time beside Dal Lake, experience a traditional Shikara ride and explore the scenic surroundings of Gulmarg and Pahalgam.';
+      data.highlights = [
+        'Combines Vaishno Devi pilgrimage and Kashmir sightseeing in one holiday.',
+        'Covers Katra, Srinagar, Gulmarg and Pahalgam.',
+        'Includes time for both spiritual experiences and leisure travel.',
+        'Experience Srinagar\\'s famous gardens and Dal Lake.',
+        'Includes a 60-minute Shikara ride as specified in the package.',
+        'Offers optional experiences such as pony rides and Gondola rides for guests who wish to add them.',
+        'Suitable for families, couples and groups looking for a combination of pilgrimage and Himalayan sightseeing.'
+      ];
+      data.lodging = '2 Nights Katra | 3 Nights Srinagar | 1 Night Dal Lake Houseboat';
+      data.tourType = 'Pilgrimage, Family, Couples, Group';
+      data.includes = [
+        'Accommodation for 6 nights: 2 nights Katra, 3 nights Srinagar and 1 night Dal Lake houseboat',
+        'Daily breakfast and dinner as specified',
+        'Private cab for transfers and sightseeing as per itinerary',
+        'Sightseeing according to the programme',
+        '60-minute Shikara ride on Dal Lake',
+        'Applicable hotel and transportation taxes',
+        'Toll charges, parking fees and driver allowances',
+        'Applicable taxes included as specified in the package'
+      ];
+      data.excludes = [
+        'Airfare or railway tickets',
+        '5% GST, as specified in the source package',
+        'Vaishno Devi pony, pithoo and palki charges',
+        'Gulmarg Gondola/cable car charges',
+        'Horse/pony rides and other optional activities',
+        'Local sightseeing charges where specifically payable by guests',
+        'Garden entrance fees and guide charges where applicable',
+        'Travel insurance',
+        'Personal expenses, tips, laundry, room service and telephone charges',
+        'Food and beverages other than the included meals',
+        'Room heater charges, where applicable',
+        'Additional sightseeing or excursions outside the itinerary',
+        'Camera/video charges where applicable',
+        'Any service or expense not specifically mentioned under inclusions'
+      ];
+      data.notes = [
+        'Vaishno Devi Yatra: The pilgrimage involves approximately 13 km each way. Guests should consider their physical fitness before undertaking the trek.',
+        'Yatra Slip: A Yatra Slip is required before beginning the pilgrimage.',
+        'Pony, Pithoo & Palki: These services are not included in the package cost and can be arranged at the guest\\'s own expense.',
+        'Gulmarg Gondola: The Gondola ride is an optional activity and is not included.',
+        'Pahalgam Local Sightseeing: Sightseeing to places such as Aru Valley, Betaab Valley and Chandanwari may require local vehicles. Any applicable local transportation cost is payable separately.',
+        'Seasonal Conditions: Mountain weather can change quickly. Snowfall, rain, road conditions and local operating restrictions may affect sightseeing or optional activities.',
+        'Accommodation: The final duration and accommodation plan should be confirmed at the time of booking.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Kashmir with Vaishno Devi tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this Kashmir and Vaishno Devi itinerary for travellers from Kerala, subject to travel dates, hotel and transportation availability.' },
+        { q: 'Can Sahapathika Holidays arrange the trip from Kochi or other airports in Kerala?', a: 'Yes. You can discuss your preferred departure point, including Kochi and other airports in Kerala. Flight arrangements can also be coordinated if required and booked as part of your travel plan.' },
+        { q: 'How difficult is the Vaishno Devi pilgrimage?', a: 'The pilgrimage involves approximately 13 km each way according to the supplied itinerary. The physical effort can be considerable, so travellers should assess their fitness and choose suitable assistance if required.' },
+        { q: 'Are pony, pithoo or palki services included?', a: 'No. These services are specifically listed as additional expenses and are payable by the traveller.' },
+        { q: 'Is the Shikara ride included?', a: 'Yes. The package includes a 60-minute Shikara ride on Dal Lake.' },
+        { q: 'Is the Gulmarg Gondola included?', a: 'No. The Gondola cable car is an optional activity and its charges are payable separately.' },
+        { q: 'Is this package suitable for families and senior citizens?', a: 'Yes, families and senior travellers can consider the itinerary. However, the Vaishno Devi pilgrimage involves substantial walking, so senior citizens should assess their comfort level and consider available assistance.' },
+        { q: 'Can this Kashmir package be customized?', a: 'Yes. You can enquire about modifying the itinerary, hotel category, travel dates, transportation or other requirements according to availability and feasibility.' },
+        { q: 'Are flights or train tickets included?', a: 'No. Airfare and railway tickets are excluded from the package. Sahapathika Holidays can discuss and coordinate these arrangements separately if required.' },
+        { q: 'How can I enquire about this package?', a: 'Contact Sahapathika Holidays with your preferred travel dates, number of travellers and requirements. The team can then provide the applicable package quotation and availability.' }
+      ];
+    } else if (p.slug === 'lucknow-naimisharanya-ayodhya-prayagraj-varanasi-y') {
+      data.overview = 'Experience a spiritually enriching journey through some of the most revered destinations of Uttar Pradesh with this carefully planned Lucknow–Naimisharanya–Ayodhya–Prayagraj–Varanasi Yatra.\\n\\nBeginning in the historic city of Lucknow, the journey takes you to the sacred land of Naimisharanya, the divine city of Ayodhya, the holy Triveni Sangam of Prayagraj, and finally to Kashi, the eternal city of Lord Shiva.\\n\\nThis Uttar Pradesh pilgrimage package from Kerala is designed for travellers who wish to combine important Hindu pilgrimage sites with the cultural and historical highlights of Lucknow. It is suitable for families, senior citizens, couples and pilgrimage groups travelling from Kerala.';
+      data.highlights = [
+        'Explore one of the ancient pilgrimage centres of Uttar Pradesh and its important sacred sites at Naimisharanya.',
+        'Experience the spiritual atmosphere of Shri Ram Janmabhoomi, Hanuman Garhi and Kanak Bhawan in Ayodhya.',
+        'Visit the sacred Triveni Sangam, one of India\\'s most important pilgrimage destinations in Prayagraj.',
+        'Complete your journey in Kashi with Kashi Vishwanath Darshan, temple visits and the divine Ganga Aarti.',
+        'Add a cultural dimension to the pilgrimage with the magnificent Nawabi architecture and historic landmarks of Lucknow.',
+        'One coordinated pilgrimage connecting five major destinations into a planned route.'
+      ];
+      data.lodging = '1 Night Naimisharanya | 1 Night Ayodhya | 1 Night Prayagraj | 2 Nights Varanasi';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '5 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Pickup at Lucknow Airport / Railway Station and drop at Varanasi Airport / Railway Station',
+        'Sightseeing in Lucknow, Naimisharanya, Ayodhya, Prayagraj and Varanasi as per itinerary',
+        'Assistance from Sahapathika Holidays during the journey',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Lucknow and from Varanasi',
+        'Lunch, dinner and beverages',
+        'Personal expenses, shopping and laundry',
+        'Temple donations and offerings',
+        'Special / VIP / priority darshan charges, wherever applicable',
+        'Religious rituals or special puja charges',
+        'Ganga boat ride unless specifically included',
+        'E-rickshaw / auto-rickshaw charges in restricted areas unless specifically included',
+        'Monument / museum entry fees unless specifically mentioned',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Temple Darshan: Entry, darshan timings, security procedures and special darshan arrangements are subject to the rules and regulations of the respective temple authorities.',
+        'Varanasi Local Transportation: Parts of old Varanasi have narrow lanes and restricted vehicle access. Guests may need to use an e-rickshaw, auto-rickshaw or walk a short distance to reach some pilgrimage sites. Applicable local transportation charges are payable directly by guests.',
+        'Ganga Boat Ride: The boat ride mentioned in the itinerary is at the guest\\'s own expense unless specifically included in the selected package.',
+        'Holy Dips & Rituals: Any religious rituals, holy dips or offerings are undertaken according to the guest\\'s personal beliefs and prevailing local conditions.',
+        'Itinerary Flexibility: The sightseeing sequence may be adjusted according to temple timings, traffic, local conditions and operational requirements.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Lucknow–Ayodhya–Varanasi tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this Uttar Pradesh pilgrimage package from Kerala for families, couples, senior citizens and groups.' },
+        { q: 'Which places are covered in this pilgrimage package?', a: 'The itinerary covers Lucknow, Naimisharanya, Ayodhya, Prayagraj and Varanasi, with important temples, pilgrimage sites and cultural attractions included as per the itinerary.' },
+        { q: 'Can I travel from Kochi to Lucknow and return from Varanasi?', a: 'Yes. This is a convenient way to approach the itinerary because the journey begins in Lucknow and concludes in Varanasi. Flight or train arrangements can be planned separately according to your travel requirements.' },
+        { q: 'Can travellers from Kozhikode, Kannur or Thiruvananthapuram book this package?', a: 'Yes. Travellers from anywhere in Kerala can enquire about the package. The journey can be planned around the most convenient airport or railway station for your location.' },
+        { q: 'Is Shri Ram Janmabhoomi included?', a: 'Yes. Shri Ram Janmabhoomi in Ayodhya is included in the Day 3 sightseeing itinerary, subject to prevailing temple entry and darshan procedures.' },
+        { q: 'Is Kashi Vishwanath Temple Darshan included?', a: 'The itinerary includes a visit to Kashi Vishwanath Temple. Actual temple entry and darshan are subject to the temple authorities\\' prevailing rules, timings and procedures.' },
+        { q: 'Is the Ganga boat ride included in the package?', a: 'The itinerary mentions a Ganga boat ride, but it is at the guest\\'s own expense unless specifically included in the final quotation.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be customized for senior travellers with appropriate hotel selection, private transportation and a more comfortable sightseeing pace.' },
+        { q: 'Can this itinerary be customized?', a: 'Yes. Additional nights, different hotel categories, transportation arrangements and other requirements can be incorporated according to your group\\'s needs.' },
+        { q: 'Can I add other pilgrimage destinations to this tour?', a: 'Yes. Depending on the number of additional days available, the itinerary can potentially be extended to include other North India destinations. The exact route should be discussed while planning your package.' }
+      ];
+    } else if (p.slug === 'mathura-vrindavan-braj-agra-yatra') {
+      data.overview = 'Experience the spiritual heart of Braj Bhoomi with a thoughtfully planned Mathura–Vrindavan tour package from Kerala, covering the sacred places associated with Lord Krishna\\'s life along with the magnificent heritage of Agra. From the birthplace of Lord Krishna in Mathura to the devotional atmosphere of Vrindavan, this journey brings together temples, ghats, sacred kunds and historic landmarks.\\n\\nThe journey also explores Gokul, Govardhan, Nandgaon and Barsana, allowing travellers to experience different facets of the Braj region before concluding with the architectural grandeur of Agra, including the Taj Mahal and Agra Fort. It is an ideal pilgrimage and cultural holiday for families, couples, senior travellers and groups travelling from Kochi, Ernakulam and other parts of Kerala.';
+      data.highlights = [
+        'Mathura, the sacred heart of Braj',
+        'Gokul and its Krishna-associated spiritual landmarks',
+        'Vrindavan\\'s famous temples',
+        'Govardhan and Radha Kund',
+        'Nandgaon and Barsana',
+        'Radha Rani Temple',
+        'Evening experience at Prem Mandir',
+        'Taj Mahal and Agra Fort',
+        'A convenient multi-destination route covering both pilgrimage and heritage experiences'
+      ];
+      data.lodging = '3 Nights Hotel Accommodation (Mathura / Braj Region)';
+      data.tourType = 'Pilgrimage, Family, Couples, Senior Citizens, Group';
+      data.includes = [
+        'Accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast as specified',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Pickup and drop as specified',
+        'Mathura, Gokul, Vrindavan, Govardhan, Nandgaon, Barsana and Agra sightseeing as per itinerary',
+        'Assistance from Sahapathika Holidays',
+        'Applicable hotel taxes/service charges'
+      ];
+      data.excludes = [
+        'Flights and train tickets',
+        'Lunch and dinner unless specifically mentioned',
+        'Personal expenses, shopping and laundry',
+        'Temple donations and offerings',
+        'Special/VIP/priority darshan or special puja charges',
+        'Monument/temple entry fees unless specifically included',
+        'Travel insurance',
+        'Any local transportation or service not specifically included',
+        'Anything not mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Temple visits may involve walking and standing in crowded areas, particularly during weekends and festival periods.',
+        'Temple entry, darshan procedures and operating arrangements may vary depending on local conditions and religious occasions.',
+        'Some temples and sacred sites may have restrictions regarding photography, footwear and personal belongings.',
+        'The itinerary involves several road journeys between Mathura, Vrindavan, Govardhan, Nandgaon, Barsana and Agra.',
+        'The Braj region can become extremely crowded during major festivals, particularly around Holi and other important religious occasions.',
+        'Senior citizens and travellers with mobility concerns should inform Sahapathika Holidays in advance so that the itinerary and transportation arrangements can be planned appropriately.',
+        'Any special puja, VIP/priority darshan or temple-specific religious service should be confirmed separately before booking.',
+        'Monument entry charges and other services are included only when specifically mentioned in the final quotation.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Mathura–Vrindavan tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange a customised Mathura–Vrindavan–Braj tour package from Kerala, with the travel arrangements planned around your preferred dates and departure point.' },
+        { q: 'Can this package be arranged for travellers from Kochi or other parts of Kerala?', a: 'Yes. Travellers can enquire from Kochi, Ernakulam and other districts of Kerala. Flight/train and onward transportation arrangements can be discussed according to the selected package.' },
+        { q: 'How many days are required for a Mathura and Vrindavan pilgrimage?', a: 'This itinerary is designed for 4 days and 3 nights, covering Mathura, Gokul, Vrindavan, Govardhan, Nandgaon, Barsana and Agra.' },
+        { q: 'Does the package include Agra?', a: 'Yes. The final day includes Agra sightseeing covering the Taj Mahal, Agra Fort and Sikandra before the departure transfer.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes, it can be suitable for senior travellers. However, the Braj temples can involve crowds, walking and standing. Senior travellers should inform us about mobility requirements before booking.' },
+        { q: 'Can families book this Mathura–Vrindavan package?', a: 'Absolutely. The itinerary works well for families who want to combine spiritual experiences with cultural and historical sightseeing.' },
+        { q: 'Can Sahapathika Holidays customise the itinerary?', a: 'Yes. The itinerary can be discussed and customised depending on travel dates, hotel preferences, group size, transportation requirements and other applicable arrangements.' },
+        { q: 'Is accommodation included in the package?', a: 'Yes, accommodation in selected hotels is included according to the package quotation and room-sharing arrangement.' },
+        { q: 'Are train or flight tickets included?', a: 'Not automatically. Flights or train tickets are excluded unless specifically mentioned in your final quotation. Sahapathika Holidays can discuss suitable travel arrangements based on your departure location.' },
+        { q: 'How can I enquire about this Mathura–Vrindavan tour from Kerala?', a: 'Contact Sahapathika Holidays with your preferred travel dates, number of travellers, departure location and hotel preference. Our team can then prepare the appropriate package and quotation.' }
+      ];
+    } else if (p.slug === 'puri-jagannath-konark-chilika-bhubaneswar') {
+      data.overview = 'Discover the spiritual and cultural treasures of Odisha with this carefully planned Puri Jagannath tour package from Kerala. The journey combines the sacred atmosphere of Puri with the architectural brilliance of Konark, the natural beauty of Chilika Lake and the ancient temples and heritage sites of Bhubaneswar.\\n\\nBeginning at Bhubaneswar, the itinerary takes you to Puri, with visits to Sakhigopal, Raghurajpur, the revered Jagannath Temple and the beautiful Puri coastline. You will also explore Chilika Lake at Satapada, experience a boat ride in search of Irrawaddy dolphins and enjoy the coastal landscape.\\n\\nThe journey continues through Konark, Chandrabhaga and Ramchandi before returning to Bhubaneswar for a fascinating exploration of its temples, caves, museums and cultural attractions. This makes the itinerary suitable for Kerala families, pilgrimage travellers, couples, senior citizens and groups looking for a well-rounded Odisha holiday.';
+      data.highlights = [
+        'Spiritual experience at Shri Jagannath Temple, Puri',
+        'Sakhigopal Temple and Raghurajpur Craft Village',
+        'Chilika Lake and Satapada',
+        'Opportunity for an Irrawaddy dolphin viewing boat excursion',
+        'Puri\\'s Blue Flag Beach',
+        'Konark Sun Temple and light & sound experience',
+        'Chandrabhaga Beach and Ramchandi Temple',
+        'Traditional handicrafts at Pipli',
+        'Dhauli Shanti Stupa',
+        'Bhubaneswar\\'s historic temples',
+        'Khandagiri and Udayagiri Caves',
+        'Nandankanan and Kala Bhoomi Museum'
+      ];
+      data.lodging = '3 Nights Puri | 1 Night Bhubaneswar';
+      data.tourType = 'Pilgrimage, Family, Heritage, Group';
+      data.includes = [
+        'Accommodation in selected A/C hotels on twin/double sharing basis',
+        'Daily breakfast',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Airport/Railway Station pickup and drop as specified',
+        'Puri, Chilika, Konark and Bhubaneswar sightseeing as per itinerary',
+        'Driver allowance, tolls, parking and applicable state taxes',
+        'Hotel taxes',
+        'Assistance from Sahapathika Holidays'
+      ];
+      data.excludes = [
+        'Airfare and train tickets',
+        'Monument and attraction entry fees',
+        'Chilika boating charges',
+        'Guide charges',
+        'Personal expenses',
+        'Camera/video camera fees wherever applicable',
+        'Porterage at hotels and airports',
+        'Tips and gratuities',
+        'Travel insurance',
+        'Laundry and telephone expenses',
+        'Alcoholic beverages',
+        'Any meal other than those specifically included',
+        'Any service or expense not mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Shri Jagannath Temple has specific entry and visitor regulations. Temple rules should be followed as applicable on the date of travel.',
+        'Photography may be restricted in certain religious or heritage locations.',
+        'Temple visits can involve walking and waiting, particularly during busy periods.',
+        'The Chilika boat ride is subject to local operating conditions, weather and availability.',
+        'Dolphin sightings during the Chilika excursion are a natural experience and therefore cannot be guaranteed.',
+        'Nandankanan Zoo is closed on Mondays, according to the itinerary information.',
+        'Kala Bhoomi Museum is closed on Mondays and government holidays, as specified in the source itinerary.',
+        'Light and sound programmes at Konark are subject to the prevailing operating schedule.',
+        'Travellers should carry comfortable footwear and clothing suitable for temple visits and outdoor sightseeing.',
+        'Senior citizens or guests with mobility concerns should inform Sahapathika Holidays before travel so suitable arrangements can be considered.',
+        'Monument, temple and activity charges are included only when specifically mentioned in the final quotation.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Puri Jagannath tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this Puri–Konark–Chilika–Bhubaneswar tour package from Kerala, with travel arrangements planned according to your preferred dates.' },
+        { q: 'How many days are required for a Puri and Bhubaneswar trip?', a: 'This itinerary is designed as a 5 Days / 4 Nights journey covering Puri, Chilika, Konark and Bhubaneswar.' },
+        { q: 'Can Sahapathika Holidays arrange the trip from Kochi or another airport in Kerala?', a: 'Yes. Your journey can be planned based on your preferred departure point in Kerala, including arrangements involving Kochi or other suitable airports and railway stations.' },
+        { q: 'Does this package include the Jagannath Temple?', a: 'Yes. The itinerary includes visits to Shri Jagannath Temple in Puri, along with other temples and spiritual landmarks.' },
+        { q: 'Is Chilika Lake included in the package?', a: 'Yes. The itinerary includes a visit to Satapada on Chilika Lake and a motorboat excursion. Boating charges are listed separately under exclusions.' },
+        { q: 'Can we see dolphins at Chilika Lake?', a: 'Satapada is known for its Irrawaddy dolphin population, and the boat excursion provides an opportunity to look for them. However, as they are wild animals, sightings cannot be guaranteed.' },
+        { q: 'Is this Puri package suitable for senior citizens?', a: 'Yes, the itinerary can be suitable for senior travellers. However, some temple visits and sightseeing locations involve walking and standing. Mobility requirements should be communicated before booking.' },
+        { q: 'Are flight or train tickets included?', a: 'No. Airfare and train tickets are excluded unless specifically added to your customised quotation. Sahapathika Holidays can assist with suitable travel arrangements.' },
+        { q: 'Can this Odisha tour be customised?', a: 'Yes. Depending on your travel dates, group size, hotel preference and transportation requirements, the itinerary can be discussed and customised.' },
+        { q: 'How can I book this Puri tour package from Kerala?', a: 'Contact Sahapathika Holidays with your travel dates, number of travellers, departure location and preferred hotel category. Our team can prepare the appropriate package and quotation for you.' }
+      ];
+    } else if (p.slug === 'kerala-ayurveda-wellness-retreat') {
+      data.overview = 'Six unhurried days built around real Ayurvedic treatment rather than a spa menu. You begin with a consultation, follow a prescribed course of therapies with daily yoga and meditation, and eat sattvic food cooked for your constitution. Between sessions there is Kovalam Beach, the Poovar estuary where backwater meets sea, and the temple city of Trivandrum — so the trip restores you without ever feeling like a clinic.';
+      data.highlights = ['Consultation-led Ayurveda therapies', 'Daily yoga and guided meditation', 'Kovalam Beach at sunrise', 'Poovar backwaters and the golden sand bar', 'Sree Padmanabhaswamy Temple exterior', 'Sattvic dining throughout'];
+      data.lodging = 'Ayurveda Resort / Deluxe Wellness Resort';
+      data.tourType = 'Group, Family & Pilgrimage';
+      data.includes = ['Accommodation at the named Ayurveda / wellness resorts', 'Ayurveda treatments as per the vaidya consultation', 'All meals — sattvic menu', 'Daily yoga and meditation sessions', 'Comfortable private vehicle throughout', 'Airport pickup and drop', 'All applicable taxes'];
+      data.excludes = ['Airfare and train fare', 'Travel insurance', 'Treatments beyond the prescribed course', 'Personal expenses, tips and laundry', 'Anything not listed under inclusions'];
+    } else if (p.slug === 'himachal-devi-yatra-with-vaishno-devi-mansa-devi') {
+      data.overview = 'Embark on a spiritually enriching Devi temple pilgrimage from Chandigarh, covering some of the most revered Shakti temples of Himachal Pradesh along with the sacred pilgrimage to Mata Vaishno Devi and Mata Mansa Devi. This carefully planned 7-day journey brings together ancient temples, devotional experiences and the beautiful mountain landscapes around Kangra and Dharamshala.\n\nThe pilgrimage takes you through Naina Devi, Chintpurni, Jwala Ji, Baglamukhi, Kangra Devi and Chamunda Devi, followed by Dharamshala sightseeing and the onward journey to Katra for Vaishno Devi Darshan. The return journey includes a visit to Mansa Devi Temple near Panchkula before concluding at Chandigarh.\n\nFor Malayalis and travellers from Kerala looking for a Himachal Devi Yatra package from Kerala, this itinerary can be planned with suitable flight or train arrangements to Chandigarh. Sahapathika Holidays can coordinate the pilgrimage, accommodation and private transportation according to your travel dates and group requirements.';
+      data.highlights = [
+        'Combines several important Devi temples of Himachal Pradesh with Mata Vaishno Devi and Mansa Devi.',
+        'Covers the major pilgrimage circuit from Chandigarh through Himachal Pradesh to Katra and back.',
+        'Includes visits to Naina Devi, Chintpurni, Jwala Ji, Baglamukhi, Kangra and Chamunda Devi temples.',
+        'Adds the spiritual experience of Mata Vaishno Devi Darshan.',
+        'Includes Dharamshala and McLeod Ganj sightseeing for a cultural and scenic break.',
+        'Suitable for families, devotees and pilgrimage groups seeking a structured multi-temple journey.'
+      ];
+      data.lodging = '1N Chintpurni | 2N Dharamshala/Kangra | 2N Katra | 1N Chandigarh';
+      data.tourType = 'Pilgrimage, Family, Group';
+      data.includes = [
+        'Hotel accommodation on double/triple sharing basis',
+        'Daily breakfast and dinner',
+        'Private AC vehicle for the complete itinerary',
+        'Chandigarh pickup and drop as applicable',
+        'Sightseeing and temple visits as per itinerary',
+        'Toll, parking, fuel and applicable state taxes',
+        'Driver allowances',
+        'Assistance throughout the tour',
+        'Temple darshan guidance as specified',
+        'Customer support during the journey'
+      ];
+      data.excludes = [
+        'Flights or train tickets to/from Chandigarh',
+        'Lunch and personal snacks',
+        'Ropeway/cable car charges where applicable',
+        'Pony, palki, battery car or helicopter charges for Vaishno Devi',
+        'Entry fees and boating/adventure activities not specifically included',
+        'Personal expenses, shopping, tips and laundry',
+        'Medical expenses and travel insurance',
+        'Any special puja, donation or offering not specifically included',
+        'Any service or expense not mentioned under inclusions'
+      ];
+      data.notes = [
+        'Temple entry, darshan procedures, queues and operating arrangements can vary. Travellers should follow the prevailing instructions of the respective temple authorities on the day of visit.',
+        'The Vaishno Devi visit involves a significant pilgrimage journey. Travellers should consider their physical fitness and comfort when planning the trek.',
+        'The source itinerary specifically excludes pony, palki, battery car and helicopter charges. These should therefore be treated as optional/additional expenses rather than included services.',
+        'Road journeys through Himachal Pradesh can take longer depending on traffic, weather and road conditions. The itinerary should therefore be followed with reasonable flexibility.',
+        'The supplied package includes pickup and drop at Chandigarh Airport/Railway Station or home, depending on the selected arrangement.'
+      ];
+      data.faqs = [
+        { q: 'Can I book this Devi Yatra from Kerala?', a: 'Yes. Sahapathika Holidays can arrange the land package for travellers from Kerala, with the journey beginning and ending at Chandigarh. Flight or train arrangements from Kerala can be coordinated separately if required.' },
+        { q: 'What temples are covered in this pilgrimage?', a: 'The detailed itinerary covers Naina Devi, Chintpurni, Jwala Ji, Baglamukhi, Kangra Devi, Chamunda Devi, Mata Vaishno Devi and Mansa Devi.' },
+        { q: 'Is Mata Vaishno Devi included in the itinerary?', a: 'Yes. The programme includes a dedicated day for Mata Vaishno Devi Darshan from Katra.' },
+        { q: 'Is helicopter travel to Vaishno Devi included?', a: 'No. Helicopter charges are excluded and would be an additional expense if selected.' },
+        { q: 'Is this itinerary suitable for senior citizens?', a: 'It can be suitable for senior travellers depending on their mobility and ability to manage the pilgrimage and road journeys. Individual assistance options can be discussed before booking.' },
+        { q: 'Are accommodation and meals included?', a: 'Yes. The package includes hotel accommodation on double/triple sharing and daily breakfast and dinner.' },
+        { q: 'Is transportation included?', a: 'Yes. The supplied itinerary includes a private AC vehicle for the complete journey, with vehicle size based on group strength.' },
+        { q: 'Can the package be customized?', a: 'Yes. Travel dates, hotel preferences, group requirements and other practical arrangements can be discussed with Sahapathika Holidays.' },
+        { q: 'Can Sahapathika Holidays arrange flights from Kochi or other Kerala airports?', a: 'Yes. You can discuss flight or train coordination from Kochi or other suitable airports/railway stations in Kerala while planning the complete journey.' },
+        { q: 'How do I book this pilgrimage package?', a: 'Share your preferred travel dates, number of travellers and accommodation preference with Sahapathika Holidays. The team can check availability and prepare the applicable quotation.' }
+      ];
+    } else if (p.slug === 'kashi-gaya-prayag-ayodhya-pitru-moksha-yatra') {
+      data.overview = 'Undertake a deeply spiritual journey through four of North India\'s most revered pilgrimage destinations with our Kashi–Gaya–Prayag–Ayodhya Pitru Moksha Yatra.\n\nThis specially planned pilgrimage combines the sacred traditions of Kashi, ancestral rituals at Gaya, prayers at the holy Triveni Sangam in Prayagraj, and darshan at the revered temples of Ayodhya.\n\nFrom the banks of the sacred Ganga and the divine presence of Kashi Vishwanath to the ancestral rites of Gaya and the holy land of Shri Ram, this journey offers devotees an opportunity to connect with some of India\'s most important spiritual traditions.';
+      data.highlights = [
+        'Kashi: Seek the blessings of Kashi Vishwanath Mahadev and experience the sacred Ganga and Ganga Aarti.',
+        'Gaya: Undertake traditional Pitru Shradh and ancestral offerings at one of India\'s most important destinations for Pitru-related rituals.',
+        'Prayagraj: Visit the sacred Triveni Sangam, where the Ganga, Yamuna and traditionally believed invisible Saraswati meet.',
+        'Ayodhya: Complete the journey in the sacred city of Shri Ram, with darshan at Ram Janmabhoomi, Hanuman Garhi, Kanak Bhawan and other important temples.',
+        'Professionally planned multi-city journey covering Varanasi, Gaya, Prayagraj and Ayodhya.'
+      ];
+      data.lodging = '3 Nights Varanasi | 1 Night Gaya | 2 Nights Ayodhya';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '6 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Pickup and drop as specified in the itinerary',
+        'Sightseeing in Varanasi, Gaya, Prayagraj and Ayodhya as per itinerary',
+        'Assistance for the pilgrimage and local sightseeing arrangements',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Varanasi and from Ayodhya',
+        'Lunch, dinner and beverages',
+        'Pitru Shradh / Pind Daan / special puja charges unless specifically mentioned',
+        'Priest/purohit charges and religious offerings unless specifically included',
+        'Temple donations and special/VIP/priority darshan charges',
+        'E-rickshaw/auto-rickshaw charges in restricted areas unless specifically included',
+        'Boat ride charges at Prayagraj unless specifically included',
+        'Monument/museum entry fees unless mentioned',
+        'Personal expenses, shopping and laundry',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Pitru Rituals: Pitru Shradh, Pind Daan and other ancestral ceremonies should be performed according to the devotee\'s family tradition and religious requirements. Guests should communicate their specific ritual requirements while booking so suitable arrangements can be discussed.',
+        'Temple Darshan: Temple entry, darshan timings, security procedures and special darshan facilities are subject to the respective temple authorities.',
+        'Varanasi Local Transportation: Due to narrow lanes and restricted vehicle access in several parts of old Varanasi, the main vehicle may not be able to reach some temples directly. Guests may need to use an e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples. Applicable local transportation charges, if any, will be payable directly by the guests unless specifically included in the quotation.',
+        'Triveni Sangam Boat Ride: Boat rides at Prayagraj are dependent on weather, river conditions, local regulations and availability.',
+        'Travel Schedule: The sightseeing sequence may be adjusted depending on temple timings, traffic, local conditions and operational requirements.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Kashi–Gaya Pitru Moksha Yatra from Kerala?', a: 'Yes. Sahapathika Holidays can arrange Kashi–Gaya pilgrimage packages from Kerala for individuals, families and groups, with the itinerary extended to Prayagraj and Ayodhya as included in this package.' },
+        { q: 'Does this package include Pitru Shradh or Pind Daan?', a: 'The itinerary is designed to accommodate Pitru-related rituals at Varanasi and Gaya. Specific priest, puja, Shradh or Pind Daan arrangements and charges should be confirmed at the time of booking according to your family\'s requirements.' },
+        { q: 'Can the rituals be performed according to our family tradition?', a: 'Yes. Pilgrims should provide their specific requirements while planning the trip. The appropriate local arrangements can then be discussed and coordinated.' },
+        { q: 'Is Kashi Vishwanath Darshan included?', a: 'The itinerary includes a visit to Kashi Vishwanath Temple. Actual temple entry and darshan are subject to the prevailing rules, timings and procedures of the temple authorities.' },
+        { q: 'Can I travel from Kochi to Varanasi for this pilgrimage?', a: 'Yes. Travellers from Kochi and other parts of Kerala can plan the journey to Varanasi by air or rail, depending on their preferred travel dates and available schedules. Sahapathika Holidays can assist with the overall travel plan.' },
+        { q: 'Can people from Kozhikode, Kannur or Thiruvananthapuram book this package?', a: 'Yes. The package is available to travellers from across Kerala. The journey can be planned around the most convenient airport or railway station for your location.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be adapted for senior travellers with suitable accommodation, private transportation and a more comfortable sightseeing schedule.' },
+        { q: 'Can we add more days to the pilgrimage?', a: 'Yes. Additional nights can be added in Varanasi, Gaya or Ayodhya, depending on your requirements.' },
+        { q: 'Can Ayodhya and Prayagraj be removed if we only want Kashi and Gaya?', a: 'Yes. The itinerary can be customized depending on the purpose and duration of your pilgrimage.' },
+        { q: 'Can Sahapathika Holidays arrange a complete pilgrimage package from Kerala?', a: 'Yes. Depending on your requirements, Sahapathika Holidays can coordinate accommodation, local transportation, sightseeing and other travel arrangements for your pilgrimage from Kerala.' }
+      ];
+    } else if (p.slug === 'kashi-prayag-chitrakoot-ayodhya-yatra') {
+      data.overview = 'Embark on a spiritually enriching journey through some of the most revered pilgrimage destinations in North India. This specially planned Kashi–Prayag–Chitrakoot–Ayodhya Yatra takes you from the eternal city of Lord Shiva to the sacred birthplace of Lord Rama, covering the divine destinations of Varanasi, Prayagraj, Chitrakoot and Ayodhya.\n\nExperience the sacred Ganga Aarti at Dashashwamedh Ghat, seek blessings at Kashi Vishwanath Temple, offer prayers at the holy Triveni Sangam, explore the Ramayana-linked spiritual heritage of Chitrakoot and conclude your pilgrimage in Ayodhya, the sacred city associated with Shri Ram.\n\nThis itinerary is thoughtfully designed for pilgrims and families travelling from Kerala, combining important temple visits, spiritual experiences and comfortable intercity travel.';
+      data.highlights = [
+        'Kashi – the eternal city of Lord Shiva',
+        'Prayagraj – the sacred Triveni Sangam',
+        'Chitrakoot – the land associated with Shri Ram\'s exile',
+        'Ayodhya – the sacred city of Lord Rama',
+        'Experience important temples, sacred rivers, spiritual ceremonies and Ramayana-linked destinations',
+        'Professionally coordinated holiday with Kerala-based travel assistance'
+      ];
+      data.lodging = '2 Nights Varanasi | 2 Nights Prayagraj | 1 Night Ayodhya';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '5 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast at the hotel',
+        'AC vehicle for transfers and sightseeing as per the itinerary',
+        'Pickup from Varanasi Airport / Railway Station and drop at Ayodhya Airport / Railway Station',
+        'Sightseeing in Varanasi, Prayagraj, Chitrakoot and Ayodhya as per itinerary',
+        'Ganga boat ride and Ganga Aarti at Dashashwamedh Ghat, as mentioned in the itinerary',
+        'Triveni Sangam visit in Prayagraj',
+        'Temple visits and sightseeing at all destinations as mentioned in the itinerary',
+        'Assistance from Sahapathika Holidays during the tour',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Varanasi and from Ayodhya',
+        'Lunch, dinner and beverages',
+        'Personal expenses, shopping and laundry',
+        'Temple donations, offerings and special pujas',
+        'Rudrabhishek / special puja charges, if applicable',
+        'VIP / priority darshan charges, wherever applicable',
+        'Boat rides at Prayagraj / Triveni Sangam unless specifically mentioned in the quotation',
+        'Monument / museum entry fees unless specifically mentioned',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Important Note on Varanasi Local Travel: Due to the narrow lanes and restricted vehicle access in parts of Varanasi, the vehicle cannot reach the entrance of some temples. Guests may need to travel by e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples and pilgrimage sites. Any such local transportation charges, if applicable, are payable directly by the guests.',
+        'Temple entry and darshan procedures are subject to the rules and regulations of the respective temple authorities.',
+        'Special pujas such as Rudrabhishek are subject to availability and applicable temple procedures.',
+        'Boat rides at the Sangam and Ganga may depend on weather, river conditions and local regulations.',
+        'The sequence of sightseeing may be adjusted according to local conditions, temple timings and operational requirements.',
+        'The final package price and inclusions depend on the selected hotel category, transportation, travel dates and other services.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Varanasi–Ayodhya tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange Varanasi, Prayagraj, Chitrakoot and Ayodhya tour packages for travellers from Kerala, including customized travel arrangements based on your requirements.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be customized for senior citizens with suitable hotels, transportation and a more relaxed sightseeing schedule wherever possible.' },
+        { q: 'Does the package include Kashi Vishwanath Temple darshan?', a: 'The itinerary includes a visit for Kashi Vishwanath Temple darshan. Actual darshan arrangements are subject to temple rules, timings and applicable booking procedures.' },
+        { q: 'Can Rudrabhishek Puja be arranged at Kashi Vishwanath?', a: 'Rudrabhishek may be arranged subject to availability and the prevailing temple procedures.' },
+        { q: 'Can this package be customized?', a: 'Yes. The number of nights, hotel category, transportation, sightseeing and travel arrangements can be customized according to your group and travel requirements.' },
+        { q: 'Can travellers from different parts of Kerala book this package?', a: 'Yes. Travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam, Thiruvananthapuram and other parts of Kerala can enquire about the package.' },
+        { q: 'Is this a good pilgrimage package for a family?', a: 'Yes. The combination of Kashi, Prayagraj, Chitrakoot and Ayodhya makes this an excellent North India spiritual tour for families interested in temples, Hindu heritage and sacred places.' }
+      ];
+    } else if (p.slug === 'kashi-prayag-chitrakoot-ayodhya-divya-yatra') {
+      data.overview = 'Embark on a spiritually enriching North India pilgrimage tour from Kerala covering four of India\'s most revered sacred destinations — Varanasi, Prayagraj, Chitrakoot and Ayodhya.\n\nBegin your journey in the ancient city of Kashi, seek the blessings of Lord Shiva at Kashi Vishwanath and experience the divine Ganga Aarti. Continue to the sacred Triveni Sangam at Prayagraj, explore the Ramayana-linked spiritual heritage of Chitrakoot, and conclude your pilgrimage in Ayodhya, the sacred city of Shri Ram.\n\nThis carefully planned Varanasi–Prayagraj–Chitrakoot–Ayodhya tour package from Kerala is ideal for families, devotees, senior travellers and pilgrimage groups looking for a meaningful spiritual journey through North India.';
+      data.highlights = [
+        'Kashi – The City of Mahadev: Experience Kashi Vishwanath Darshan, Kaal Bhairav Temple, Ganga Aarti and the spiritual atmosphere of the holy Ganga.',
+        'Prayagraj – The Sacred Triveni Sangam: Visit the confluence of the Ganga, Yamuna and the mystical Saraswati and explore important pilgrimage sites.',
+        'Chitrakoot – The Land of Shri Ram: Follow the Ramayana trail through sacred places traditionally associated with the exile of Shri Ram, Maa Sita and Lakshmana.',
+        'Ayodhya – The Sacred City of Lord Rama: Seek blessings at Shri Ram Janmabhoomi, Hanuman Garhi, Kanak Bhawan and other important temples.',
+        'Designed for Kerala Travellers with complete multi-destination planning.'
+      ];
+      data.lodging = '1 Night Varanasi | 1 Night Prayagraj | 1 Night Chitrakoot | 1 Night Ayodhya';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '4 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast at the hotel',
+        'AC vehicle for transfers and sightseeing as per the itinerary',
+        'Pickup from Varanasi Junction and drop at Ayodhya Junction / Airport',
+        'Sightseeing in Varanasi, Prayagraj, Chitrakoot and Ayodhya as per itinerary',
+        'Ganga Aarti at Dashashwamedh Ghat',
+        'Triveni Sangam visit in Prayagraj',
+        'Local sightseeing and temple visits as mentioned in the itinerary',
+        'Assistance from Sahapathika Holidays during the tour',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Varanasi and from Ayodhya',
+        'Lunch, dinner and beverages',
+        'Personal expenses, shopping and laundry',
+        'Temple donations, offerings and special pujas',
+        'VIP / priority darshan charges, wherever applicable',
+        'Boat rides unless specifically mentioned in the quotation',
+        'Monument / museum entry fees unless specifically mentioned',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Important Note on Varanasi Local Travel: Due to the narrow lanes and restricted vehicle access in parts of Varanasi, the vehicle cannot reach the entrance of some temples. Guests may need to travel by e-rickshaw, auto-rickshaw or walk a short distance to reach certain temples and pilgrimage sites. Any such local transportation charges, if applicable, are payable directly by the guests.',
+        'Temple darshan is subject to the rules, timings and security procedures of the respective temple authorities.',
+        'Special pujas or priority darshan, wherever applicable, are subject to availability and prevailing temple procedures.',
+        'Boat rides at the Ganga and Triveni Sangam depend on weather, river conditions and local regulations.',
+        'The sightseeing sequence may be modified depending on temple timings, traffic, local conditions and operational requirements.',
+        'Travel time between destinations can vary according to road and traffic conditions.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Varanasi–Prayagraj–Chitrakoot–Ayodhya package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this North India pilgrimage tour from Kerala for individuals, families and groups travelling from different parts of Kerala.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be customized for senior travellers by selecting suitable hotels, transportation and a comfortable sightseeing pace.' },
+        { q: 'Does this package include Kashi Vishwanath Temple Darshan?', a: 'The itinerary includes Kashi Vishwanath Temple Darshan. Temple entry, darshan procedures and timings remain subject to the rules and regulations of the temple authorities.' },
+        { q: 'Can I get a customized package from Kerala?', a: 'Yes. You can customize the duration, hotels, transportation and travel arrangements according to your requirements.' },
+        { q: 'Can Sahapathika arrange flights from Kerala?', a: 'Flight arrangements can be included depending on your chosen package and travel requirements. You can enquire about options from airports such as Kochi, Kozhikode, Kannur or Thiruvananthapuram.' },
+        { q: 'Can this package be booked for a family or group?', a: 'Yes. The itinerary is suitable for families, friends, pilgrimage groups and community groups. Group-specific arrangements can be planned based on the number of travellers.' },
+        { q: 'Which places are covered in this pilgrimage package?', a: 'The main destinations covered are Varanasi, Prayagraj, Chitrakoot and Ayodhya, along with important temples, ghats and spiritual landmarks in each destination.' },
+        { q: 'Is Sarnath included in the Varanasi itinerary?', a: 'Yes. The package includes a visit to Sarnath, including important Buddhist heritage sites such as Dhamek Stupa and Chaukhandi Stupa, subject to the available time.' },
+        { q: 'Can I extend the trip beyond 5 days?', a: 'Yes. Additional nights can be added in Varanasi, Prayagraj, Chitrakoot or Ayodhya depending on your travel plans.' },
+        { q: 'How can I enquire about this package?', a: 'You can contact Sahapathika Holidays for availability, travel dates, hotel options and a customized quotation.' }
+      ];
+    } else if (p.slug === 'lucknow-naimisharanya-ayodhya-prayagraj-varanasi-y') {
+      data.overview = 'Experience a spiritually enriching journey through some of the most revered destinations of Uttar Pradesh with this carefully planned Lucknow–Naimisharanya–Ayodhya–Prayagraj–Varanasi Yatra.\n\nBeginning in the historic city of Lucknow, the journey takes you to the sacred land of Naimisharanya, the divine city of Ayodhya, the holy Triveni Sangam of Prayagraj, and finally to Kashi, the eternal city of Lord Shiva.\n\nThis Uttar Pradesh pilgrimage package from Kerala is designed for travellers who wish to combine important Hindu pilgrimage sites with the cultural and historical highlights of Lucknow. It is suitable for families, senior citizens, couples and pilgrimage groups travelling from Kerala.';
+      data.highlights = [
+        'Explore one of the ancient pilgrimage centres of Uttar Pradesh and its important sacred sites at Naimisharanya.',
+        'Experience the spiritual atmosphere of Shri Ram Janmabhoomi, Hanuman Garhi and Kanak Bhawan in Ayodhya.',
+        'Visit the sacred Triveni Sangam, one of India\'s most important pilgrimage destinations in Prayagraj.',
+        'Complete your journey in Kashi with Kashi Vishwanath Darshan, temple visits and the divine Ganga Aarti.',
+        'Add a cultural dimension to the pilgrimage with the magnificent Nawabi architecture and historic landmarks of Lucknow.',
+        'One coordinated pilgrimage connecting five major destinations into a planned route.'
+      ];
+      data.lodging = '1 Night Naimisharanya | 1 Night Ayodhya | 1 Night Prayagraj | 2 Nights Varanasi';
+      data.tourType = 'Pilgrimage, Family, Senior Citizens, Group';
+      data.includes = [
+        '5 Nights accommodation in selected hotels on twin/double sharing basis',
+        'Daily breakfast',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Pickup at Lucknow Airport / Railway Station and drop at Varanasi Airport / Railway Station',
+        'Sightseeing in Lucknow, Naimisharanya, Ayodhya, Prayagraj and Varanasi as per itinerary',
+        'Assistance from Sahapathika Holidays during the journey',
+        'Applicable hotel taxes and service charges'
+      ];
+      data.excludes = [
+        'Flights / train tickets to Lucknow and from Varanasi',
+        'Lunch, dinner and beverages',
+        'Personal expenses, shopping and laundry',
+        'Temple donations and offerings',
+        'Special / VIP / priority darshan charges, wherever applicable',
+        'Religious rituals or special puja charges',
+        'Ganga boat ride unless specifically included',
+        'E-rickshaw / auto-rickshaw charges in restricted areas unless specifically included',
+        'Monument / museum entry fees unless specifically mentioned',
+        'Travel insurance',
+        'Any service not specifically mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Temple Darshan: Entry, darshan timings, security procedures and special darshan arrangements are subject to the rules and regulations of the respective temple authorities.',
+        'Varanasi Local Transportation: Parts of old Varanasi have narrow lanes and restricted vehicle access. Guests may need to use an e-rickshaw, auto-rickshaw or walk a short distance to reach some pilgrimage sites. Applicable local transportation charges are payable directly by guests.',
+        'Ganga Boat Ride: The boat ride mentioned in the itinerary is at the guest\'s own expense unless specifically included in the selected package.',
+        'Holy Dips & Rituals: Any religious rituals, holy dips or offerings are undertaken according to the guest\'s personal beliefs and prevailing local conditions.',
+        'Itinerary Flexibility: The sightseeing sequence may be adjusted according to temple timings, traffic, local conditions and operational requirements.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Lucknow–Ayodhya–Varanasi tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this Uttar Pradesh pilgrimage package from Kerala for families, couples, senior citizens and groups.' },
+        { q: 'Which places are covered in this pilgrimage package?', a: 'The itinerary covers Lucknow, Naimisharanya, Ayodhya, Prayagraj and Varanasi, with important temples, pilgrimage sites and cultural attractions included as per the itinerary.' },
+        { q: 'Can I travel from Kochi to Lucknow and return from Varanasi?', a: 'Yes. This is a convenient way to approach the itinerary because the journey begins in Lucknow and concludes in Varanasi. Flight or train arrangements can be planned separately according to your travel requirements.' },
+        { q: 'Can travellers from Kozhikode, Kannur or Thiruvananthapuram book this package?', a: 'Yes. Travellers from anywhere in Kerala can enquire about the package. The journey can be planned around the most convenient airport or railway station for your location.' },
+        { q: 'Is Shri Ram Janmabhoomi included?', a: 'Yes. Shri Ram Janmabhoomi in Ayodhya is included in the Day 3 sightseeing itinerary, subject to prevailing temple entry and darshan procedures.' },
+        { q: 'Is Kashi Vishwanath Temple Darshan included?', a: 'The itinerary includes a visit to Kashi Vishwanath Temple. Actual temple entry and darshan are subject to the temple authorities\' prevailing rules, timings and procedures.' },
+        { q: 'Is the Ganga boat ride included in the package?', a: 'The itinerary mentions a Ganga boat ride, but it is at the guest\'s own expense unless specifically included in the final quotation.' },
+        { q: 'Is this package suitable for senior citizens?', a: 'Yes. The itinerary can be customized for senior travellers with appropriate hotel selection, private transportation and a more comfortable sightseeing pace.' },
+        { q: 'Can this itinerary be customized?', a: 'Yes. Additional nights, different hotel categories, transportation arrangements and other requirements can be incorporated according to your group\'s needs.' },
+        { q: 'Can I add other pilgrimage destinations to this tour?', a: 'Yes. Depending on the number of additional days available, the itinerary can potentially be extended to include other North India destinations. The exact route should be discussed while planning your package.' }
+      ];
+    } else if (p.slug === 'puri-jagannath-konark-chilika-bhubaneswar') {
+      data.overview = 'Discover the spiritual and cultural treasures of Odisha with this carefully planned Puri Jagannath tour package from Kerala. The journey combines the sacred atmosphere of Puri with the architectural brilliance of Konark, the natural beauty of Chilika Lake and the ancient temples and heritage sites of Bhubaneswar.\n\nBeginning at Bhubaneswar, the itinerary takes you to Puri, with visits to Sakhigopal, Raghurajpur, the revered Jagannath Temple and the beautiful Puri coastline. You will also explore Chilika Lake at Satapada, experience a boat ride in search of Irrawaddy dolphins and enjoy the coastal landscape.\n\nThe journey continues through Konark, Chandrabhaga and Ramchandi before returning to Bhubaneswar for a fascinating exploration of its temples, caves, museums and cultural attractions. This makes the itinerary suitable for Kerala families, pilgrimage travellers, couples, senior citizens and groups looking for a well-rounded Odisha holiday.';
+      data.highlights = [
+        'Spiritual experience at Shri Jagannath Temple, Puri',
+        'Sakhigopal Temple and Raghurajpur Craft Village',
+        'Chilika Lake and Satapada',
+        'Opportunity for an Irrawaddy dolphin viewing boat excursion',
+        'Puri\'s Blue Flag Beach',
+        'Konark Sun Temple and light & sound experience',
+        'Chandrabhaga Beach and Ramchandi Temple',
+        'Traditional handicrafts at Pipli',
+        'Dhauli Shanti Stupa',
+        'Bhubaneswar\'s historic temples',
+        'Khandagiri and Udayagiri Caves',
+        'Nandankanan and Kala Bhoomi Museum'
+      ];
+      data.lodging = '3 Nights Puri | 1 Night Bhubaneswar';
+      data.tourType = 'Pilgrimage, Family, Heritage, Group';
+      data.includes = [
+        'Accommodation in selected A/C hotels on twin/double sharing basis',
+        'Daily breakfast',
+        'AC vehicle for transfers and sightseeing as per itinerary',
+        'Airport/Railway Station pickup and drop as specified',
+        'Puri, Chilika, Konark and Bhubaneswar sightseeing as per itinerary',
+        'Driver allowance, tolls, parking and applicable state taxes',
+        'Hotel taxes',
+        'Assistance from Sahapathika Holidays'
+      ];
+      data.excludes = [
+        'Airfare and train tickets',
+        'Monument and attraction entry fees',
+        'Chilika boating charges',
+        'Guide charges',
+        'Personal expenses',
+        'Camera/video camera fees wherever applicable',
+        'Porterage at hotels and airports',
+        'Tips and gratuities',
+        'Travel insurance',
+        'Laundry and telephone expenses',
+        'Alcoholic beverages',
+        'Any meal other than those specifically included',
+        'Any service or expense not mentioned under Package Inclusions'
+      ];
+      data.notes = [
+        'Shri Jagannath Temple has specific entry and visitor regulations. Temple rules should be followed as applicable on the date of travel.',
+        'Photography may be restricted in certain religious or heritage locations.',
+        'Temple visits can involve walking and waiting, particularly during busy periods.',
+        'The Chilika boat ride is subject to local operating conditions, weather and availability.',
+        'Dolphin sightings during the Chilika excursion are a natural experience and therefore cannot be guaranteed.',
+        'Nandankanan Zoo is closed on Mondays, according to the itinerary information.',
+        'Kala Bhoomi Museum is closed on Mondays and government holidays, as specified in the source itinerary.',
+        'Light and sound programmes at Konark are subject to the prevailing operating schedule.',
+        'Travellers should carry comfortable footwear and clothing suitable for temple visits and outdoor sightseeing.',
+        'Senior citizens or guests with mobility concerns should inform Sahapathika Holidays before travel so suitable arrangements can be considered.',
+        'Monument, temple and activity charges are included only when specifically mentioned in the final quotation.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Puri Jagannath tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange this Puri–Konark–Chilika–Bhubaneswar tour package from Kerala, with travel arrangements planned according to your preferred dates.' },
+        { q: 'How many days are required for a Puri and Bhubaneswar trip?', a: 'This itinerary is designed as a 5 Days / 4 Nights journey covering Puri, Chilika, Konark and Bhubaneswar.' },
+        { q: 'Can Sahapathika Holidays arrange the trip from Kochi or another airport in Kerala?', a: 'Yes. Your journey can be planned based on your preferred departure point in Kerala, including arrangements involving Kochi or other suitable airports and railway stations.' },
+        { q: 'Does this package include the Jagannath Temple?', a: 'Yes. The itinerary includes visits to Shri Jagannath Temple in Puri, along with other temples and spiritual landmarks.' },
+        { q: 'Is Chilika Lake included in the package?', a: 'Yes. The itinerary includes a visit to Satapada on Chilika Lake and a motorboat excursion. Boating charges are listed separately under exclusions.' },
+        { q: 'Can we see dolphins at Chilika Lake?', a: 'Satapada is known for its Irrawaddy dolphin population, and the boat excursion provides an opportunity to look for them. However, as they are wild animals, sightings cannot be guaranteed.' },
+        { q: 'Is this Puri package suitable for senior citizens?', a: 'Yes, the itinerary can be suitable for senior travellers. However, some temple visits and sightseeing locations involve walking and standing. Mobility requirements should be communicated before booking.' },
+        { q: 'Are flight or train tickets included?', a: 'No. Airfare and train tickets are excluded unless specifically added to your customised quotation. Sahapathika Holidays can assist with suitable travel arrangements.' },
+        { q: 'Can this Odisha tour be customised?', a: 'Yes. Depending on your travel dates, group size, hotel preference and transportation requirements, the itinerary can be discussed and customised.' },
+        { q: 'How can I book this Puri tour package from Kerala?', a: 'Contact Sahapathika Holidays with your travel dates, number of travellers, departure location and preferred hotel category. Our team can prepare the appropriate package and quotation for you.' }
+      ];
+    } else if (p.slug === 'himachal-pradesh') {
+      data.overview = 'Discover the diverse beauty of Himachal Pradesh with this thoughtfully planned Himachal tour package from Kerala, taking you across four of the state\'s most popular mountain destinations — Shimla, Manali, Dharamshala and Dalhousie. Beginning in Delhi, the journey gradually moves through pine-covered hills, scenic valleys, mountain towns and peaceful landscapes.\n\nExplore the colonial charm of Shimla and the scenic surroundings of Kufri, travel through the beautiful Kullu Valley to Manali, and experience the mountain atmosphere of Solang Valley. The journey then continues towards Dharamshala and McLeod Ganj before reaching the picturesque hill station of Dalhousie and the meadow landscapes of Khajjiar.\n\nThis Himachal Pradesh holiday package from Kerala is ideal for families, couples, honeymooners, friends and groups who want to experience several iconic destinations in one Himalayan journey. Sahapathika Holidays can also assist travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam and Thiruvananthapuram with suitable travel arrangements to Delhi.';
+      data.highlights = [
+        'Experience four major Himachal destinations in one extended holiday.',
+        'Explore the contrasting landscapes of Shimla, Manali, Dharamshala and Dalhousie.',
+        'Visit popular attractions around Kufri, Solang Valley and Khajjiar.',
+        'Combine temples, monasteries, heritage landmarks, mountain scenery and local markets.',
+        'Includes dedicated time in both Manali and Dalhousie.',
+        'Ideal for travellers who want more than a short Shimla–Manali trip.',
+        'Offers a balanced Himalayan experience for families, couples and groups.'
+      ];
+      data.lodging = '2 Nights Shimla | 3 Nights Manali | 1 Night Dharamshala | 2 Nights Dalhousie';
+      data.tourType = 'Family, Couple, Honeymoon, Group';
+      data.includes = [
+        '8 nights accommodation on twin-sharing basis',
+        'Daily breakfast and dinner',
+        'Private vehicle for transfers and sightseeing as per itinerary',
+        'Delhi pickup and drop',
+        'Local sightseeing as specified',
+        'Toll taxes, parking charges and driver allowances',
+        'Applicable hotel taxes',
+        'Assistance on arrival and departure'
+      ];
+      data.excludes = [
+        'Flights or train tickets to/from Delhi',
+        'Lunch and additional meals',
+        'Optional tours and activities',
+        'Adventure rides and other personal-choice activities',
+        'Monument and attraction entrance fees',
+        'Camera fees',
+        'Personal expenses, shopping, laundry and telephone charges',
+        'Alcoholic and non-alcoholic beverages',
+        'Unplanned transportation expenses',
+        'Vehicle service during leisure periods when not part of the itinerary',
+        'Medical and travel insurance',
+        'Expenses arising from natural calamities, landslides, road blockages, strikes or similar unforeseen circumstances',
+        'Anything not specifically mentioned under inclusions'
+      ];
+      data.notes = [
+        'Long Mountain Journeys: This is a comprehensive Himachal circuit involving several intercity road transfers. Some travel days can be lengthy, particularly the final Dalhousie–Delhi journey.',
+        'Weather & Road Conditions: Mountain weather can change quickly. Rain, snowfall, traffic, road maintenance or unforeseen disruptions may affect journey times or sightseeing.',
+        'Adventure Activities: Activities at Solang Valley, including skiing, paragliding, snow-bike rides, zorbing and horse riding, are optional and payable separately.',
+        'Sightseeing Flexibility: The actual order of sightseeing may be adjusted depending on road conditions, local accessibility, weather and the available time on a particular day.',
+        'Vehicle Usage: The vehicle is provided for the transfers and sightseeing specified in the itinerary. It is not intended to remain at the guests\' disposal throughout leisure periods unless separately arranged.',
+        'Hotel Check-in / Check-out: The supplied package specifies standard hotel check-in and check-out at 12:00 noon. Early check-in or late check-out is subject to hotel availability and additional charges.'
+      ];
+      data.faqs = [
+        { q: 'Can I book this Himachal tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange the Himachal land package for travellers from Kerala, with arrival and departure through New Delhi.' },
+        { q: 'Can I travel from Kochi to Delhi for this package?', a: 'Yes. The package begins from New Delhi, and Sahapathika Holidays can assist with coordinating flights or trains from Kochi or other suitable locations in Kerala if required.' },
+        { q: 'How many nights are included?', a: 'The itinerary includes 8 nights and 9 days, with 2 nights in Shimla, 3 nights in Manali, 1 night in Dharamshala and 2 nights in Dalhousie.' },
+        { q: 'Does the package include Solang Valley?', a: 'Yes. Solang Valley is included in the sightseeing itinerary. However, individual adventure activities and rides are payable separately.' },
+        { q: 'Is Khajjiar included?', a: 'Yes. Day 8 is dedicated to the Khajjiar excursion from Dalhousie.' },
+        { q: 'Is Rohtang Pass included?', a: 'No. This particular itinerary does not include a Rohtang Pass excursion. It focuses on Solang Valley instead.' },
+        { q: 'Is this package suitable for honeymoon couples?', a: 'Yes. The combination of Shimla, Manali, Dharamshala and Dalhousie makes this a suitable extended Himalayan holiday for couples and honeymooners.' },
+        { q: 'Is the vehicle available throughout the day?', a: 'The vehicle is provided according to the planned transfer and sightseeing programme. Availability during leisure periods or for unplanned sightseeing is not included.' },
+        { q: 'Can senior citizens travel on this itinerary?', a: 'Yes, provided they are comfortable with the long road journeys and hill travel involved. The itinerary contains several extended transfers, so individual mobility and comfort should be considered.' },
+        { q: 'Can Sahapathika Holidays customize this itinerary?', a: 'Yes. You can discuss travel dates, hotel category, group size, transportation preferences and other requirements while requesting your quotation.' }
+      ];
+    } else if (p.slug === 'shimla-manali-amritsar') {
+      data.overview = 'Experience the best of the Himalayas and Punjab with this thoughtfully planned Himachal and Amritsar tour package from Kerala. The journey combines the cool mountain landscapes of Shimla and Manali with the cultural and spiritual highlights of Amritsar, creating a holiday that offers scenery, sightseeing, adventure, heritage and devotion in one itinerary.\n\nStarting with a scenic drive from Delhi to Shimla, the tour takes you through Kufri, Manali, Solang Valley, Kullu and Amritsar, before concluding with visits to the iconic Golden Temple and the Attari-Wagah Border ceremony. It is an excellent choice for families, couples, friends and groups travelling from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam and Thiruvananthapuram.';
+      data.highlights = [
+        'Shimla and Kufri for Himalayan scenery and hill-station experiences.',
+        'Manali and Solang Valley for mountain landscapes and optional adventure activities.',
+        'Kullu and Mandi for a scenic Himalayan road journey.',
+        'Amritsar for spirituality, history and Punjabi culture.',
+        'Golden Temple for a deeply meaningful cultural and spiritual experience.',
+        'Attari-Wagah Border for its distinctive ceremonial atmosphere.'
+      ];
+      data.lodging = '2 Nights Shimla | 3 Nights Manali | 2 Nights Amritsar';
+      data.tourType = 'Family, Couple, Group';
+      data.includes = [
+        '7 nights accommodation in selected hotels on double-sharing basis',
+        '7 breakfasts and 7 dinners',
+        'Private vehicle for the 8-day itinerary as per family/group size',
+        'Fuel, tolls, permits, parking and driver allowance',
+        'Welcome drink at the hotel on arrival',
+        'Transfers and sightseeing as specified in the itinerary'
+      ];
+      data.excludes = [
+        'Airfare or train tickets',
+        'Personal expenses, laundry, telephone calls and beverages',
+        'Mineral water and other items of personal consumption',
+        'Monument, garden and sightseeing entry fees',
+        'River rafting, paragliding and other optional activities',
+        'Rohtang Pass transportation and related activities',
+        'Tips for drivers, guides, hotel staff and other service personnel',
+        'Any service, activity or expense not specifically mentioned under inclusions'
+      ];
+      data.notes = [
+        'The itinerary includes several long road journeys, particularly Delhi–Shimla, Shimla–Manali, Manali–Amritsar and Amritsar–Delhi.',
+        'Mountain travel times are approximate and may change because of traffic, weather, road conditions or local restrictions.',
+        'Rohtang Pass is not included. Any applicable local transportation and activity charges are payable separately by guests.',
+        'River rafting at Kullu is an optional activity and is subject to suitable weather conditions and direct payment.',
+        'Adventure activities at Solang Valley are optional and payable separately.',
+        'Monument, garden and other applicable entry charges are not included unless specifically mentioned.',
+        'Guests should carry suitable warm clothing for the Himalayan portions of the journey, particularly during colder months.',
+        'The Wagah Border ceremony is subject to prevailing local arrangements and regulations.',
+        'Final accommodation, vehicle and departure arrangements should be confirmed at the time of booking.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Himachal and Amritsar tour package from Kerala?', a: 'Yes. Sahapathika Holidays can coordinate this North India holiday for travellers originating from Kerala, with travel arrangements discussed according to your preferred dates and requirements.' },
+        { q: 'What is the duration of this Himachal–Amritsar package?', a: 'The itinerary is designed as an 8 Days / 7 Nights holiday covering Shimla, Manali and Amritsar.' },
+        { q: 'Can I start the trip from Kochi?', a: 'Yes. Flight or train arrangements can be discussed separately according to your preferred departure point in Kerala. The supplied itinerary itself begins with arrival at Delhi Airport or Railway Station.' },
+        { q: 'Which places are covered in the package?', a: 'The itinerary covers Delhi, Shimla, Kufri, Manali, Solang Valley, Kullu, Amritsar, Golden Temple, Jallianwala Bagh and the Attari-Wagah Border.' },
+        { q: 'Is Rohtang Pass included?', a: 'No. Rohtang Pass sightseeing is specifically excluded from the supplied package and requires separate local transportation arrangements and applicable charges.' },
+        { q: 'Is river rafting included at Kullu?', a: 'No. River rafting is an optional activity and is payable directly by the guest, subject to weather conditions.' },
+        { q: 'Is this package suitable for families?', a: 'Yes. The itinerary can work well for families who want to combine Himalayan sightseeing with Amritsar\'s cultural and spiritual attractions.' },
+        { q: 'Can senior citizens travel on this itinerary?', a: 'Senior citizens can consider the package, but they should be comfortable with several long road journeys and Himalayan terrain. The itinerary can be discussed and customized according to the group\'s requirements.' },
+        { q: 'Can the accommodation or itinerary be customized?', a: 'Yes. Hotel preferences, travel dates and certain arrangements can be discussed with Sahapathika Holidays while planning the trip.' },
+        { q: 'Can I end the trip at Amritsar instead of Delhi?', a: 'The supplied itinerary allows the final drop at Amritsar Airport/Railway Station or Delhi, depending on the travel requirement.' }
+      ];
+    } else if (p.slug === 'shimla-kullu-manali') {
+      data.overview = 'Escape into the Himalayas with a memorable Shimla Kullu Manali tour package from Kerala, designed around the scenic hill stations of Himachal Pradesh. Starting from New Delhi, the journey takes you through the charming landscapes of Shimla and Kufri before continuing into the valleys of Kullu and Manali.\n\nExplore Shimla\'s famous Mall Road, the Ridge, Jakhoo Temple and Christ Church, travel through the beautiful Kullu Valley and experience Manali\'s temples, monasteries, markets and mountain scenery. The itinerary also includes an excursion towards Rohtang Pass, subject to seasonal accessibility and applicable local regulations.\n\nThis Shimla Manali holiday package from Kerala is an appealing choice for families, couples, honeymooners, friends and groups looking for a Himalayan holiday. Travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam and Thiruvananthapuram can enquire about flight or train coordination to New Delhi along with the land arrangements.';
+      data.highlights = [
+        'Covers three popular Himachal destinations — Shimla, Kullu and Manali.',
+        'Includes sightseeing in Kufri and Shimla.',
+        'Combines Himalayan scenery with temples, monasteries and local markets.',
+        'Includes a dedicated Rohtang Pass excursion, subject to seasonal access.',
+        'Provides four nights in Manali, allowing more time to experience the valley.',
+        'Includes both scenic road journeys and relaxed sightseeing.',
+        'Suitable for families, couples, honeymooners, friends and groups.'
+      ];
+      data.lodging = '2 Nights Shimla | 4 Nights Manali';
+      data.tourType = 'Family, Couple, Honeymoon, Group';
+      data.includes = [
+        '6 nights accommodation on twin-sharing basis',
+        'Daily breakfast and dinner',
+        'Exclusive vehicle for transfers and sightseeing as per itinerary',
+        'New Delhi pickup and drop',
+        'Destination–hotel–destination transfers',
+        'Sightseeing as mentioned in the itinerary',
+        'Toll taxes, parking charges and applicable permits',
+        'Driver allowance',
+        'Applicable fuel and state taxes',
+        'Assistance on arrival and departure'
+      ];
+      data.excludes = [
+        'Flights or train tickets to/from New Delhi',
+        'Lunch and snacks',
+        'Rohtang Pass taxi/transport charges',
+        'Monument and attraction entrance fees',
+        'Guide charges',
+        'Camera charges',
+        'Adventure activities, snow rides and other optional rides',
+        'Personal expenses such as laundry, telephone calls and tips',
+        'Alcoholic beverages',
+        'Early check-in or late check-out charges',
+        'Costs arising from landslides, road blockages, strikes, political disturbances or other unforeseen disruptions',
+        'Travel insurance',
+        '5% GST, as specified in the source package',
+        'Anything not specifically mentioned under inclusions'
+      ];
+      data.notes = [
+        'Rohtang Pass access depends on the season, weather, road conditions and applicable permissions or regulations. Rohtang Pass sightseeing and taxi charges are extra.',
+        'Certain sightseeing areas around Manali may be subject to local transportation rules.',
+        'The journey between New Delhi, Shimla and Manali involves long road travel which can vary because of traffic and weather.',
+        'Vehicle is provided for transfers and sightseeing according to the itinerary and is not at the guests\' disposal throughout the day.',
+        'Snow rides, skiing, and adventure activities are not included unless specifically mentioned.'
+      ];
+      data.faqs = [
+        { q: 'Can I book a Shimla Kullu Manali tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange the Himachal land package for travellers from Kerala, with the itinerary beginning and ending in New Delhi.' },
+        { q: 'Can Sahapathika Holidays arrange flights from Kochi or other Kerala airports?', a: 'Yes. You can discuss flight or train coordination from Kochi and other suitable airports or railway stations in Kerala while planning the trip.' },
+        { q: 'How many nights are included in this Shimla Manali package?', a: 'The itinerary is planned for 7 days and 6 nights, with 2 nights in Shimla and 4 nights in Manali.' },
+        { q: 'Is Rohtang Pass included?', a: 'The excursion is part of the itinerary, but Rohtang Pass taxi/transport charges are excluded. Access is also subject to seasonal conditions and local regulations.' },
+        { q: 'Can we see snow during the trip?', a: 'Snow availability depends on the travel season, altitude, weather and prevailing conditions. It cannot be guaranteed.' },
+        { q: 'Are activities such as skiing and snow scooter rides included?', a: 'No. Optional rides and adventure activities are payable separately.' },
+        { q: 'Is transportation private?', a: 'Yes. The source itinerary provides an exclusive vehicle for transfers and sightseeing according to the planned itinerary.' },
+        { q: 'Is this package suitable for honeymoon couples?', a: 'Yes. Shimla, Kullu and Manali are well suited to couples seeking mountain scenery, leisure time and a romantic Himalayan holiday.' },
+        { q: 'Can senior citizens travel on this itinerary?', a: 'Yes, provided they are comfortable with the long road journeys and hill travel involved. Travellers with mobility concerns should discuss their requirements before booking.' },
+        { q: 'Can the itinerary be customized?', a: 'Yes. Hotel preferences, travel dates, transportation requirements and sightseeing arrangements can be discussed with Sahapathika Holidays.' }
+      ];
+    } else if (p.slug === 'shimla-manali') {
+      data.overview = 'Experience the charm of the Himalayas with a memorable Shimla Manali tour package from Kerala, combining the colonial-era appeal of Shimla with the dramatic mountain scenery of Manali. Starting from Delhi, this journey takes you through picturesque hill roads, forested valleys, riverside landscapes and popular Himalayan attractions.\n\nExplore Shimla, Kufri, Mall Road, the Ridge and Jakhoo Temple, followed by a scenic drive through Mandi and Kullu to Manali. Discover Hadimba Temple, Vashisht, Manu Temple and the vibrant markets of Manali before heading towards Solang Valley and Rohtang Pass, subject to seasonal accessibility and local regulations.\n\nThis Shimla Manali holiday package from Kerala is suitable for families, couples, friends and groups looking for a well-planned Himalayan getaway. Travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam and Thiruvananthapuram can enquire about suitable travel arrangements to Delhi.';
+      data.highlights = ['Covers the two iconic Himalayan destinations of Shimla and Manali in one itinerary.', 'Includes popular experiences around Kufri, Solang Valley and Rohtang Pass.', 'Combines temples, mountain scenery, local markets and adventure opportunities.', 'Includes a scenic road journey through Mandi and Kullu.', 'Provides free time for shopping and exploring Shimla and Manali.', 'A practical choice for families, couples and groups seeking a classic Himachal holiday.'];
+      data.lodging = '2 Nights Shimla | 3 Nights Manali';
+      data.tourType = 'Family, Couple, Group';
+      data.includes = ['5 nights accommodation in selected deluxe hotels', 'Daily breakfast and dinner', 'Individual vehicle for transfers and sightseeing', 'Delhi pickup and drop as applicable', 'Sightseeing as per the itinerary', 'Destination–hotel–destination transfers', 'Toll taxes, parking charges and applicable permits', 'Driver allowance', 'Applicable fuel and state taxes'];
+      data.excludes = ['Airfare or train tickets to/from Delhi', 'Lunch and snacks', 'Rohtang Pass charges', 'Hotel early check-in or late check-out charges', 'Monument and attraction entrance fees', 'Camera charges', 'Adventure activities, rides and optional experiences', 'Personal expenses and shopping', 'Travel insurance or medical expenses', 'Any service or expense not specifically mentioned under inclusions', '5% GST, as specified in the package information'];
+      data.notes = ['Rohtang Pass is subject to seasonal accessibility, weather, road conditions and applicable local regulations. Rohtang-related charges are specifically excluded from the package.', 'Activities such as skiing, paragliding, snow-scooter rides and other rides are not included in the package unless specifically mentioned.', 'The Shimla–Manali and Manali–Delhi journeys involve long stretches of mountain and highway travel.', 'Temple visits are subject to the prevailing entry and operating arrangements of the respective temples.'];
+      data.faqs = [
+        { q: 'Can I book a Shimla Manali tour package from Kerala?', a: 'Yes. Sahapathika Holidays can arrange the land package beginning from Delhi for travellers from Kerala. Flight or train arrangements to Delhi can be coordinated separately if required.' },
+        { q: 'Can I start the trip from Kochi or another Kerala airport?', a: 'The itinerary begins with arrival in Delhi. Sahapathika Holidays can assist in coordinating travel from Kochi or other suitable airports in Kerala to Delhi according to your preferred travel dates.' },
+        { q: 'How many days are required for this Shimla Manali package?', a: 'This itinerary is planned for 6 days and 5 nights, covering Shimla, Kufri, Manali, Solang Valley and Rohtang Pass before returning to Delhi.' },
+        { q: 'Is Rohtang Pass guaranteed in the itinerary?', a: 'No. Rohtang Pass access depends on seasonal conditions, weather, road status and local regulations. Applicable Rohtang charges are also excluded.' },
+        { q: 'Are adventure activities included?', a: 'No. Activities such as skiing, paragliding and snow-scooter rides are optional and payable separately.' },
+        { q: 'Is accommodation included?', a: 'Yes. The source package provides deluxe hotel accommodation for five nights, along with breakfast and dinner.' },
+        { q: 'Is private transportation included?', a: 'Yes. The package includes sightseeing and transfers by an individual vehicle, with vehicle size based on the group requirement.' },
+        { q: 'Is this suitable for families?', a: 'Yes. The itinerary is suitable for families, couples and groups. Families travelling with young children or elderly members should consider the long road journeys involved.' },
+        { q: 'Can this Shimla Manali package be customized?', a: 'Yes. You can discuss hotel category, travel dates, vehicle requirements and other itinerary preferences with Sahapathika Holidays.' },
+        { q: 'How can I enquire or book?', a: 'Share your preferred travel dates, number of travellers and accommodation requirements with Sahapathika Holidays to receive the applicable availability and quotation.' }
+      ];
+    }
+    return data;
+  }
+
+  getGallery(slug) {
+    const p = this.packages.find(x => x.slug === slug);
+    const def = this.galleryItems;
+    if (!p) return def;
+    
+    let set = [];
+    if (p.slug.includes('kashmir')) set = ['srinagar.jpg', 'gulmarg.jpg', 'pahalgam.jpg', 'sonamarg.jpg', 'kashmir(lake).jpg', 'kashmir(bridge).jpg'];
+    else if (p.region === 'North India') set = ['shimla.jpg', 'manali.jpg', 'kullu.jpg', 'haridwar(aarti).jpg', 'rishikesh.jpg', 'mathura.jpg'];
+    else if (p.region === 'East India') set = ['jaganathpuri.jpg', 'jaganathpuri(1).jpg', 'boat_ghat.jpg', 'varanasi.jpg', 'kashi.jpg', 'prayagraj.jpg'];
+    else return def;
+    
+    return set.map((img, i) => {
+      let photo = i === 0 ? p.photo : 'packages_cards/' + img;
+      return {
+        id: 'sh-g' + (i+1),
+        photo: photo,
+        hint: p.title + ' view ' + (i+1),
+        span: i === 0 ? 'grid-column:span 2;grid-row:span 2' : (i===5 ? 'grid-column:span 2;grid-row:span 1' : 'grid-column:span 1;grid-row:span 1'),
+        cap: p.title
+      };
+    });
+  }
+
+  renderVals() {
+    const s = this.state, self = this;
+    const navBtn = on => 'background:' + (on ? 'rgba(22,33,29,.06)' : 'transparent') + ';border:0;color:#16211D;padding:10px 15px;border-radius:99px;font-size:14.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px';
+    const dLabel = s.date ? new Date(s.date + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) : 'Any date';
+    const dSub = s.date ? new Date(s.date + 'T00:00').toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric' }) : 'When would you like to travel?';
+    const m = s.month || new Date(2026, 8, 1);
+    const tbcTag = 'display:inline-block;margin-top:9px;font-size:9.5px;font-weight:800;letter-spacing:.12em;padding:5px 10px;border-radius:99px;background:rgba(217,164,65,.22);color:#8A6316';
+    const okTag = 'display:inline-block;margin-top:9px;font-size:9.5px;font-weight:800;letter-spacing:.12em;padding:5px 10px;border-radius:99px;background:rgba(95,169,140,.2);color:#2F7A63';
+
+    return {
+      isHome: s.page === 'home', isPackages: s.page === 'packages', isDetail: s.page === 'detail',
+      isAbout: s.page === 'about', isContact: s.page === 'contact',
+      menuDest: s.menu === 'dest', menuPkg: s.menu === 'pkg',
+      closeMenu: () => this.setState({ menu: null }),
+      openDest: () => this.setState({ menu: 'dest' }), openPkg: () => this.setState({ menu: 'pkg' }),
+      goHome: () => this.go('home'), goPackages: () => this.go('packages', { fCat: 'All', fRegion: 'All' }),
+      goAbout: () => this.go('about'), goContact: () => this.go('contact'),
+      goDetailAyurveda: () => this.go('detail', { slug: 'kerala-ayurveda-wellness-retreat', day: 1 }),
+      navHomeStyle: navBtn(s.page === 'home'), navDestStyle: navBtn(s.menu === 'dest'),
+      navPkgStyle: navBtn(s.page === 'packages' || s.menu === 'pkg'),
+      navAboutStyle: navBtn(s.page === 'about'), navContactStyle: navBtn(s.page === 'contact'),
+      footLinkStyle: 'background:none;border:0;padding:0;text-align:left;color:rgba(251,247,238,.68);font-size:14px;cursor:pointer',
+      headerRef: el => { this.headerEl = el; if (el && this._measure) requestAnimationFrame(this._measure); },
+      loading: s.loading, wiping: s.wiping,
+      preloaderStyle: 'position:fixed;inset:0;z-index:100;background:#FAF6EF;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:wipeout .5s 1.25s both',
+      topBarStyle: 'position:fixed;top:0;left:0;height:3px;z-index:99;background:#E5483D;transition:width .28s ease,opacity .3s;width:' + (s.wiping ? '100%' : '0') + ';opacity:' + (s.wiping ? '1' : '0'),
+      headerInnerStyle: 'max-width:1280px;margin:0 auto;padding:0 24px;min-height:' + (s.scrolled ? '62px' : '78px') + ';display:flex;align-items:center;gap:24px;flex-wrap:wrap;transition:min-height .32s cubic-bezier(.2,.7,.3,1)',
+      logoStyle: 'height:' + (s.scrolled ? '36px' : '46px') + ';width:auto;display:block;transition:height .32s cubic-bezier(.2,.7,.3,1)',
+      marquee: ['MINISTRY OF TOURISM APPROVED', 'IATO & ADTOI MEMBERS', 'HOTEL BOOKINGS', 'MICE & EVENTS', 'CORPORATE TRAVEL', 'PAN-INDIA', 'INTERNATIONAL', 'SINCE 2015', 'MINISTRY OF TOURISM APPROVED', 'IATO & ADTOI MEMBERS', 'HOTEL BOOKINGS', 'MICE & EVENTS', 'CORPORATE TRAVEL', 'PAN-INDIA', 'INTERNATIONAL', 'SINCE 2015'].map(label => ({ label })),
+      heroVideo: this.props.heroVideoUrl || 'hero_video.mp4',
+      hasHeroVideo: true,
+      pkgAsideStyle: 'position:sticky;top:' + (s.hdr + 24) + 'px;flex:1 1 240px;max-width:302px;background:#fff;border:1px solid rgba(22,33,29,.08);border-radius:22px;padding:26px',
+      detailAsideStyle: 'position:sticky;top:' + (s.hdr + 24) + 'px;flex:1 1 330px;max-width:376px;display:grid;gap:16px',
+
+      destinations: this.destinations.map(d => Object.assign({}, d, { go: () => this.filterTo('All', 'All') })),
+      destGroups: [
+        {
+          title: 'NORTH INDIA', badge: 'POPULAR', badgeStyle: 'font-size:9px;font-weight:800;letter-spacing:.1em;background:#DCEEE7;color:#2F7A63;padding:4px 9px;border-radius:99px',
+          items: [
+            { name: 'Shimla & Manali', initial: 'S', photo: 'packages_cards/shimla.jpg', region: 'North India' },
+            { name: 'Kashmir', initial: 'K', photo: 'packages_cards/srinagar.jpg', region: 'North India' },
+            { name: 'Varanasi', initial: 'V', photo: 'packages_cards/varanasi.jpg', region: 'North India' },
+            { name: 'Ayodhya', initial: 'A', photo: 'packages_cards/ayodhya.jpg', region: 'North India' },
+            { name: 'Mathura', initial: 'M', photo: 'packages_cards/mathura.jpg', region: 'North India' },
+            { name: 'Haridwar', initial: 'H', photo: 'packages_cards/haridwar(aarti).jpg', region: 'North India' }
+          ]
+        },
+        {
+          title: 'SOUTH & EAST INDIA', badge: 'BOOKABLE NOW', badgeStyle: 'font-size:9px;font-weight:800;letter-spacing:.1em;background:#DCEEE7;color:#2F7A63;padding:4px 9px;border-radius:99px',
+          items: [
+            { name: 'Kovalam', initial: 'K', photo: 'https://i.pinimg.com/1200x/1f/cc/f1/1fccf111a972587d9c072f8381018c70.jpg', region: 'South India' },
+            { name: 'Alleppey', initial: 'A', photo: 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg', region: 'South India' },
+            { name: 'Munnar', initial: 'M', photo: 'https://i.pinimg.com/736x/75/1e/96/751e9636e5a9f3b2ef002932b1817d3d.jpg', region: 'South India' },
+            { name: 'Kochi', initial: 'C', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', region: 'South India' },
+            { name: 'Puri', initial: 'P', photo: 'packages_cards/jaganathpuri.jpg', region: 'East India' },
+            { name: 'Chilika', initial: 'C', photo: 'packages_cards/boat_ghat.jpg', region: 'East India' }
+          ]
+        }
+      ].map(g => Object.assign({}, g, {
+        items: g.items.map(d => Object.assign({}, d, {
+          thumbStyle: 'width:80px;height:80px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:Fraunces,serif;font-size:26px;transition:transform .3s;' +
+            (d.photo
+              ? 'background-image:url(\'' + d.photo + '\');background-size:cover;background-position:center;color:transparent;border:2px solid #fff;box-shadow:0 8px 20px -10px rgba(22,33,29,.5)'
+              : 'background:#DCEEE7;color:#5FA98C;border:1px solid rgba(95,169,140,.4)'),
+          go: d.photo ? () => this.filterTo('All', d.region) : () => this.go('contact')
+        }))
+      })),
+      menuCats: Object.keys(this.catColor).filter(c => c !== 'Heritage').map(c => ({
+        name: c, go: () => this.filterTo(c),
+        dot: 'width:9px;height:9px;border-radius:99px;flex:0 0 auto;background:' + this.catColor[c]
+      })),
+      menuSignature: (this._randPkgs || (this._randPkgs = this.packages.slice().sort(() => 0.5 - Math.random()).slice(0, 6))).map(p => ({ title: p.title, duration: p.duration, go: () => this.go('detail', { slug: p.slug, day: 1 }) })),
+
+      destLabel: s.dest || 'Any destination', expLabel: s.exp || 'Any experience',
+      dateLabel: dLabel, dateSub: dSub,
+      fieldDestStyle: this.field(s.field === 'dest'), fieldExpStyle: this.field(s.field === 'exp'), fieldDateStyle: this.field(s.field === 'date'),
+      openDestList: s.field === 'dest', openExpList: s.field === 'exp', openDateList: s.field === 'date',
+      toggleDest: () => this.setState({ field: s.field === 'dest' ? null : 'dest' }),
+      toggleExp: () => this.setState({ field: s.field === 'exp' ? null : 'exp' }),
+      toggleDate: () => this.setState({ field: s.field === 'date' ? null : 'date' }),
+      destOptions: (() => {
+        const row = 'width:100%;background:none;border:0;text-align:left;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;transition:background .18s';
+        const head = 'width:100%;background:none;border:0;text-align:left;padding:12px 12px 6px;font-size:9.5px;font-weight:800;letter-spacing:.2em;color:#C4362C;cursor:default';
+        const out = [{ label: 'Anywhere', style: row, pick: () => this.setState({ dest: '', field: null }) }];
+        [['SOUTH INDIA · KERALA', ['Kovalam', 'Varkala', 'Alleppey', 'Munnar', 'Thekkady', 'Wayanad', 'Kochi', 'Bekal', 'Trivandrum']],
+         ['REST OF INDIA — ON ENQUIRY', ['Rajasthan', 'Golden Triangle', 'Goa', 'Himachal', 'Northeast', 'Ladakh']],
+         ['INTERNATIONAL — ON ENQUIRY', ['Middle East', 'South-East Asia', 'Europe', 'Sri Lanka', 'Maldives']]
+        ].forEach(g => {
+          out.push({ label: g[0], style: head, pick: () => {} });
+          g[1].forEach(l => out.push({ label: l, style: row, pick: () => this.setState({ dest: l, field: null }) }));
+        });
+        return out;
+      })(),
+      expOptions: ['Any experience', 'Ayurveda & Wellness', 'Heritage & Temple', 'Beach & Coastal', 'Hill & Backwater', 'Honeymoon', 'Signature'].map(l => ({ label: l, pick: () => this.setState({ exp: l === 'Any experience' ? '' : l, field: null }) })),
+      weekdays: ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((l, i) => ({ l, i })),
+      dayCells: this.monthCells(),
+      monthLabel: m.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+      prevMonth: () => this.setState({ month: new Date(m.getFullYear(), m.getMonth() - 1, 1) }),
+      nextMonth: () => this.setState({ month: new Date(m.getFullYear(), m.getMonth() + 1, 1) }),
+      doSearch: () => this.filterTo(s.exp || 'All', 'All'),
+
+      catCardStyle: 'animation:rise .6s both;background:#fff;border:1px solid rgba(22,33,29,.08);border-radius:22px;padding:28px 24px 26px;text-align:left;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;transition:transform .3s cubic-bezier(.2,.7,.3,1),box-shadow .3s;box-shadow:0 6px 18px -12px rgba(22,33,29,.2)',
+      catKerala: () => this.filterTo('All'), catHoneymoon: () => this.filterTo('Honeymoon'),
+      catAyurveda: () => this.filterTo('Ayurveda & Wellness'), catHeritage: () => this.filterTo('Heritage & Temple'),
+      catBackwater: () => this.filterTo('Hill & Backwater'), catHill: () => this.filterTo('Hill & Backwater'),
+      catBeach: () => this.filterTo('Beach & Coastal'), catIndia: () => this.filterTo('Signature'),
+
+      featured: (this._randFeatured || (this._randFeatured = this.packages.slice().sort(() => 0.5 - Math.random()).slice(0, 10))).map(p => Object.assign({}, p, {
+        slotId: 'sh-pkg-' + p.slug, photoHint: p.hint, price: 'On enquiry',
+        chipStyle: this.chip(p.cat), go: () => this.go('detail', { slug: p.slug, day: 1 })
+      })),
+      railRef: el => { this.rail = el; },
+      scrollLeft: () => this.rail && this.rail.scrollBy({ left: -716, behavior: 'smooth' }),
+      scrollRight: () => this.rail && this.rail.scrollBy({ left: 716, behavior: 'smooth' }),
+
+      testimonials: this.testis.map((t, i) => Object.assign({}, t, {
+        style: 'grid-area:1/1;background:#fff;border-radius:26px;padding:40px;box-shadow:0 16px 44px -22px rgba(22,33,29,.28);transition:opacity .6s,transform .6s;opacity:' +
+          (i === s.testi ? '1' : '0') + ';transform:translateY(' + (i === s.testi ? '0' : '16px') + ');pointer-events:' + (i === s.testi ? 'auto' : 'none')
+      })),
+      testiDots: this.testis.map((t, i) => ({
+        style: 'width:' + (i === s.testi ? '34px' : '10px') + ';height:10px;border-radius:99px;border:0;cursor:pointer;transition:all .3s;background:' + (i === s.testi ? '#E5483D' : 'rgba(22,33,29,.18)'),
+        pick: () => this.setState({ testi: i })
+      })),
+
+      statsRef: el => { this.statsEl = el; },
+      stats: [
+        { value: s.counts.travellers + '+', label: 'Happy Travelers', tag: 'VERIFIED', tagStyle: okTag },
+        { value: s.counts.destinations + '+', label: 'Destinations', tag: 'VERIFIED', tagStyle: okTag },
+        { value: s.counts.packages + '+', label: 'Holiday Packages', tag: 'VERIFIED', tagStyle: okTag },
+        { value: s.counts.years + '+', label: 'Years of Experience', tag: 'VERIFIED', tagStyle: okTag }
+      ],
+
+      tags: ['Backwater Houseboat Cruise', 'Ayurveda Spa Therapy', 'Kathakali Evening Show', 'Tea Plantation Walk', 'Periyar Wildlife Safari', 'Spice Plantation Tour', 'Beach Relaxation', 'Temple Darshan', 'Hill-Station Trek', 'Elephant Camp Visit']
+        .map(l => ({ label: l, go: () => this.filterTo('All') })),
+
+      journal: [
+        { slotId: 'sh-j1', photo: 'https://i.pinimg.com/1200x/b9/74/0a/b9740a34ba67edb133591cb297723efa.jpg', photoHint: 'Monsoon over the backwaters', kicker: 'SEASONS', title: 'When is the best time to visit Kerala?', meta: 'Guide · 6 min read' },
+        { slotId: 'sh-j2', photo: 'https://i.pinimg.com/1200x/7d/92/4c/7d924cc4489932afa59b881fc9f2a523.jpg', photoHint: 'Ayurveda consultation', kicker: 'WELLNESS', title: 'Your first Panchakarma: what to expect', meta: 'Guide · 8 min read' },
+        { slotId: 'sh-j3', photo: 'https://i.pinimg.com/originals/87/8b/84/878b841ad38d1d59cbefa547e995f363.png', photoHint: 'Thrissur Pooram crowd', kicker: 'FESTIVALS', title: 'Kerala festival calendar, month by month', meta: 'Guide · 5 min read' }
+      ],
+
+      gallery: this.getGallery(s.page === 'detail' ? s.slug : null).map((g, i) => ({
+        slotId: g.id, hint: g.hint, photo: g.photo,
+        wrapStyle: g.span + ';border-radius:18px;overflow:hidden;cursor:zoom-in;position:relative',
+        open: () => this.setState({ light: i })
+      })),
+      lightboxOpen: s.light >= 0,
+      lightboxSlot: s.light >= 0 ? this.getGallery(s.page === 'detail' ? s.slug : null)[s.light].id : 'sh-g1',
+      lightboxHint: s.light >= 0 ? this.getGallery(s.page === 'detail' ? s.slug : null)[s.light].hint : '',
+      lightboxPhoto: s.light >= 0 ? this.getGallery(s.page === 'detail' ? s.slug : null)[s.light].photo : '',
+      lightboxCaption: s.light >= 0 ? this.getGallery(s.page === 'detail' ? s.slug : null)[s.light].cap : '',
+      closeLightbox: () => this.setState({ light: -1 }),
+      prevLight: e => { e.stopPropagation(); this.setState({ light: (s.light + 5) % 6 }); },
+      nextLight: e => { e.stopPropagation(); this.setState({ light: (s.light + 1) % 6 }); },
+      stop: e => e.stopPropagation(),
+
+      email: s.email, setEmail: e => this.setState({ email: e.target.value }),
+      subscribe: () => {
+        if (this.state.email) {
+          fetch('https://formsubmit.co/ajax/adarsh@rytful.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              email: this.state.email,
+              _subject: '10% Off Newsletter Subscription'
+            })
+          });
+        }
+        this.setState({ subscribed: true });
+      },
+      subscribed: s.subscribed, notSubscribed: !s.subscribed,
+
+      /*  === Packages listing ===  */
+      catChips: ['All'].concat(Object.keys(this.catColor)).map(c => ({
+        label: c === 'All' ? 'All categories' : c,
+        count: c === 'All' ? this.packages.length : this.packages.filter(p => p.cat === c).length,
+        dot: 'width:8px;height:8px;border-radius:99px;flex:0 0 auto;background:' + (c === 'All' ? '#16211D' : this.catColor[c]),
+        style: 'display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;border-radius:11px;padding:10px 12px;cursor:pointer;font-size:13.5px;font-weight:' +
+          (s.fCat === c ? '800' : '600') + ';background:' + (s.fCat === c ? '#FDE8E4' : 'transparent') + ';color:' + (s.fCat === c ? '#C4362C' : '#1B1A17'),
+        pick: () => this.setState({ fCat: c })
+      })),
+      regionChips: ['All', 'North India', 'South India', 'East India', 'West India', 'Central India'].map(r => ({
+        label: r === 'All' ? 'All regions' : r,
+        count: r === 'All' ? this.packages.length : this.packages.filter(p => p.region === r).length,
+        style: 'display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;border-radius:11px;padding:10px 12px;cursor:pointer;font-size:13.5px;font-weight:' +
+          (s.fRegion === r ? '800' : '600') + ';background:' + (s.fRegion === r ? '#DCEEE7' : 'transparent') + ';color:' + (s.fRegion === r ? '#2F7A63' : '#1B1A17'),
+        pick: () => this.setState({ fRegion: r })
+      })),
+      clearFilters: () => this.setState({ fCat: 'All', fRegion: 'All', fSort: 'Featured' }),
+      sorts: ['Featured', 'Shortest', 'A–Z'].map(o => ({
+        label: o,
+        style: 'border:1px solid ' + (s.fSort === o ? '#16211D' : 'rgba(22,33,29,.14)') + ';background:' + (s.fSort === o ? '#16211D' : 'transparent') +
+          ';color:' + (s.fSort === o ? '#FAF6EF' : '#3A4A44') + ';padding:9px 15px;border-radius:999px;font-size:12.5px;font-weight:700;cursor:pointer',
+        pick: () => this.setState({ fSort: o })
+      })),
+      results: (() => {
+        let r = this.packages.filter(p => (s.fCat === 'All' || p.cat === s.fCat) && (s.fRegion === 'All' || p.region === s.fRegion));
+        if (s.fSort === 'A–Z') r = r.slice().sort((a, b) => a.title.localeCompare(b.title));
+        if (s.fSort === 'Shortest') r = r.slice().sort((a, b) => (parseInt(a.duration) || 99) - (parseInt(b.duration) || 99));
+        return r.map(p => Object.assign({}, p, {
+          listSlot: 'sh-pkg-' + p.slug, chipStyle: this.chip(p.cat),
+          go: () => this.go('detail', { slug: p.slug, day: 1 })
+        }));
+      })(),
+      resultCount: this.packages.filter(p => (s.fCat === 'All' || p.cat === s.fCat) && (s.fRegion === 'All' || p.region === s.fRegion)).length,
+      resultNoun: 'packages',
+      noResults: this.packages.filter(p => (s.fCat === 'All' || p.cat === s.fCat) && (s.fRegion === 'All' || p.region === s.fRegion)).length === 0,
+      activeLabel: (s.fCat === 'All' ? 'all categories' : s.fCat) + (s.fRegion === 'All' ? '' : ' · ' + s.fRegion),
+
+      /*  === Package detail ===  */
+      detail: (() => {
+        const d = this.detailFor(s.slug), p = d.p, it = this.itineraries[p.slug];
+        return {
+          title: p.title, cat: p.cat, region: p.region, regions: p.regions, duration: p.duration, hint: p.hint, photo: p.photo, photo2: this.getGallery(s.slug)[1].photo, photo3: this.getGallery(s.slug)[2].photo,
+          mapUrl: d.mapUrl || ('https://maps.google.com/maps?q=' + encodeURIComponent(p.regions || p.title) + '&t=&z=6&ie=UTF8&iwloc=&output=embed'),
+          flatChip: 'background:' + (this.catColor[p.cat] || '#E5483D') + ';color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.1em;padding:7px 13px;border-radius:99px;text-transform:uppercase',
+          overview: d.overview,
+          facts: [
+            { k: 'REGION', v: p.regions }, { k: 'DURATION', v: p.duration }, { k: 'LODGING', v: d.lodging },
+            { k: 'TOUR TYPE', v: d.tourType }, { k: 'TRANSPORT', v: 'Comfortable private vehicle' }
+          ],
+          highlights: d.highlights.map(t => ({ t })),
+          hasItinerary: !!it, noItinerary: !it,
+          days: (it || []).map((x, i) => {
+            const n = i + 1, open = s.day === n;
+            return {
+              n: 'DAY ' + (n < 10 ? '0' + n : n), title: x.title, body: x.body,
+              nodeStyle: 'position:absolute;left:-29px;top:22px;width:13px;height:13px;border-radius:99px;background:' + (open ? '#E5483D' : '#FAF6EF') + ';border:2px solid ' + (open ? '#E5483D' : '#5FA98C'),
+              headStyle: 'width:100%;text-align:left;background:' + (open ? '#fff' : 'transparent') + ';border:1px solid ' + (open ? 'transparent' : 'rgba(22,33,29,.1)') +
+                ';border-radius:16px 16px ' + (open ? '0 0' : '16px 16px') + ';padding:18px 24px;cursor:pointer;position:relative;box-shadow:' + (open ? '0 10px 26px -16px rgba(22,33,29,.3)' : 'none'),
+              iconStyle: 'position:absolute;right:22px;top:50%;transform:translateY(-50%) rotate(' + (open ? '90deg' : '0deg') + ');transition:transform .34s cubic-bezier(.2,.7,.3,1);color:#E5483D;font-size:22px;font-weight:800',
+              bodyStyle: 'background:#fff;border-radius:0 0 16px 16px;overflow:hidden;max-height:' + (open ? '350px' : '0') + ';transition:max-height .4s cubic-bezier(.2,.7,.3,1);box-shadow:' + (open ? '0 10px 26px -16px rgba(22,33,29,.3)' : 'none'),
+              toggle: () => this.setState({ day: open ? 0 : n })
+            };
+          }),
+          includes: d.includes.map(t => ({ t })),
+          excludes: d.excludes.map(t => ({ t })),
+          notes: d.notes.map(t => ({ t })),
+          faqs: d.faqs
+        };
+      })(),
+      faqs: (() => {
+        const d = this.detailFor(s.slug);
+        return d.faqs.map((f, i) => {
+        const open = s.faq === i;
+        return {
+          q: f.q, a: f.a,
+          headStyle: 'width:100%;text-align:left;background:transparent;border:0;padding:20px 54px 20px 22px;cursor:pointer;position:relative;font-size:16px;font-weight:700',
+          iconStyle: 'position:absolute;right:22px;top:50%;transform:translateY(-50%) rotate(' + (open ? '90deg' : '0deg') + ');transition:transform .34s cubic-bezier(.2,.7,.3,1);color:#E5483D;font-size:22px;font-weight:800',
+          bodyStyle: 'overflow:hidden;max-height:' + (open ? '350px' : '0') + ';transition:max-height .38s cubic-bezier(.2,.7,.3,1)',
+          toggle: () => this.setState({ faq: open ? -1 : i })
+        };
+      });
+      })(),
+      related: this.packages.filter(p => p.slug !== s.slug).slice(0, 3).map(p => Object.assign({}, p, {
+        relSlot: 'sh-pkg-' + p.slug, chipStyle: this.chip(p.cat), go: () => this.go('detail', { slug: p.slug, day: 1 })
+      })),
+      openGallery: () => this.setState({ light: 0 }),
+      bookDateStyle: 'width:100%;text-align:left;background:#fff;border:1.5px solid ' + (s.field === 'date' ? '#E5483D' : 'rgba(22,33,29,.1)') + ';border-radius:14px;padding:13px 16px;cursor:pointer',
+      stepBtnStyle: 'width:26px;height:26px;border-radius:99px;border:1px solid rgba(22,33,29,.16);background:transparent;cursor:pointer;font-weight:700;line-height:1',
+      adults: s.adults, kids: s.kids,
+      adultsUp: () => this.setState({ adults: Math.min(20, s.adults + 1) }),
+      adultsDown: () => this.setState({ adults: Math.max(1, s.adults - 1) }),
+      kidsUp: () => this.setState({ kids: Math.min(10, s.kids + 1) }),
+      kidsDown: () => this.setState({ kids: Math.max(0, s.kids - 1) }),
+                  bookNow: () => {
+        const p = this.packages.find(x => x.slug === s.slug) || this.packages[0];
+        this.setState({
+          form: Object.assign({}, s.form, {
+            pkg: p.title,
+            dates: s.date ? s.date : s.form.dates,
+            message: 'Enquiry for ' + p.title + ' - ' + s.adults + ' adults, ' + s.kids + ' children.'
+          })
+        });
+        const formEl = document.getElementById('enquiry-form');
+        if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+        else this.go('contact', { form: this.state.form });
+      },
+
+      /*  === About ===  */
+      whyUs: [
+        { n: '01', t: 'Competitive pricing', d: 'Across a wide range of packages, from homestays to backwater villas.' },
+        { n: '02', t: '24/7 client support', d: 'Someone answers, whatever the hour of your trip.' },
+        { n: '03', t: 'Experienced, friendly team', d: 'Efficient planners who know these roads personally.' },
+        { n: '04', t: 'Best hotels in your budget', d: 'We only place you where we would stay ourselves.' },
+        { n: '05', t: 'Honest rates across India', d: 'No hidden mark-ups, no surprise line items on arrival.' },
+        { n: '06', t: 'Budget trips, India & abroad', d: 'Hotels, MICE, events and corporate travel too.' }
+      ],
+
+      /*  === Contact ===  */
+      form: s.form, sent: s.sent, notSent: !s.sent,
+      labelStyle: 'display:block;font-size:11px;letter-spacing:.14em;font-weight:800;color:#B5822A;margin-bottom:8px',
+      inputStyle: 'width:100%;border:1.5px solid rgba(22,33,29,.12);border-radius:13px;padding:14px 16px;font-size:15px;outline:none;background:#FAF6EF',
+      textareaStyle: 'width:100%;border:1.5px solid rgba(22,33,29,.12);border-radius:13px;padding:14px 16px;font-size:15px;outline:none;background:#FAF6EF;resize:vertical;font-family:inherit',
+      setName: e => this.setState({ form: Object.assign({}, s.form, { name: e.target.value }) }),
+      setPhone: e => this.setState({ form: Object.assign({}, s.form, { phone: e.target.value }) }),
+      setEmailF: e => this.setState({ form: Object.assign({}, s.form, { email: e.target.value }) }),
+      setDates: e => this.setState({ form: Object.assign({}, s.form, { dates: e.target.value }) }),
+      setPkg: e => this.setState({ form: Object.assign({}, s.form, { pkg: e.target.value }) }),
+      setWhatsapp: e => this.setState({ form: Object.assign({}, s.form, { whatsapp: e.target.checked }) }),
+      setMessage: e => this.setState({ form: Object.assign({}, s.form, { message: e.target.value }) }),
+      pkgOptions: [{ v: 'Not sure yet — help me choose' }].concat(this.packages.map(p => ({ v: p.title }))),
+            send: () => {
+        const { name, phone, email, dates, pkg } = this.state.form;
+        
+        if (!name || !name.trim()) return this.setState({ errorMsg: 'Please enter your full name.' });
+        if (!phone || !phone.trim()) return this.setState({ errorMsg: 'Please enter your phone number.' });
+        if (!email || !email.trim()) return this.setState({ errorMsg: 'Please enter your email address.' });
+        if (!dates || !dates.trim()) return this.setState({ errorMsg: 'Please specify your travel dates.' });
+        if (!pkg || !pkg.trim()) return this.setState({ errorMsg: 'Please select an interested package.' });
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return this.setState({ errorMsg: 'Please enter a valid email address.' });
+
+        const phoneRegex = /^\+?[0-9\s\-\(\)]{7,15}$/;
+        if (!phoneRegex.test(phone)) return this.setState({ errorMsg: 'Please enter a valid phone number.' });
+
+        this.setState({ errorMsg: '' });
+
+        fetch('https://formsubmit.co/ajax/adarsh@rytful.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            name: this.state.form.name,
+            phone: this.state.form.phone,
+            email: this.state.form.email,
+            dates: this.state.form.dates,
+            package: this.state.form.pkg,
+            message: this.state.form.message,
+            whatsapp_opt_in: this.state.form.whatsapp ? 'Yes' : 'No',
+            _subject: 'New Enquiry from Sahapathika Holidays'
+          })
+        });
+
+        this.setState({ sent: true });
+      },
+      resetForm: () => this.setState({ sent: false, form: { name: '', email: '', phone: '', pkg: '', dates: '', message: '', whatsapp: true } }),
+      offices: [
+        { city: 'Kochi', address: '14/5H, 2nd Floor, Thomson and Mathews Building, NH 544, Opposite Navya Bakery, Athani, Airport Junction, Kochi, Kerala 683585' },
+        { city: 'New Delhi', address: 'House Plot no 476, Bharthal Dwarka Expressway, Opp: IICC Yashobhoomi, Sec 26 Dwarka, New Delhi 110077' }
+      ]
+    };
+  }
+}
