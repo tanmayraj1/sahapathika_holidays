@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="preconnect" href="https://unpkg.com" crossorigin="anonymous">
-<link rel="preload" as="script" crossorigin="anonymous" href="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z">
-<link rel="preload" as="script" crossorigin="anonymous" href="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1">
+<link rel="preload" as="script" href="vendor/react.production.min.js">
+<link rel="preload" as="script" href="vendor/react-dom.production.min.js">
 <link rel="preload" as="image" href="Site-logo1.svg">
 <style id="sx-critical">
   html, body { margin:0; background:#FAF6EF; }
@@ -100,6 +99,8 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
   })();
 </script>
+<script src="./vendor/react.production.min.js"></script>
+<script src="./vendor/react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,7 +129,7 @@
   <meta name="twitter:title" content="Contact Sahapathika Holidays – Kochi &amp; New Delhi Travel Agency | Call +91 90727 69547">
   <meta name="twitter:description" content="Plan your trip with Sahapathika Holidays. Call or WhatsApp +91 90727 69547, or send an enquiry. Offices near Kochi Airport (Athani) and in Dwarka, New Delhi.">
   <meta name="twitter:image" content="https://sahapathika-holidays.vercel.app/og-images/default.png">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TravelAgency", "@id": "https://sahapathika-holidays.vercel.app/#agency", "name": "Sahapathika Holidays", "url": "https://sahapathika-holidays.vercel.app/", "logo": "https://sahapathika-holidays.vercel.app/Site-logo1.svg", "image": "https://sahapathika-holidays.vercel.app/og-images/default.png", "telephone": "+91-9072769547", "priceRange": "On request", "foundingDate": "2015", "description": "Ministry of Tourism (Govt. of India) approved travel agency, member of IATO and ADTOI, offering tour packages from Kerala across India and abroad.", "address": {"@type": "PostalAddress", "streetAddress": "14/5H, 2nd Floor, Thomson and Mathews Building, NH 544, Opposite Navya Bakery, Athani, Airport Junction", "addressLocality": "Kochi", "addressRegion": "Kerala", "postalCode": "683585", "addressCountry": "IN"}, "areaServed": ["Kochi", "Ernakulam", "Thrissur", "Kottayam", "Kozhikode", "Kannur", "Malappuram", "Alappuzha", "Kollam", "Thiruvananthapuram", "Kerala", "India"], "department": [{"@type": "TravelAgency", "name": "Sahapathika Holidays – New Delhi", "address": {"@type": "PostalAddress", "streetAddress": "House Plot no 476, Bharthal Dwarka Expressway, Opp: IICC Yashobhoomi, Sec 26 Dwarka", "addressLocality": "New Delhi", "postalCode": "110077", "addressCountry": "IN"}}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TravelAgency", "@id": "https://sahapathika-holidays.vercel.app/#agency", "name": "Sahapathika Holidays", "sameAs": ["https://www.instagram.com/sahapathika_holidays/", "https://www.facebook.com/sahapathika", "https://www.threads.com/@sahapathika_holidays", "https://www.youtube.com/@sahapathikateam8537"], "url": "https://sahapathika-holidays.vercel.app/", "logo": "https://sahapathika-holidays.vercel.app/Site-logo1.svg", "image": "https://sahapathika-holidays.vercel.app/og-images/default.png", "telephone": "+91-9072769547", "priceRange": "On request", "foundingDate": "2015", "description": "Ministry of Tourism (Govt. of India) approved travel agency, member of IATO and ADTOI, offering tour packages from Kerala across India and abroad.", "address": {"@type": "PostalAddress", "streetAddress": "14/5H, 2nd Floor, Thomson and Mathews Building, NH 544, Opposite Navya Bakery, Athani, Airport Junction", "addressLocality": "Kochi", "addressRegion": "Kerala", "postalCode": "683585", "addressCountry": "IN"}, "areaServed": ["Kochi", "Ernakulam", "Thrissur", "Kottayam", "Kozhikode", "Kannur", "Malappuram", "Alappuzha", "Kollam", "Thiruvananthapuram", "Kerala", "India"], "department": [{"@type": "TravelAgency", "name": "Sahapathika Holidays – New Delhi", "address": {"@type": "PostalAddress", "streetAddress": "House Plot no 476, Bharthal Dwarka Expressway, Opp: IICC Yashobhoomi, Sec 26 Dwarka", "addressLocality": "New Delhi", "postalCode": "110077", "addressCountry": "IN"}}]}</script>
 </head>
 <body>
 <x-dc>
@@ -1383,6 +1384,66 @@
   }
   @media (max-width:360px) { header .sx-hdr-pk span { display:none; } header .sx-hdr-pk { padding:0 11px; } }
   .dx .dx-mbar-call { width:46px; height:46px; border-radius:14px; display:grid; place-items:center; background:rgba(255,244,226,.14); color:#FFD58A; flex:0 0 auto; }
+  /* Mobile menu: social links */
+  .sx-mob-social { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:16px 20px 4px; }
+  .sx-mob-social span { width:100%; font-size:10.5px; letter-spacing:.18em; font-weight:800; text-transform:uppercase; color:#C4362C; }
+  .sx-mob-social a { width:42px; height:42px; border-radius:99px; display:grid; place-items:center; background:#FFF4E2; border:1px solid rgba(232,135,30,.3); color:#7A1F16 !important; text-decoration:none; }
+  .sx-mob-social a:active { background:#FFE7BF; }
+  .sx-mob-social svg { width:19px; height:19px; }
+  /* Contact page: social card + FAQ */
+  .cx-social { background:#fff; border-radius:24px; padding:24px; border:1px solid rgba(22,33,29,.07); }
+  .cx-social-h { display:flex; flex-direction:column; gap:3px; margin-bottom:16px; }
+  .cx-social-h strong { font-family:'Fraunces',serif; font-weight:400; font-size:22px; letter-spacing:-.01em; }
+  .cx-social-h span { font-size:13.5px; color:#6B655C; }
+  .cx-social-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .cx-s { display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:16px; background:#FAF6EF; border:1px solid rgba(22,33,29,.07); color:#16211D !important; text-decoration:none; min-width:0; transition:transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, background .25s; }
+  .cx-s:hover { transform:translateY(-2px); background:#fff; box-shadow:0 14px 28px -18px rgba(22,33,29,.45); }
+  .cx-s i { flex:0 0 auto; width:40px; height:40px; border-radius:12px; display:grid; place-items:center; color:#fff; }
+  .cx-s i svg { width:20px; height:20px; }
+  .cx-s-instagram i { background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+  .cx-s-facebook i { background:#1877F2; }
+  .cx-s-threads i { background:#101010; }
+  .cx-s-youtube i { background:#FF0033; }
+  .cx-s span { display:flex; flex-direction:column; min-width:0; }
+  .cx-s strong { font-size:14px; font-weight:800; }
+  .cx-s small { font-size:11.5px; color:#6B655C; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .cx-faq-sec { background:#fff; padding:clamp(56px,7vw,96px) 0; }
+  .cx-faq-grid { max-width:1280px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(32px,5vw,80px); align-items:start; }
+  .cx-faq-intro { position:sticky; top:110px; }
+  .cx-eyebrow { display:inline-flex; align-items:center; gap:12px; font-size:11.5px; letter-spacing:.22em; font-weight:800; color:#C4362C; text-transform:uppercase; margin-bottom:18px; }
+  .cx-eyebrow::before { content:""; width:28px; height:1.5px; background:currentColor; opacity:.7; }
+  .cx-h2 { font-family:'Fraunces',serif; font-weight:380; font-size:clamp(34px,4.3vw,58px); line-height:1.02; letter-spacing:-.035em; margin:0; }
+  .cx-h2 em { font-style:italic; font-weight:330; color:#E5483D; }
+  .cx-sub { margin:18px 0 0; max-width:400px; font-size:15.5px; line-height:1.72; color:#6B655C; }
+  .cx-help { margin-top:28px; background:#FFF4E2; border:1px solid rgba(232,135,30,.22); border-radius:22px; padding:24px; display:grid; gap:6px; }
+  .cx-help strong { font-size:16.5px; }
+  .cx-help > span { font-size:14px; color:#3A4A44; line-height:1.6; }
+  .cx-help-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .cx-btn { display:inline-flex; align-items:center; padding:11px 20px; border-radius:99px; font-weight:800; font-size:14px; text-decoration:none; }
+  .cx-btn-p { background:#E5483D; color:#fff !important; }
+  .cx-btn-l { border:1.5px solid rgba(22,33,29,.16); color:#16211D !important; }
+  .cx-faq { display:grid; gap:12px; }
+  .cx-q { border:1px solid rgba(22,33,29,.1); border-radius:20px; background:#FAF6EF; transition:background .35s, box-shadow .35s, border-color .35s; }
+  .cx-q.open { background:#fff; border-color:transparent; box-shadow:0 18px 40px -26px rgba(22,33,29,.45); }
+  .cx-q-btn { width:100%; display:flex; align-items:center; justify-content:space-between; gap:18px; text-align:left; background:transparent; border:0; padding:20px 22px; cursor:pointer; font-size:16px; font-weight:700; color:#1B1A17; font-family:inherit; }
+  .cx-q-ic { position:relative; flex:0 0 auto; width:32px; height:32px; border-radius:99px; background:#fff; border:1px solid rgba(22,33,29,.1); transition:background .35s, transform .45s cubic-bezier(.22,1,.36,1); }
+  .cx-q-ic::before, .cx-q-ic::after { content:""; position:absolute; left:50%; top:50%; width:12px; height:1.8px; margin:-.9px 0 0 -6px; background:#E5483D; border-radius:2px; transition:transform .45s cubic-bezier(.22,1,.36,1), background .35s; }
+  .cx-q-ic::after { transform:rotate(90deg); }
+  .cx-q.open .cx-q-ic { background:#E5483D; transform:rotate(180deg); }
+  .cx-q.open .cx-q-ic::before, .cx-q.open .cx-q-ic::after { background:#fff; }
+  .cx-q.open .cx-q-ic::after { transform:rotate(0deg); }
+  .cx-a { display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1); }
+  .cx-q.open .cx-a { grid-template-rows:1fr; }
+  .cx-a > div { overflow:hidden; }
+  .cx-a p { margin:0; padding:0 22px 22px; font-size:15px; line-height:1.75; color:#3A4A44; }
+  @media (max-width:860px) {
+    .cx-faq-grid { grid-template-columns:1fr; padding:0 16px; }
+    .cx-faq-intro { position:static; }
+    .cx-q-btn { padding:17px 18px; font-size:15px; }
+    .cx-a p { padding:0 18px 18px; font-size:14.5px; }
+  }
+  @media (max-width:420px) { .cx-social-grid { grid-template-columns:1fr; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -2479,11 +2540,11 @@
             <div>
               <div id="enquiry-form" style="font-family:'Fraunces',serif;font-size:27px;letter-spacing:-.01em;margin-bottom:26px;scroll-margin-top:100px;">Send an enquiry</div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px;margin-bottom:16px">
-                <label style="display:block"><span style="{{ labelStyle }}">Your name</span><input value="{{ form.name }}" onChange="{{ setName }}" placeholder="Full name" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
-                <label style="display:block"><span style="{{ labelStyle }}">Phone</span><input value="{{ form.phone }}" onChange="{{ setPhone }}" placeholder="+91" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
+                <label style="display:block"><span style="{{ labelStyle }}">Your name <b style="color:#C4362C">*</b></span><input required="{{ true }}" autoComplete="name" value="{{ form.name }}" onChange="{{ setName }}" placeholder="Full name" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
+                <label style="display:block"><span style="{{ labelStyle }}">Phone <b style="color:#C4362C">*</b></span><input required="{{ true }}" type="tel" inputMode="tel" autoComplete="tel" value="{{ form.phone }}" onChange="{{ setPhone }}" placeholder="+91" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
               </div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px;margin-bottom:16px">
-                <label style="display:block"><span style="{{ labelStyle }}">Email</span><input type="email" value="{{ form.email }}" onChange="{{ setEmailF }}" placeholder="you@email.com" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
+                <label style="display:block"><span style="{{ labelStyle }}">Email <b style="color:#C4362C">*</b></span><input required="{{ true }}" type="email" autoComplete="email" value="{{ form.email }}" onChange="{{ setEmailF }}" placeholder="you@email.com" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
                 <label style="display:block"><span style="{{ labelStyle }}">Travel dates</span><input value="{{ form.dates }}" onChange="{{ setDates }}" placeholder="e.g. 12–18 Nov 2026" style="{{ inputStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)" /></label>
               </div>
               <label style="display:block;margin-bottom:16px"><span style="{{ labelStyle }}">Interested package</span>
@@ -2492,7 +2553,10 @@
                 </select>
               </label>
               <label style="display:block;margin-bottom:24px"><span style="{{ labelStyle }}">Message</span><textarea value="{{ form.message }}" onChange="{{ setMessage }}" rows="4" placeholder="Group size, budget, anything you'd love to include…" style="{{ textareaStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)"></textarea></label>
-              <button style="background:#E5483D;color:#fff;border:0;padding:17px 32px;border-radius:14px;font-weight:800;font-size:15.5px;cursor:pointer;width:100%" style-hover="background:#C4362C" onClick="{{ send }}">Send enquiry</button>
+              <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+                <div role="alert" style="display:flex;gap:10px;align-items:flex-start;background:#FDE8E4;color:#9A1F17;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.5;margin:-8px 0 16px">{{ errorMsg }}</div>
+              </sc-if>
+              <button style="background:#E5483D;color:#fff;border:0;padding:17px 32px;border-radius:14px;font-weight:800;font-size:15.5px;cursor:pointer;width:100%" style-hover="background:#C4362C" onClick="{{ send }}">{{ sendLabel }}</button>
               <div style="font-size:12.5px;color:#6B655C;text-align:center;margin-top:14px">We reply within one working day — usually much sooner.</div>
             </div>
           </sc-if>
@@ -2512,6 +2576,16 @@
               <a href="tel:+919072769547" style="display:flex;align-items:center;gap:14px;color:#16211D"><span style="width:42px;height:42px;border-radius:99px;background:rgba(229,72,61,.12);display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1.1 1A16 16 0 0 1 4 5.1 1 1 0 0 1 5 4Z" stroke="#E5483D" strokeWidth="1.5" strokeLinejoin="round"/></svg></span><span><span style="display:block;font-size:12px;color:#5A6E66">Phone</span><span style="display:block;font-weight:800;font-size:16px">+91 90727 69547</span></span></a>
               <a href="mailto:sahapathika@gmail.com" style="display:flex;align-items:center;gap:14px;color:#16211D"><span style="width:42px;height:42px;border-radius:99px;background:rgba(229,72,61,.12);display:flex;align-items:center;justify-content:center;flex:0 0 auto"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="#E5483D" strokeWidth="1.5"/><path d="m4 7 8 6 8-6" stroke="#E5483D" strokeWidth="1.5"/></svg></span><span><span style="display:block;font-size:12px;color:#5A6E66">Email</span><span style="display:block;font-weight:800;font-size:16px">sahapathika@gmail.com</span></span></a>
             </div>
+
+          <div class="cx-social">
+            <div class="cx-social-h"><strong>Follow our journeys</strong><span>Yatra moments, travel tips and new packages</span></div>
+            <div class="cx-social-grid">
+              <a class="cx-s cx-s-instagram" href="https://www.instagram.com/sahapathika_holidays/" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Instagram"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></i><span><strong>Instagram</strong><small>@sahapathika_holidays</small></span></a>
+              <a class="cx-s cx-s-facebook" href="https://www.facebook.com/sahapathika" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Facebook"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V15.03H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 3.03h-2.33v6.849C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></i><span><strong>Facebook</strong><small>/sahapathika</small></span></a>
+              <a class="cx-s cx-s-threads" href="https://www.threads.com/@sahapathika_holidays" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Threads"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></i><span><strong>Threads</strong><small>@sahapathika_holidays</small></span></a>
+              <a class="cx-s cx-s-youtube" href="https://www.youtube.com/@sahapathikateam8537" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on YouTube"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></i><span><strong>YouTube</strong><small>@sahapathikateam8537</small></span></a>
+            </div>
+          </div>
           </div>
 
           <sc-for list="{{ offices }}" as="o" hint-placeholder-count="2">
@@ -2527,6 +2601,32 @@
                 <div style="font-weight:800;font-size:16.5px;margin-bottom:8px">{{ o.city }} Office</div>
                 <p style="margin:0;font-size:14px;line-height:1.65;color:#6B655C">{{ o.address }}</p>
               </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section class="cx-faq-sec">
+      <div class="cx-faq-grid">
+        <div class="cx-faq-intro">
+          <div class="cx-eyebrow">Good to know</div>
+          <h2 class="cx-h2">Questions, <em>answered</em></h2>
+          <p class="cx-sub">Still unsure about something? Our planners are one message away.</p>
+          <div class="cx-help">
+            <strong>Talk to a travel planner</strong>
+            <span>Call or WhatsApp — we'll help you pick the right journey.</span>
+            <div class="cx-help-actions">
+              <a class="cx-btn cx-btn-p" href="tel:+919072769547">Call us</a>
+              <a class="cx-btn cx-btn-l" href="https://wa.me/919072769547" target="_blank" rel="noopener">WhatsApp</a>
+            </div>
+          </div>
+        </div>
+        <div class="cx-faq">
+          <sc-for list="{{ cxFaqs }}" as="f" hint-placeholder-count="6">
+            <div class="cx-q {{ f.cls }}">
+              <button class="cx-q-btn" onClick="{{ f.toggle }}" aria-expanded="{{ f.open }}"><span>{{ f.q }}</span><i class="cx-q-ic" aria-hidden="true"></i></button>
+              <div class="cx-a"><div><p>{{ f.a }}</p></div></div>
             </div>
           </sc-for>
         </div>
@@ -3164,7 +3264,7 @@
         <div class="newsletter">
           <h2 class="col-title">The Letter</h2>
           <p>Sign up for early notice on new arrivals, stories &amp; members-only offers.</p>
-          <form class="subscribe" action="https://formsubmit.co/adarsh@rytful.com" method="POST">
+          <form class="subscribe" action="https://formsubmit.co/sahapathika@gmail.com" method="POST">
             <input type="hidden" name="_captcha" value="false">
             <input type="hidden" name="_next" value="https://sahapathika-holidays.vercel.app/">
             <input type="hidden" name="_subject" value="New Footer Newsletter Subscription">
@@ -3181,14 +3281,17 @@
       
       <div class="footer-bottom">
         <div class="socials">
-          <a href="#" aria-label="Facebook">
+          <a href="https://www.instagram.com/sahapathika_holidays/" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="https://www.facebook.com/sahapathika" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Facebook">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V15.03H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 3.03h-2.33v6.849C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg>
           </a>
-          <a href="#" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <a href="https://www.threads.com/@sahapathika_holidays" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Threads">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg>
           </a>
-          <a href="#" aria-label="LinkedIn">
-            <svg viewBox="0 0 448 448" fill="currentColor"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
+          <a href="https://www.youtube.com/@sahapathikateam8537" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </a>
         </div>
         <div style="font-size: 13.5px; color: var(--ink-soft); opacity: 0.9;">&copy; 2026 Sahapathika. All Rights Reserved. | Govt. Approved | Designed by <a href="https://rytfulmedia.in" target="_blank" rel="noopener" style="color:#E5483D; font-weight:700; text-decoration:none;">RytfulMedia</a>.</div>
@@ -5482,8 +5585,9 @@ class Component extends DCLogic {
 
       email: s.email, setEmail: e => this.setState({ email: e.target.value }),
       subscribe: () => {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((this.state.email || '').trim())) return;
         if (this.state.email) {
-          fetch('https://formsubmit.co/ajax/adarsh@rytful.com', {
+          fetch('https://formsubmit.co/ajax/sahapathika@gmail.com', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({
@@ -5635,6 +5739,20 @@ class Component extends DCLogic {
 
       /*  === Contact ===  */
       form: s.form, sent: s.sent, notSent: !s.sent,
+      cxFaqs: [
+        { q: 'Do you book flights or trains as well?', a: "Our packages cover everything on the ground — hotel stays, a private vehicle, sightseeing and a planner you can reach at any hour. We don't sell flight or train tickets, but we build your itinerary around whichever arrival and departure you book." },
+        { q: 'Can I customise a package?', a: "Yes. Every itinerary on this site is a starting point. Tell us your dates, group size, pace and budget and we'll adjust the hotels, stops and number of nights to suit you." },
+        { q: 'How do I book a trip with you?', a: 'Pick a package and send an enquiry, or message us on WhatsApp. We reply with a firm quote and available dates, and once you confirm we lock in your stays and transport.' },
+        { q: "Why don't you show prices on the website?", a: 'Prices change with your travel dates, hotel category and group size, so we share an exact quote for your trip rather than a generic "from" price. A quick WhatsApp message is the fastest way to get one.' },
+        { q: 'Is Sahapathika Holidays a registered agency?', a: 'Yes. We are approved by the Ministry of Tourism, Government of India, and are members of IATO and ADTOI, with offices in Kochi and New Delhi.' },
+        { q: 'Do you handle hotel bookings, MICE and corporate travel?', a: 'Yes. Alongside holiday packages we arrange hotel bookings, MICE, events and corporate tours across India, and plan international holidays on request.' },
+        { q: 'Do you offer pilgrimage tour packages from Kerala?', a: 'Yes. We plan yatras from Kerala to Kashi (Varanasi), Ayodhya, Prayagraj, Gaya, Chitrakoot, Mathura–Vrindavan, Puri and Vaishno Devi, including a Pitru Moksha Yatra for Pitru Paksha rituals. Each itinerary is built around darshan and can be paced for families and senior citizens.' },
+        { q: 'Can you plan a Varanasi (Kashi) yatra from Kerala?', a: 'Yes. Our Varanasi packages cover Kashi Vishwanath darshan, the Ganga aarti at Dashashwamedh Ghat, a sunrise boat ride and Sarnath, and can be combined with Ayodhya, Prayagraj and Gaya. We plan the tour around the flight or train you take from Kerala.' },
+        { q: 'Which Kerala cities do you assist travellers from?', a: 'We assist travellers from Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam, Thiruvananthapuram and other parts of Kerala.' },
+        { q: 'Do you have Kashmir and Himachal tour packages from Kerala?', a: 'Yes. Our Kashmir packages cover Srinagar, Gulmarg, Sonmarg and Pahalgam, with honeymoon and Vaishno Devi options. Our Himachal tours cover Shimla, Kullu and Manali, with an Amritsar extension.' },
+        { q: 'Are your tours suitable for families, senior citizens and groups?', a: 'Yes. Packages can be planned for families, senior citizens, couples, friends and organised pilgrimage groups, with the pace, stays and sightseeing adjusted to suit.' },
+        { q: 'Do you also offer Kerala tour packages?', a: 'Yes. Our Kerala holidays include Munnar, Thekkady and the Alleppey backwaters, Kovalam and Varkala beaches, a Kerala temple tour, North Kerala heritage and an Ayurveda wellness retreat.' }
+      ].map((f, i) => { const on = (s.cxFaq === undefined ? 0 : s.cxFaq) === i; return { q: f.q, a: f.a, cls: on ? 'open' : '', open: on ? 'true' : 'false', toggle: () => this.setState({ cxFaq: on ? -1 : i }) }; }),
       labelStyle: 'display:block;font-size:11px;letter-spacing:.14em;font-weight:800;color:#B5822A;margin-bottom:8px',
       inputStyle: 'width:100%;border:1.5px solid rgba(22,33,29,.12);border-radius:13px;padding:14px 16px;font-size:15px;outline:none;background:#FAF6EF',
       textareaStyle: 'width:100%;border:1.5px solid rgba(22,33,29,.12);border-radius:13px;padding:14px 16px;font-size:15px;outline:none;background:#FAF6EF;resize:vertical;font-family:inherit',
@@ -5651,8 +5769,6 @@ class Component extends DCLogic {
         if (!name || !name.trim()) return this.setState({ errorMsg: 'Please enter your full name.' });
         if (!phone || !phone.trim()) return this.setState({ errorMsg: 'Please enter your phone number.' });
         if (!email || !email.trim()) return this.setState({ errorMsg: 'Please enter your email address.' });
-        if (!dates || !dates.trim()) return this.setState({ errorMsg: 'Please specify your travel dates.' });
-        if (!pkg || !pkg.trim()) return this.setState({ errorMsg: 'Please select an interested package.' });
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) return this.setState({ errorMsg: 'Please enter a valid email address.' });
@@ -5660,9 +5776,10 @@ class Component extends DCLogic {
         const phoneRegex = /^\+?[0-9\s\-\(\)]{7,15}$/;
         if (!phoneRegex.test(phone)) return this.setState({ errorMsg: 'Please enter a valid phone number.' });
 
-        this.setState({ errorMsg: '' });
+        if (this.state.sending) return;
+        this.setState({ errorMsg: '', sending: true });
 
-        fetch('https://formsubmit.co/ajax/adarsh@rytful.com', {
+        fetch('https://formsubmit.co/ajax/sahapathika@gmail.com', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
@@ -5672,12 +5789,13 @@ class Component extends DCLogic {
             dates: this.state.form.dates,
             package: this.state.form.pkg,
             message: this.state.form.message,
-            _subject: 'New Enquiry from Sahapathika Holidays'
+            _subject: 'New website enquiry: ' + name.trim() + (pkg ? ' – ' + pkg : ''),
+            _template: 'table'
           })
-        });
-
-        this.setState({ sent: true });
+        }).then(() => this.setState({ sent: true, sending: false }),
+          () => this.setState({ sending: false, errorMsg: 'We could not send your enquiry — please check your connection, or call / WhatsApp us on +91 90727 69547.' }));
       },
+      errorMsg: s.errorMsg || '', hasError: !!s.errorMsg, sendLabel: s.sending ? 'Sending…' : 'Send enquiry',
       resetForm: () => this.setState({ sent: false, form: { name: '', email: '', phone: '', pkg: '', dates: '', message: '' } }),
       offices: [
         { city: 'Kochi', address: '14/5H, 2nd Floor, Thomson and Mathews Building, NH 544, Opposite Navya Bakery, Athani, Airport Junction, Kochi, Kerala 683585', embed: 'https://www.google.com/maps?q=14/5H,+2nd+Floor,+Thomson+and+Mathews+Building,+NH+544,+Opposite+Navya+Bakery,+Athani,+Airport+Junction,+Kochi,+Kerala+683585&output=embed', dir: 'https://www.google.com/maps/dir/?api=1&destination=14/5H,+2nd+Floor,+Thomson+and+Mathews+Building,+NH+544,+Opposite+Navya+Bakery,+Athani,+Airport+Junction,+Kochi,+Kerala+683585' },
@@ -5852,6 +5970,10 @@ class Component extends DCLogic {
       a.innerHTML = '<span class="sx-mob-explore-imgs"><img src="packages_cards/kashmir(lake_boat).jpg" alt=""><img src="packages_cards/varanasi(aarti).jpg" alt=""><img src="packages_cards/manali.jpg" alt=""></span>' +
         '<span class="sx-mob-explore-b"><span><small>॥ सभी यात्राएँ ॥</small><strong>Explore all packages</strong></span><i>→</i></span>';
       links.parentNode.insertBefore(a, links.nextSibling);
+      var so = document.createElement('div');
+      so.className = 'sx-mob-social';
+      so.innerHTML = '<span>Follow us</span>' + '<a href="https://www.instagram.com/sahapathika_holidays/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></a>' + '<a href="https://www.facebook.com/sahapathika" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V15.03H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 3.03h-2.33v6.849C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></a>' + '<a href="https://www.threads.com/@sahapathika_holidays" target="_blank" rel="noopener" aria-label="Threads"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>' + '<a href="https://www.youtube.com/@sahapathikateam8537" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>';
+      a.parentNode.insertBefore(so, a.nextSibling);
       return true;
     }
     function start() { if (!build()) { var n = 0, t = setInterval(function () { if (build() || ++n > 60) clearInterval(t); }, 150); } }
@@ -5921,7 +6043,7 @@ class Component extends DCLogic {
         btn.style.opacity = '0.5';
       }
 
-      fetch('https://formsubmit.co/ajax/adarsh@rytful.com', {
+      fetch('https://formsubmit.co/ajax/sahapathika@gmail.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -5970,6 +6092,19 @@ class Component extends DCLogic {
     }
     addEventListener('scroll', check, { passive: true });
     addEventListener('load', check);
+  })();
+</script>
+<script>
+  /* Footer newsletter: send to our inbox without leaving the page */
+  (function () {
+    document.addEventListener('submit', function (e) {
+      var f = e.target; if (!f.classList || !f.classList.contains('subscribe')) return;
+      e.preventDefault();
+      var inp = f.querySelector('input[type="email"]'), v = (inp.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { inp.focus(); inp.setCustomValidity('Please enter a valid email address.'); inp.reportValidity(); inp.setCustomValidity(''); return; }
+      var done = function () { f.innerHTML = '<p style="margin:0;padding:14px 0;font-weight:700">Thank you — you\'re on the list.</p>'; };
+      fetch('https://formsubmit.co/ajax/sahapathika@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify({ email: v, _subject: 'New newsletter sign-up (website footer)', _template: 'table' }) }).then(done, done);
+    });
   })();
 </script>
 </body>
