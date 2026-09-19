@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /debug.html
+Disallow: /old_packages.html
+
+Sitemap: https://sahapathika-holidays.vercel.app/sitemap.xml

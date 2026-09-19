@@ -1,16 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style id="sx-critical">
   html, body { margin:0; background:#FAF6EF; }
   html:not(.sx-ready) #sh-mobile-nav { display:none !important; }
+  html:not(.sx-ready) body { visibility:hidden; }
+  .sx-fast .hx-hero { --base:.1s !important; }
+</style>
+<style id="sx-bnav-css">
+  /* Floating call button (all screens) */
+  #sx-call { position:fixed; right:30px; bottom:100px; z-index:69; display:flex; align-items:center; gap:8px; height:52px; padding:0 18px 0 15px; border-radius:99px; background:linear-gradient(135deg,#E8871E,#C4362C); color:#fff !important; font:800 14px/1 'Plus Jakarta Sans',system-ui,sans-serif; text-decoration:none; box-shadow:0 16px 30px -12px rgba(196,54,44,.75); transition:transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s; }
+  #sx-call:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 20px 36px -12px rgba(196,54,44,.85); }
+  #sx-call svg { animation:sxRing 3.2s ease-in-out infinite; transform-origin:50% 50%; }
+  @keyframes sxRing { 0%,86%,100% { transform:rotate(0); } 88% { transform:rotate(-14deg); } 90% { transform:rotate(14deg); } 92% { transform:rotate(-10deg); } 94% { transform:rotate(8deg); } 96% { transform:rotate(0); } }
+  #sx-bnav, #sx-bsheet, #sx-bsheet-bg { display:none; }
+
+  @media (max-width:768px) {
+    /* Bottom navigation */
+    #sx-bnav { position:fixed; left:0; right:0; bottom:0; z-index:80; display:grid; grid-template-columns:repeat(4,1fr); background:rgba(255,252,246,.96); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid rgba(22,33,29,.08); box-shadow:0 -10px 30px -18px rgba(62,14,10,.35); padding:6px 6px calc(6px + env(safe-area-inset-bottom, 0px)); font-family:'Plus Jakarta Sans',system-ui,sans-serif; }
+    .sx-bn { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; height:52px; border:0; background:none; color:#6B655C !important; text-decoration:none; font-size:11px; font-weight:700; cursor:pointer; border-radius:14px; -webkit-tap-highlight-color:transparent; transition:color .2s, background .2s; }
+    .sx-bn:active { background:rgba(232,135,30,.1); }
+    .sx-bn.on { color:#B3261E !important; }
+    .sx-bn.on::before { content:""; position:absolute; top:-6px; width:26px; height:3px; border-radius:0 0 3px 3px; background:linear-gradient(90deg,#E8871E,#C4362C); }
+    body { padding-bottom:calc(66px + env(safe-area-inset-bottom, 0px)); }
+    /* Stack the floating buttons above the bar */
+    #sx-call { right:16px; bottom:calc(144px + env(safe-area-inset-bottom, 0px)); width:50px; height:50px; padding:0; justify-content:center; }
+    #sx-call span { display:none; }
+    a[href="https://wa.me/919072769547"][target="_blank"][style*="fixed"] { bottom:calc(80px + env(safe-area-inset-bottom, 0px)) !important; right:16px !important; width:54px !important; height:54px !important; }
+    body:has(.dx-mbar) #sx-call { display:none; }
+    .dx-mbar { bottom:calc(74px + env(safe-area-inset-bottom, 0px)) !important; }
+
+    /* Slide-up panels */
+    #sx-bsheet-bg { position:fixed; inset:0; z-index:90; background:rgba(22,15,10,.45); opacity:0; transition:opacity .3s; }
+    #sx-bsheet-bg:not([hidden]) { display:block; }
+    #sx-bsheet-bg.in { opacity:1; }
+    #sx-bsheet { position:fixed; left:0; right:0; bottom:0; z-index:91; max-height:84vh; flex-direction:column; background:#FFFCF6; border-radius:24px 24px 0 0; box-shadow:0 -20px 50px -20px rgba(0,0,0,.4); transform:translateY(100%); transition:transform .38s cubic-bezier(.22,1,.36,1); font-family:'Plus Jakarta Sans',system-ui,sans-serif; color:#1B1A17; padding-bottom:env(safe-area-inset-bottom, 0px); }
+    #sx-bsheet:not([hidden]) { display:flex; }
+    #sx-bsheet.in { transform:none; }
+    #sx-bsheet[hidden], #sx-bsheet-bg[hidden], .sx-bs-panel[hidden] { display:none !important; }
+    .sx-bs-grab { width:42px; height:5px; border-radius:99px; background:rgba(22,33,29,.18); margin:10px auto 2px; flex:0 0 auto; }
+    .sx-bs-panel { display:flex; flex-direction:column; min-height:0; }
+    .sx-bs-h { display:flex; align-items:center; justify-content:space-between; padding:6px 18px 10px; border-bottom:1px solid rgba(22,33,29,.08); }
+    .sx-bs-h strong { font-family:'Fraunces',serif; font-weight:400; font-size:23px; }
+    .sx-bs-x { width:36px; height:36px; border-radius:99px; border:0; background:rgba(22,33,29,.06); font-size:13px; cursor:pointer; }
+    .sx-bs-body { overflow-y:auto; overscroll-behavior:contain; padding:12px 14px 20px; }
+    .sx-bs-all { display:flex; flex-direction:column; position:relative; border-radius:18px; overflow:hidden; background:linear-gradient(115deg,#3E0E0A,#7A1F16 60%,#9A3419); color:#FFF4E2 !important; text-decoration:none; }
+    .sx-bs-all-imgs { display:grid; grid-template-columns:1.3fr 1fr 1fr; grid-template-rows:84px; gap:3px; height:84px; overflow:hidden; }
+    .sx-bs-all-imgs img { width:100%; height:100% !important; object-fit:cover; display:block; }
+    .sx-bs-all-b { padding:12px 60px 14px 16px; display:flex; flex-direction:column; }
+    .sx-bs-all-b small { font-family:'Tiro Devanagari Sanskrit',serif; color:#FFC46B; font-size:13px; }
+    .sx-bs-all-b strong { font-family:'Fraunces',serif; font-weight:400; font-size:20px; }
+    .sx-bs-all i { position:absolute; right:14px; bottom:14px; width:36px; height:36px; border-radius:99px; background:#FFF4E2; color:#7A1F16; display:grid; place-items:center; font-style:normal; font-weight:800; }
+    .sx-bs-l { font-size:10.5px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:#C4362C; margin:20px 4px 10px; }
+    .sx-bs-themes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .sx-bs-themes a { display:flex; align-items:center; gap:9px; padding:12px; border-radius:14px; background:#fff; border:1px solid rgba(22,33,29,.08); color:#16211D !important; text-decoration:none; font-size:13.5px; font-weight:700; }
+    .sx-bs-themes i { width:9px; height:9px; border-radius:99px; flex:0 0 auto; }
+    .sx-bs-fests { display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; margin:0 -14px; padding:2px 14px 4px; scroll-snap-type:x mandatory; }
+    .sx-bs-fests::-webkit-scrollbar { display:none; }
+    .sx-bs-fests a { position:relative; flex:0 0 150px; scroll-snap-align:start; display:flex; flex-direction:column; gap:2px; padding:14px; border-radius:16px; background:linear-gradient(180deg,#FFF4E2,#fff); border:1px solid rgba(232,135,30,.25); color:#16211D !important; text-decoration:none; }
+    .sx-bs-fd { font-family:'Tiro Devanagari Sanskrit',serif; font-size:15px; color:#E8871E; }
+    .sx-bs-fests strong { font-family:'Fraunces',serif; font-weight:420; font-size:17px; line-height:1.15; }
+    .sx-bs-fests small { font-size:11.5px; font-weight:700; color:#6B655C; }
+    .sx-bs-fests em { align-self:flex-start; margin-top:6px; font-style:normal; font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:4px 8px; border-radius:99px; background:#B3261E; color:#fff; }
+    .sx-bs-fests em.soon { background:#FFE7BF; color:#8A4B0B; }
+    .sx-bs-dests { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .sx-bs-dests a { position:relative; display:block; height:108px; border-radius:16px; overflow:hidden; color:#fff !important; text-decoration:none; }
+    .sx-bs-dests img { position:absolute; inset:0; width:100%; height:100% !important; object-fit:cover; }
+    .sx-bs-dests a::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.65)); }
+    .sx-bs-dests span { position:absolute; left:12px; bottom:10px; z-index:1; font-family:'Fraunces',serif; font-size:16.5px; }
+    .sx-bs-custom { display:block; margin-top:18px; padding:14px 16px; border-radius:14px; background:#E6F6EC; color:#12663A !important; text-decoration:none; font-size:13.5px; font-weight:800; }
+  }
+  @media (prefers-reduced-motion: reduce) { #sx-call svg { animation:none; } #sx-bsheet { transition:none; } }
 </style>
 <script>
   /* Keep the injected mobile menu hidden until the site's styles have rendered (prevents an unstyled flash on load) */
   (function () {
     var d = document.documentElement;
+    try { if (sessionStorage.getItem('sx-seen')) d.classList.add('sx-fast'); sessionStorage.setItem('sx-seen', '1'); } catch (e) {}
     function ready() {
       var p = document.getElementById('sh-mobile-panel');
       if (p && getComputedStyle(p).position === 'fixed') { d.classList.add('sx-ready'); return true; }
@@ -31,19 +99,29 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <title>Beach and Backwater Tour | Sahapathika Holidays</title>
-  <meta name="description" content="Explore Beach and Backwater Tour with Sahapathika Holidays. A curated TBC journey in South Kerala featuring Beach & Coastal.">
-  <meta name="keywords" content="Kerala tours, Ayurveda retreats, Kerala honeymoon packages, backwater tours, South India holidays">
+  <title>Beach and Backwater Tour Package – Kerala Holiday | Sahapathika Holidays</title>
+  <meta name="description" content="Book the Beach and Backwater Tour holiday package. Covers Varkala. Hotels, private vehicle, sightseeing &amp; 24/7 support from a Govt. approved Kochi agency.">
+  <meta name="keywords" content="Beach and Backwater Tour package, Beach and Backwater Tour tour package from Kerala, Varkala tour package from Kerala, Kerala tour packages, Kerala holiday packages, Sahapathika Holidays">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://sahapathika-holidays.vercel.app/package-beach-and-backwater-tour.html">
+  <meta name="theme-color" content="#7A1F16">
+  <meta name="geo.region" content="IN-KL">
+  <meta name="geo.placename" content="Kochi, Kerala">
   <link rel="icon" type="image/svg+xml" href="Site-logo1.svg">
   <meta property="og:site_name" content="Sahapathika Holidays">
-  <meta property="og:title" content="Beach and Backwater Tour | Sahapathika Holidays">
-  <meta property="og:description" content="Explore Beach and Backwater Tour with Sahapathika Holidays. A curated TBC journey in South Kerala featuring Beach & Coastal.">
-  <meta property="og:image" content="https://i.pinimg.com/1200x/9c/4d/7b/9c4d7b7354f5deff64a143cd3ee10583.jpg">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="Beach and Backwater Tour Package – Kerala Holiday | Sahapathika Holidays">
+  <meta property="og:description" content="Book the Beach and Backwater Tour holiday package. Covers Varkala. Hotels, private vehicle, sightseeing &amp; 24/7 support from a Govt. approved Kochi agency.">
+  <meta property="og:image" content="https://sahapathika-holidays.vercel.app/og-images/beach-and-backwater-tour.jpg">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://sahapathika-holidays.vercel.app/index.html">
+  <meta property="og:url" content="https://sahapathika-holidays.vercel.app/package-beach-and-backwater-tour.html">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Beach and Backwater Tour Package – Kerala Holiday | Sahapathika Holidays">
+  <meta name="twitter:description" content="Book the Beach and Backwater Tour holiday package. Covers Varkala. Hotels, private vehicle, sightseeing &amp; 24/7 support from a Govt. approved Kochi agency.">
+  <meta name="twitter:image" content="https://sahapathika-holidays.vercel.app/og-images/beach-and-backwater-tour.jpg">
+  <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "TravelAgency", "@id": "https://sahapathika-holidays.vercel.app/#agency", "name": "Sahapathika Holidays", "url": "https://sahapathika-holidays.vercel.app/", "logo": "https://sahapathika-holidays.vercel.app/Site-logo1.svg", "image": "https://sahapathika-holidays.vercel.app/og-images/default.png", "telephone": "+91-9072769547", "priceRange": "On request", "foundingDate": "2015", "description": "Ministry of Tourism (Govt. of India) approved travel agency, member of IATO and ADTOI, offering tour packages from Kerala across India and abroad.", "address": {"@type": "PostalAddress", "streetAddress": "14/5H, 2nd Floor, Thomson and Mathews Building, NH 544, Opposite Navya Bakery, Athani, Airport Junction", "addressLocality": "Kochi", "addressRegion": "Kerala", "postalCode": "683585", "addressCountry": "IN"}, "areaServed": ["Kochi", "Ernakulam", "Thrissur", "Kottayam", "Kozhikode", "Kannur", "Malappuram", "Alappuzha", "Kollam", "Thiruvananthapuram", "Kerala", "India"], "department": [{"@type": "TravelAgency", "name": "Sahapathika Holidays – New Delhi", "address": {"@type": "PostalAddress", "streetAddress": "House Plot no 476, Bharthal Dwarka Expressway, Opp: IICC Yashobhoomi, Sec 26 Dwarka", "addressLocality": "New Delhi", "postalCode": "110077", "addressCountry": "IN"}}]}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sahapathika-holidays.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "Packages", "item": "https://sahapathika-holidays.vercel.app/packages.html"}, {"@type": "ListItem", "position": 3, "name": "Beach and Backwater Tour", "item": "https://sahapathika-holidays.vercel.app/package-beach-and-backwater-tour.html"}]}]</script>
 
   
 
@@ -1210,15 +1288,15 @@
 
   @media (max-width:768px) {
     /* Compact header: 56px, smaller logo, no tagline */
-    header > div:first-child { min-height:56px !important; padding:0 14px !important; gap:10px !important; }
-    header img[alt="Sahapathika Holidays"] { height:30px !important; }
+    header > div:first-child { min-height:64px !important; padding:0 16px !important; gap:10px !important; }
+    header img[alt="Sahapathika Holidays"] { height:47px !important; }
     header a[href="index.html"] > span { display:none !important; }
     #sh-hamburger { width:40px !important; height:40px !important; border-radius:12px !important; }
-    .dx-tabs { top:56px !important; margin-top:16px; }
+    .dx-tabs { top:64px !important; margin-top:16px; }
     .dx .dx-tabs-links a { padding:12px 10px !important; font-size:13px !important; }
     .dx-tabs-links a::after { left:10px; right:10px; }
     .dx-aside, .dx-sec { scroll-margin-top:110px; }
-    .px-bar { top:56px !important; }
+    .px-bar { top:64px !important; }
   }
   @media (max-width:640px) {
     /* One-row filter bar: theme chips + Sort & filter button */
@@ -1263,6 +1341,45 @@
     .px-grid { gap:10px !important; }
     .px-card h3 { font-size:13.5px; }
   }
+  /* ---------- Why choose / Why book / Who is it for ---------- */
+  .dx-why-p { margin:0 0 12px; font-size:16px; line-height:1.75; color:var(--sx-soft,#3A4A44); max-width:760px; }
+  .dx-why-gap { height:34px; }
+  .dx-choose { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:6px; }
+  .dx-choose-i { display:flex; gap:14px; align-items:flex-start; background:linear-gradient(180deg,#FFF8EC,#fff); border:1px solid rgba(232,135,30,.22); border-radius:18px; padding:16px 18px; }
+  .dx-choose-ic { flex:0 0 auto; width:42px; height:42px; border-radius:13px; display:grid; place-items:center; background:#FFE7BF; font-size:20px; }
+  .dx-choose-i strong { display:block; font-family:'Fraunces',serif; font-weight:420; font-size:18px; margin-bottom:4px; }
+  .dx-choose-i p { margin:0; font-size:14.5px; line-height:1.65; color:#3A4A44; }
+  .dx-why-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:18px; }
+  .dx-why-card { position:relative; background:#fff; border:1px solid rgba(22,33,29,.07); border-radius:18px; padding:18px 18px 18px 64px; transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s; }
+  .dx-why-card:hover { transform:translateY(-2px); box-shadow:0 18px 36px -24px rgba(62,14,10,.45); }
+  .dx-why-n { position:absolute; left:16px; top:18px; width:34px; height:34px; border-radius:11px; display:grid; place-items:center; background:linear-gradient(135deg,#E8871E,#C4362C); color:#fff; font-size:12px; font-weight:800; }
+  .dx-why-card h3 { margin:0 0 6px; font-size:16px; font-weight:800; line-height:1.3; }
+  .dx-why-card p { margin:0; font-size:14.5px; line-height:1.65; color:#3A4A44; }
+  .dx-who { margin-top:22px; border-radius:20px; padding:20px 22px; background:#DCEEE7; }
+  .dx-who h3 { margin:0 0 8px; font-size:16.5px; font-weight:800; color:#2F7A63; }
+  .dx-who p { margin:0; font-size:14.5px; line-height:1.7; color:#16211D; }
+  @media (max-width:640px) {
+    .dx-choose, .dx-why-grid { grid-template-columns:1fr; }
+    .dx-why-p { font-size:15px; }
+  }
+  .dx-why-lead { font-weight:700; color:#16211D; margin-bottom:8px; }
+  .dx-why-list { list-style:none; margin:0 0 14px; padding:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .dx-why-list li { position:relative; padding:10px 12px 10px 34px; background:#fff; border:1px solid rgba(232,135,30,.2); border-radius:12px; font-size:14px; line-height:1.5; font-weight:600; color:#3A2A1A; }
+  .dx-why-list li::before { content:""; position:absolute; left:13px; top:16px; width:8px; height:8px; border-radius:99px; background:#E8871E; box-shadow:0 0 0 3px rgba(232,135,30,.18); }
+  .dx-who .dx-why-p { font-size:14.5px; color:#16211D; }
+  .dx-who .dx-why-list li { background:rgba(255,255,255,.7); border-color:rgba(47,122,99,.2); }
+  .dx-who .dx-why-list li::before { background:#2F7A63; box-shadow:0 0 0 3px rgba(47,122,99,.15); }
+  .dx-best { background:#FFF4E2; }
+  .dx-best h3 { color:#B3261E; }
+  @media (max-width:640px) { .dx-why-list { grid-template-columns:1fr; } }
+
+  /* Header quick link + phone logo + booking-bar call button */
+  .sx-hdr-pk { display:none; }
+  @media (max-width:1224px) {
+    header .sx-hdr-pk { display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 14px; border-radius:12px; background:linear-gradient(135deg,#E8871E,#C4362C); color:#fff !important; font-weight:800; font-size:13px; white-space:nowrap; box-shadow:0 10px 20px -12px rgba(196,54,44,.8); }
+  }
+  @media (max-width:360px) { header .sx-hdr-pk span { display:none; } header .sx-hdr-pk { padding:0 11px; } }
+  .dx .dx-mbar-call { width:46px; height:46px; border-radius:14px; display:grid; place-items:center; background:rgba(255,244,226,.14); color:#FFD58A; flex:0 0 auto; }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -1827,7 +1944,7 @@
         <p class="px-lead">{{ pxLead }}</p>
         <form class="px-search" onSubmit="{{ pxSubmit }}" role="search">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="2"/><path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-          <input type="search" enterKeyHint="search" autoComplete="off" placeholder="Search Kashmir, Kashi, honeymoon, temple…" value="{{ pxQ }}" onChange="{{ pxSetQ }}" aria-label="Search packages" />
+          <input type="search" enterKeyHint="search" autoComplete="off" placeholder="Search any place or package" value="{{ pxQ }}" onChange="{{ pxSetQ }}" aria-label="Search packages" />
           <sc-if value="{{ pxHasQ }}" hint-placeholder-val="{{ false }}"><button type="button" class="px-clear" onClick="{{ pxClearQ }}" aria-label="Clear search">✕</button></sc-if>
         </form>
         <div class="px-quick">
@@ -1981,6 +2098,7 @@
       <div class="dx-wrap dx-tabs-in">
         <div class="dx-tabs-links">
           <a href="#dx-overview" data-spy="dx-overview">Overview</a>
+          <a href="#dx-why" data-spy="dx-why">Why book</a>
           <a href="#dx-itinerary" data-spy="dx-itinerary">Itinerary</a>
           <a href="#dx-included" data-spy="dx-included">Inclusions</a>
           <a href="#dx-map" data-spy="dx-map">Map</a>
@@ -2015,6 +2133,36 @@
               </div>
             </sc-if>
           </div>
+
+          <sc-if value="{{ dx.why.show }}" hint-placeholder-val="{{ true }}">
+          <div class="dx-sec dx-why" id="dx-why">
+            <sc-if value="{{ dx.why.hasChoose }}" hint-placeholder-val="{{ false }}">
+              <div class="dx-deva" lang="hi">॥ विशेषताएँ ॥</div>
+              <h2 class="dx-h2">{{ dx.why.choose.title }}</h2>
+              <sc-if value="{{ dx.why.choose.hasIntro }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ dx.why.choose.intro }}</p></sc-if>
+              <sc-if value="{{ dx.why.choose.hasItems }}" hint-placeholder-val="{{ true }}">
+                <div class="dx-choose">
+                  <sc-for list="{{ dx.why.choose.items }}" as="c" hint-placeholder-count="4"><div class="dx-choose-i"><span class="dx-choose-ic" aria-hidden="true">{{ c.ic }}</span><div><strong>{{ c.h }}</strong><p>{{ c.t }}</p></div></div></sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ !dx.why.choose.hasItems }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ dx.why.choose.blocks }}" as="b" hint-placeholder-count="2"><sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p class="dx-why-p">{{ b.t }}</p></sc-if><sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p dx-why-lead">{{ b.lead }}</p><ul class="dx-why-list"><sc-for list="{{ b.items }}" as="li" hint-placeholder-count="4"><li>{{ li.t }}</li></sc-for></ul><sc-if value="{{ b.hasAfter }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ b.after }}</p></sc-if></sc-if></sc-for></sc-if>
+              <div class="dx-why-gap"></div>
+            </sc-if>
+            <div class="dx-deva" lang="hi">॥ क्यों चुनें ॥</div>
+            <h2 class="dx-h2">{{ dx.why.book.title }}</h2>
+            <sc-for list="{{ dx.why.book.intro }}" as="p" hint-placeholder-count="2"><p class="dx-why-p">{{ p.t }}</p></sc-for>
+            <sc-if value="{{ !dx.why.book.hasPoints }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ dx.why.book.blocks }}" as="b" hint-placeholder-count="2"><sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p class="dx-why-p">{{ b.t }}</p></sc-if><sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p dx-why-lead">{{ b.lead }}</p><ul class="dx-why-list"><sc-for list="{{ b.items }}" as="li" hint-placeholder-count="4"><li>{{ li.t }}</li></sc-for></ul><sc-if value="{{ b.hasAfter }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ b.after }}</p></sc-if></sc-if></sc-for></sc-if>
+            <div class="dx-why-grid">
+              <sc-for list="{{ dx.why.book.points }}" as="w" hint-placeholder-count="6"><div class="dx-why-card"><span class="dx-why-n">{{ w.n }}</span><h3>{{ w.h }}</h3><p>{{ w.t }}</p></div></sc-for>
+            </div>
+            <sc-if value="{{ dx.why.hasWho }}" hint-placeholder-val="{{ false }}">
+              <div class="dx-who"><h3>{{ dx.why.who.title }}</h3><sc-for list="{{ dx.why.who.blocks }}" as="b" hint-placeholder-count="2"><sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p class="dx-why-p">{{ b.t }}</p></sc-if><sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p dx-why-lead">{{ b.lead }}</p><ul class="dx-why-list"><sc-for list="{{ b.items }}" as="li" hint-placeholder-count="4"><li>{{ li.t }}</li></sc-for></ul><sc-if value="{{ b.hasAfter }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ b.after }}</p></sc-if></sc-if></sc-for></div>
+            </sc-if>
+            <sc-if value="{{ dx.why.hasBest }}" hint-placeholder-val="{{ false }}">
+              <div class="dx-who dx-best"><h3>Best time to visit</h3><sc-for list="{{ dx.why.best.blocks }}" as="b" hint-placeholder-count="2"><sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p class="dx-why-p">{{ b.t }}</p></sc-if><sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p dx-why-lead">{{ b.lead }}</p><ul class="dx-why-list"><sc-for list="{{ b.items }}" as="li" hint-placeholder-count="4"><li>{{ li.t }}</li></sc-for></ul><sc-if value="{{ b.hasAfter }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ b.after }}</p></sc-if></sc-if></sc-for></div>
+            </sc-if>
+          </div>
+          </sc-if>
 
           <div class="dx-sec" id="dx-itinerary">
             <div class="dx-sec-head">
@@ -2252,6 +2400,7 @@
     <div class="dx-mbar" role="region" aria-label="Quick booking">
       <div class="dx-mbar-t"><strong>{{ dx.durShort }}</strong><small>Price on request</small></div>
       <a class="dx-mbar-wa" href="{{ dx.waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp us"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg></a>
+      <a class="dx-mbar-call" href="tel:+919072769547" aria-label="Call us"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1.1 1A16 16 0 0 1 4 5.1 1 1 0 0 1 5 4Z" fill="currentColor"/></svg></a>
       <a class="dx-mbar-btn" href="#dx-book">Plan &amp; get quote</a>
     </div>
   </main>
@@ -3069,7 +3218,7 @@ class Component extends DCLogic {
     fRegion: 'All', fCat: 'All', fSort: 'Featured',
     slug: 'beach-and-backwater-tour', day: 1, faq: 0, adults: 2, kids: 0, hdr: 78,
     testi: 0, light: -1, email: '', subscribed: false,
-    loading: true, wiping: false, scrolled: false, sy: 0,
+    loading: !(typeof document !== 'undefined' && document.documentElement.classList.contains('sx-fast')), wiping: false, scrolled: false, sy: 0,
     counts: { travellers: 0, destinations: 0, packages: 0, years: 0 },
     form: { name: '', email: '', phone: '', pkg: '', dates: '', message: '' }, sent: false
   };
@@ -3098,25 +3247,25 @@ class Component extends DCLogic {
     { slug: 'mathura-vrindavan-braj-agra-yatra', title: 'Mathura Vrindavan Braj & Agra Yatra', regions: 'Mathura Vrindavan Braj & Agra Yatra', region: 'North India', duration: '4 Days 3 Nights', cat: 'Pilgrimage Yatra', photo: 'packages_cards/mathura(janambhoomi).jpg', hint: 'Mathura Vrindavan Braj & Agra Yatra' },
     { slug: 'varanasi-tour-packages-from-kerala', title: 'Varanasi Tour Packages from Kerala', regions: 'Varanasi Tour Packages from Kerala', region: 'North India', duration: 'On enquiry', cat: 'Pilgrimage Yatra', photo: 'packages_cards/varanasi(aarti).jpg', hint: 'Varanasi Tour Packages from Kerala' },
 
-    { slug: 'kerala-ayurveda-wellness-retreat', title: 'Kerala Ayurveda & Wellness Retreat', regions: 'Kovalam · Poovar · Trivandrum', region: 'South India', duration: '5N / 6D', cat: 'Ayurveda & Wellness', photo: 'https://i.pinimg.com/736x/24/8a/88/248a8829446ddc4864ba2093a40713b2.jpg', hint: 'Ayurveda therapy table with brass vessels, Kovalam' },
-    { slug: 'munnar-thekkady-alleppey', title: 'Munnar – Thekkady – Alleppey Tour', regions: 'Munnar · Thekkady · Alleppey', region: 'South India', duration: 'TBC', cat: 'Hill & Backwater', photo: 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg', hint: 'Munnar tea terraces at sunrise' },
-    { slug: 'waterfalls-hills-backwaters', title: 'A Perfect Blend of Waterfalls, Hills & Backwaters', regions: 'Alleppey · Munnar · Athirappilly', region: 'South India', duration: '4N (TBC)', cat: 'Hill & Backwater', photo: 'https://i.pinimg.com/736x/75/1e/96/751e9636e5a9f3b2ef002932b1817d3d.jpg', hint: 'Athirappilly falls in monsoon' },
-    { slug: 'kerala-temple-tour', title: 'Kerala Temple Tour', regions: 'Guruvayur · Kalady · Chottanikkara · Sabarimala (seasonal) · Trivandrum', region: 'South India', duration: '5N (TBC)', cat: 'Heritage & Temple', photo: 'https://i.pinimg.com/736x/a8/39/4f/a8394fa9408e2472f0672f2bb515d9db.jpg', hint: 'Temple gopuram exterior at dawn' },
-    { slug: 'kovalam-varkala-tour', title: 'Kovalam & Varkala Tour', regions: 'Kovalam · Varkala', region: 'South India', duration: '2N / 3D', cat: 'Beach & Coastal', photo: 'https://i.pinimg.com/1200x/1f/cc/f1/1fccf111a972587d9c072f8381018c70.jpg', hint: 'Varkala cliff at sunset' },
-    { slug: 'north-kerala-heritage-tour', title: 'North Kerala Heritage Tour', regions: 'Bekal · Kannur · Wayanad · Kozhikode', region: 'South India', duration: '6N (TBC)', cat: 'Heritage', photo: 'https://i.pinimg.com/1200x/1e/00/bb/1e00bb9fa2160c94d8b9fd5aa079874b.jpg', hint: 'Bekal fort against the Arabian Sea' },
-    { slug: 'beach-and-backwater-tour', title: 'Beach and Backwater Tour', regions: 'Varkala · Backwaters', region: 'South India', duration: 'TBC', cat: 'Beach & Coastal', photo: 'https://i.pinimg.com/1200x/9c/4d/7b/9c4d7b7354f5deff64a143cd3ee10583.jpg', hint: 'Fishing boats on a Kerala beach at dawn' },
-    { slug: 'enchanting-captivating-kerala', title: 'Enchanting & Captivating Kerala', regions: 'Multi-region', region: 'South India', duration: '7 Days', cat: 'Signature', photo: 'https://i.pinimg.com/originals/87/8b/84/878b841ad38d1d59cbefa547e995f363.png', hint: 'Kathakali performer close-up' },
-    { slug: 'scenic-beautiful-kerala', title: 'Scenic and Beautiful Kerala', regions: 'Multi-region', region: 'South India', duration: '8 Days', cat: 'Signature', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', hint: 'Chinese fishing nets, Fort Kochi' },
-    { slug: 'kerala-short-honeymoon-tour', title: 'Kerala Short Honeymoon Tour', regions: 'Multi-region', region: 'South India', duration: 'TBC', cat: 'Honeymoon', photo: 'https://i.pinimg.com/1200x/7d/92/4c/7d924cc4489932afa59b881fc9f2a523.jpg', hint: 'Private houseboat deck set for two' }
+    { slug: 'kerala-ayurveda-wellness-retreat', title: 'Kerala Ayurveda & Wellness Retreat', regions: 'Kovalam · Poovar · Trivandrum', region: 'South India', duration: '5N / 6D', cat: 'Ayurveda & Wellness', photo: 'https://i.pinimg.com/1200x/7d/92/4c/7d924cc4489932afa59b881fc9f2a523.jpg', hint: 'Ayurvedic herbs and spices' },
+    { slug: 'munnar-thekkady-alleppey', title: 'Munnar – Thekkady – Alleppey Tour', regions: 'Munnar · Thekkady · Alleppey', region: 'South India', duration: 'TBC', cat: 'Hill & Backwater', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', hint: 'Munnar tea hills and winding road' },
+    { slug: 'waterfalls-hills-backwaters', title: 'A Perfect Blend of Waterfalls, Hills & Backwaters', regions: 'Alleppey · Munnar · Athirappilly', region: 'South India', duration: '4N (TBC)', cat: 'Hill & Backwater', photo: 'https://i.pinimg.com/1200x/9c/4d/7b/9c4d7b7354f5deff64a143cd3ee10583.jpg', hint: 'Hill lake and tea slopes, Munnar' },
+    { slug: 'kerala-temple-tour', title: 'Kerala Temple Tour', regions: 'Guruvayur · Kalady · Chottanikkara · Sabarimala (seasonal) · Trivandrum', region: 'South India', duration: '5N (TBC)', cat: 'Heritage & Temple', photo: 'https://i.pinimg.com/736x/a8/39/4f/a8394fa9408e2472f0672f2bb515d9db.jpg', hint: 'Sree Padmanabhaswamy Temple, Thiruvananthapuram' },
+    { slug: 'kovalam-varkala-tour', title: 'Kovalam & Varkala Tour', regions: 'Kovalam · Varkala', region: 'South India', duration: '2N / 3D', cat: 'Beach & Coastal', photo: 'https://i.pinimg.com/1200x/1f/cc/f1/1fccf111a972587d9c072f8381018c70.jpg', hint: 'Kovalam lighthouse beach' },
+    { slug: 'north-kerala-heritage-tour', title: 'North Kerala Heritage Tour', regions: 'Bekal · Kannur · Wayanad · Kozhikode', region: 'South India', duration: '6N (TBC)', cat: 'Heritage', photo: 'https://i.pinimg.com/1200x/b9/74/0a/b9740a34ba67edb133591cb297723efa.jpg', hint: 'Tea estate trails in the Western Ghats' },
+    { slug: 'beach-and-backwater-tour', title: 'Beach and Backwater Tour', regions: 'Varkala · Backwaters', region: 'South India', duration: 'TBC', cat: 'Beach & Coastal', photo: 'https://i.pinimg.com/736x/22/93/a2/2293a2dfbe58a3b0f0ebd6de0396ea65.jpg', hint: 'Kerala backwaters with houseboat and palms' },
+    { slug: 'enchanting-captivating-kerala', title: 'Enchanting & Captivating Kerala', regions: 'Multi-region', region: 'South India', duration: '7 Days', cat: 'Signature', photo: 'https://i.pinimg.com/originals/87/8b/84/878b841ad38d1d59cbefa547e995f363.png', hint: 'Kathakali performer' },
+    { slug: 'scenic-beautiful-kerala', title: 'Scenic and Beautiful Kerala', regions: 'Multi-region', region: 'South India', duration: '8 Days', cat: 'Signature', photo: 'https://i.pinimg.com/736x/75/1e/96/751e9636e5a9f3b2ef002932b1817d3d.jpg', hint: 'Backwater canals at sunset' },
+    { slug: 'kerala-short-honeymoon-tour', title: 'Kerala Short Honeymoon Tour', regions: 'Multi-region', region: 'South India', duration: 'TBC', cat: 'Honeymoon', photo: 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg', hint: 'Alleppey backwaters and houseboats' }
   ];
 
   galleryItems = [
     { id: 'sh-g1', photo: 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg', hint: 'Houseboat convoy, Alleppey', span: 'grid-column:span 2;grid-row:span 2', cap: 'Kettuvallam convoy · Alleppey backwaters' },
-    { id: 'sh-g2', photo: 'https://i.pinimg.com/1200x/9c/4d/7b/9c4d7b7354f5deff64a143cd3ee10583.jpg', hint: 'Kathakali eyes, close-up', span: 'grid-column:span 1;grid-row:span 1', cap: 'Kathakali · Kochi' },
-    { id: 'sh-g3', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', hint: 'Tea pickers, Munnar', span: 'grid-column:span 2;grid-row:span 1', cap: 'Tea gardens · Munnar' },
-    { id: 'sh-g4', photo: 'https://i.pinimg.com/1200x/b9/74/0a/b9740a34ba67edb133591cb297723efa.jpg', hint: 'Spice market stall', span: 'grid-column:span 1;grid-row:span 2', cap: 'Spice market · Fort Kochi' },
-    { id: 'sh-g5', photo: 'https://i.pinimg.com/736x/a8/39/4f/a8394fa9408e2472f0672f2bb515d9db.jpg', hint: 'Temple gopuram at dusk', span: 'grid-column:span 1;grid-row:span 1', cap: 'Gopuram at dusk' },
-    { id: 'sh-g6', photo: 'https://i.pinimg.com/1200x/1e/00/bb/1e00bb9fa2160c94d8b9fd5aa079874b.jpg', hint: 'Varkala cliff sunset', span: 'grid-column:span 2;grid-row:span 1', cap: 'Cliff sunset · Varkala' }
+    { id: 'sh-g2', photo: 'https://i.pinimg.com/originals/87/8b/84/878b841ad38d1d59cbefa547e995f363.png', hint: 'Kathakali performer', span: 'grid-column:span 1;grid-row:span 1', cap: 'Kathakali · Kerala' },
+    { id: 'sh-g3', photo: 'https://i.pinimg.com/1200x/2e/de/6a/2ede6ae530ca4688f61e8a73046ae302.jpg', hint: 'Munnar tea hills', span: 'grid-column:span 2;grid-row:span 1', cap: 'Tea hills · Munnar' },
+    { id: 'sh-g4', photo: 'https://i.pinimg.com/1200x/b9/74/0a/b9740a34ba67edb133591cb297723efa.jpg', hint: 'Tea estate trails', span: 'grid-column:span 1;grid-row:span 2', cap: 'Tea estate trails · Munnar' },
+    { id: 'sh-g5', photo: 'https://i.pinimg.com/736x/a8/39/4f/a8394fa9408e2472f0672f2bb515d9db.jpg', hint: 'Sree Padmanabhaswamy Temple', span: 'grid-column:span 1;grid-row:span 1', cap: 'Padmanabhaswamy Temple · Thiruvananthapuram' },
+    { id: 'sh-g6', photo: 'https://i.pinimg.com/736x/24/8a/88/248a8829446ddc4864ba2093a40713b2.jpg', hint: 'Lighthouse sunset, Kovalam', span: 'grid-column:span 2;grid-row:span 1', cap: 'Lighthouse sunset · Kovalam' }
   ];
 
   testis = [
@@ -3132,6 +3281,7 @@ class Component extends DCLogic {
   ];
 
   componentDidMount() {
+    setTimeout(() => this.sxSeo(), 50);
     this.setState({ month: new Date(2026, 8, 1) });
     const params = new URLSearchParams(window.location.search);
     const updates = {};
@@ -4768,12 +4918,143 @@ class Component extends DCLogic {
     });
   }
 
+
+  /*  === "Why choose / Why book / Who is it for" — pulled out of the itinerary's last day and structured ===  */
+  dxSplit(it) {
+    if (!it || !it.length) return { it: it || [], secs: [] };
+    const last = it[it.length - 1], body = (last.body || []).map(b => String(b || ''));
+    const rx = /(Why Choose|Why Book|Who Is This)[^?]{0,140}\?/;
+    let k = -1, cut = -1;
+    body.forEach((b, i) => { const j = b.search(rx); if (j >= 0 && k < 0) { k = i; cut = j; } });
+    if (k < 0) return { it, secs: [] };
+    const head = body[k].slice(0, cut).trim();
+    const tail = [body[k].slice(cut)].concat(body.slice(k + 1)).join(' ');
+    const it2 = it.slice(0, -1).concat([Object.assign({}, last, { body: body.slice(0, k).concat(head ? [head] : []) })]);
+    const parts = tail.split(/(Why Choose[^?]{0,140}\?|Why Book[^?]{0,140}\?|Who Is This[^?]{0,140}\?)/);
+    const secs = [];
+    for (let i = 1; i < parts.length; i += 2) secs.push({ q: parts[i].trim(), body: (parts[i + 1] || '').trim() });
+    return { it: it2, secs };
+  }
+  dxTitled(sentence, min, strict) {
+    const toks = String(sentence).trim().split(/\s+/);
+    if (!toks.length || /^(The|A|An|This|These|Our|We|Your|It|If|In|Whether|From|For)$/.test(toks[0])) return null;
+    const conn = /^(for|with|the|and|of|to|from|in|&|a|an|your|at|on|by)$/i;
+    let t = 0;
+    for (let i = 0; i < toks.length; i++) {
+      const w = toks[i];
+      if (/[,.:;!?]$/.test(w)) { if (i >= 3) t = i; break; }
+      const cap = /^[A-Z0-9]/.test(w);
+      if (i >= 1 && cap && toks[i + 1] && /^[a-z]/.test(toks[i + 1]) && !(strict && conn.test(toks[i + 1]))) { t = i; break; }
+      if (!cap && !conn.test(w)) break;
+    }
+    return t >= (min || 2) ? { h: toks.slice(0, t).join(' '), t: toks.slice(t).join(' ') } : null;
+  }
+  dxSentences(text) { return String(text || '').split(/(?<=[.!])\s+(?=[A-Z0-9])/).map(x => x.trim()).filter(Boolean); }
+  dxPlaces(p) {
+    const L = ['Kashmir', 'Srinagar', 'Sonmarg', 'Gulmarg', 'Pahalgam', 'Katra', 'Vaishno Devi', 'Mansa Devi', 'Shimla', 'Kullu', 'Manali', 'Amritsar', 'Dharamshala', 'Dalhousie', 'Lucknow', 'Naimisharanya', 'Varanasi', 'Kashi', 'Gaya', 'Prayagraj', 'Chitrakoot', 'Ayodhya', 'Mathura', 'Vrindavan', 'Agra', 'Puri', 'Konark', 'Chilika', 'Bhubaneswar', 'Kovalam', 'Poovar', 'Trivandrum', 'Munnar', 'Thekkady', 'Alleppey', 'Athirappilly', 'Guruvayur', 'Kalady', 'Chottanikkara', 'Varkala', 'Bekal', 'Kannur', 'Wayanad', 'Kozhikode', 'Himachal Pradesh'];
+    const txt = p.title + ' ' + p.regions;
+    return L.map(w => [txt.indexOf(w), w]).filter(x => x[0] >= 0).sort((a, b) => a[0] - b[0]).map(x => x[1]).filter((w, i, a) => a.indexOf(w) === i);
+  }
+
+  dxListify(text) {
+    const i = text.indexOf(':'); if (i < 0 || i > 200) return null;
+    const lead = text.slice(0, i + 1).trim(); let rest = text.slice(i + 1).trim(), after = '';
+    const m = rest.search(/\s(The|Whether|This|It|Your|Every|Our)\s[a-z]/);
+    if (m > 0) { after = rest.slice(m).trim(); rest = rest.slice(0, m); }
+    const toks = rest.split(/\s+/).filter(Boolean), items = []; let cur = [];
+    toks.forEach((w, k) => {
+      const prev = toks[k - 1];
+      const nx = toks[k + 1], conn = /^(and|of|at|to|the|in|&|with|for|from|by|on|or|a|an)$/;
+      const brk1 = /^[A-Z]/.test(w) && prev && /^[a-z]/.test(prev) && !conn.test(prev);
+      const brk2 = /^[A-Z]/.test(w) && prev && /^[A-Z]/.test(prev) && cur.length >= 2 && nx && /^[a-z]/.test(nx) && !/^(and|or|&)$/.test(nx);
+      if (cur.length && (brk1 || brk2)) { items.push(cur.join(' ')); cur = []; }
+      cur.push(w);
+    });
+    if (cur.length) items.push(cur.join(' '));
+    return items.length >= 3 ? { lead, items: items.map(t => ({ t: t.replace(/[.,;]$/, '') })), after } : null;
+  }
+  dxBlocks(text) {
+    const out = []; let buf = [];
+    const flush = () => { if (buf.length) { out.push({ isP: true, isList: false, t: buf.join(' ') }); buf = []; } };
+    this.dxSentences(text).forEach(sn => {
+      const l = sn.indexOf(':') >= 0 ? this.dxListify(sn) : null;
+      if (l) { flush(); out.push({ isP: false, isList: true, lead: l.lead, items: l.items, after: l.after, hasAfter: !!l.after }); }
+      else { buf.push(sn); if (buf.length >= 2) flush(); }
+    });
+    flush();
+    return out;
+  }
+  dxWhyFor(p, secs) {
+    const find = re => secs.find(x => re.test(x.q));
+    const cSec = find(/^Why Choose/), bSec = find(/^Why Book/), wSec = find(/^Who Is/);
+    const out = { show: p.slug !== 'varanasi-tour-packages-from-kerala', hasChoose: false, hasWho: false, choose: null, who: null, book: null };
+    if (cSec) {
+      const pieces = cSec.body.split(/(\p{Extended_Pictographic}️?)/u);
+      const intro = pieces[0].trim(), items = [];
+      for (let i = 1; i < pieces.length; i += 2) {
+        const txt = (pieces[i + 1] || '').trim(); if (!txt) continue;
+        const tt = this.dxTitled(txt, 1);
+        items.push({ ic: pieces[i], h: tt ? tt.h : '', t: tt ? tt.t : txt });
+      }
+      out.choose = { title: cSec.q, intro: items.length ? intro : '', hasIntro: !!(items.length && intro), items, hasItems: items.length > 0, blocks: items.length ? [] : this.dxBlocks(cSec.body) };
+      out.hasChoose = true;
+    }
+    if (wSec) {
+      const bi = wSec.body.search(/Best Time (?:for|to)\b/);
+      const whoText = bi > 0 ? wSec.body.slice(0, bi).trim() : wSec.body;
+      const best = bi > 0 ? wSec.body.slice(bi).replace(/^Best Time (?:for|to)[^A-Z]*?(?:[A-Z][a-z&]+\s?)+(?=[A-Z][a-z]+ (?:is|can|has|are|offers))/, '').trim() : '';
+      out.who = { title: wSec.q, blocks: this.dxBlocks(whoText) }; out.hasWho = !!whoText;
+      out.best = { blocks: this.dxBlocks(best) }; out.hasBest = !!best;
+    }
+    if (bSec) {
+      const intro = [], points = [];
+      this.dxSentences(bSec.body).forEach(sn => {
+        const tt = this.dxTitled(sn, 2, true);
+        if (tt) points.push({ h: tt.h, t: tt.t });
+        else if (points.length) points[points.length - 1].t += ' ' + sn;
+        else intro.push({ t: sn });
+      });
+      const ok = points.length >= 3;
+      out.book = { title: bSec.q, intro: ok ? intro : [], hasPoints: ok, points: ok ? points.map((x, i) => Object.assign({ n: (i < 9 ? '0' : '') + (i + 1) }, x)) : [], blocks: ok ? [] : this.dxBlocks(bSec.body) };
+      return out;
+    }
+    /* No written copy for this package: build it from the package's own places and type */
+    const pl = this.dxPlaces(p), list = pl.length > 1 ? pl.slice(0, -1).join(', ') + ' and ' + pl[pl.length - 1] : (pl[0] || p.title);
+    const kerala = p.region === 'South India';
+    const yatra = p.cat === 'Pilgrimage Yatra' || p.cat === 'Heritage & Temple' || /yatra|temple|devi/i.test(p.title);
+    const honey = /honeymoon/i.test(p.title) || p.cat === 'Honeymoon';
+    const cities = 'Kochi, Ernakulam, Thrissur, Kottayam, Kozhikode, Kannur, Malappuram, Alappuzha, Kollam, Thiruvananthapuram';
+    const intro = [
+      { t: (yatra ? 'A pilgrimage involving ' + list + ' requires careful coordination of road travel, accommodation, temple visits and religious rituals.' : 'A holiday covering ' + list + ' involves coordinating road travel, stays and sightseeing across several stops.') },
+      { t: kerala ? 'Sahapathika Holidays, a Kochi-based team, organises these elements into one well-paced journey.' : 'Sahapathika Holidays can organise these elements into one coordinated journey for travellers from Kerala.' }
+    ];
+    const pts = kerala ? [
+      ['Local Kerala Expertise', 'Planned by a Kochi-based team that knows these routes, stays and seasons personally.'],
+      ['Easy Arrivals from Anywhere', 'Whether you arrive at Kochi or Thiruvananthapuram, we plan the tour around your flight or train.'],
+      [yatra ? 'Temple-Focused Planning' : 'Well-Paced Itinerary', yatra ? 'Darshan timings and temple customs are built into the plan, not squeezed between sightseeing stops.' : 'Each stop gets its due, with time for sightseeing and time to simply rest.'],
+      ['Multi-Stop Coordination', list + ' are coordinated as one journey, so you don’t arrange each stop independently.'],
+      [honey ? 'Made for Couples' : 'Suitable for Families & Groups', honey ? 'Private transfers, a relaxed pace and stays chosen for couples.' : 'The package can be planned for families, senior citizens, couples, friends and groups.'],
+      ['Customizable Travel', 'Additional nights, different hotel categories and other requirements can be added to suit you.']
+    ] : [
+      ['Kerala-Based Travel Support', 'Get assistance from a travel company with an established presence in Kerala.'],
+      ['Designed for Kerala Travellers', 'We can assist travellers from ' + cities + ' and other parts of Kerala.'],
+      [yatra ? 'Pilgrimage-Focused Planning' : 'Destination-Focused Planning', yatra ? 'The itinerary is designed around the spiritual purpose of the journey rather than treating these destinations as ordinary sightseeing stops.' : 'The itinerary is paced to give each destination its due, with time for sightseeing and rest.'],
+      ['Assistance with Multi-City Travel', list + ' are coordinated as one journey, reducing the need to arrange each destination independently.'],
+      [honey ? 'Planned for Couples' : 'Suitable for Families & Groups', honey ? 'Private transfers, a relaxed pace and romantic stays, planned for couples.' : 'The package can be planned for families, senior citizens, couples, friends and organised groups.'],
+      ['Customizable Travel', 'Additional nights, different hotel categories, transportation options and other requirements can be incorporated according to your needs.']
+    ];
+    out.book = { title: kerala ? 'Why Book This Kerala Holiday with Sahapathika Holidays?' : 'Why Book This Package from Kerala with Sahapathika Holidays?', intro,
+      hasPoints: true, blocks: [], points: pts.map((x, i) => ({ n: '0' + (i + 1), h: x[0], t: x[1] })) };
+    return out;
+  }
+
   dxVals() {
     const s = this.state;
     if (s.page !== 'detail') return {};
     const p = this.packages.find(x => x.slug === s.slug) || this.packages[0];
     const info = this.detailFor(p.slug);
-    const it = this.itineraries[p.slug] || [];
+    const ex = this.dxSplit(this.itineraries[p.slug] || []);
+    const it = ex.it;
     const n = it.length;
     const cur = Math.min(Math.max(s.day || 1, 1), Math.max(n, 1));
     const view = s.dxView || 'day';
@@ -4824,6 +5105,7 @@ class Component extends DCLogic {
       dx: {
         photoPos: p.slug === 'puri-jagannath-konark-chilika-bhubaneswar' ? 'object-position:top' : '',
         isYatra: p.cat === 'Pilgrimage Yatra' || p.cat === 'Heritage & Temple' || /yatra|temple/i.test(p.title),
+        why: this.dxWhyFor(p, ex.secs),
         catBg: catBg(p.cat),
         quick: [
           { k: 'Duration', v: dur || 'Flexible', icon: this.dxIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>') },
@@ -4917,6 +5199,33 @@ class Component extends DCLogic {
     { g: 'South & East', name: 'Puri & Konark', q: 'puri', img: 'packages_cards/jaganathpuri.jpg', test: p => /puri/i.test(p.title) }
   ];
   sxPopularSlugs = ['kashmir-honeymoon', 'kashi-gaya-prayag-ayodhya-pitru-moksha-yatra', 'kerala-ayurveda-wellness-retreat', 'shimla-manali'];
+
+  /*  === SEO: page-specific structured data (JSON-LD), built from the live package data ===  */
+  sxSeo() {
+    try {
+      const s = this.state, B = 'https://sahapathika-holidays.vercel.app/';
+      const put = (id, obj) => { let el = document.getElementById(id); if (!el) { el = document.createElement('script'); el.type = 'application/ld+json'; el.id = id; document.head.appendChild(el); } el.textContent = JSON.stringify(obj); };
+      const faqLd = list => ({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: list.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+      if (s.page === 'home') {
+        put('sx-ld-site', { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Sahapathika Holidays', url: B, potentialAction: { '@type': 'SearchAction', target: B + 'packages.html?q={search_term_string}', 'query-input': 'required name=search_term_string' } });
+        if (this.hxFaqList) put('sx-ld-faq', faqLd(this.hxFaqList));
+      }
+      if (s.page === 'packages') {
+        put('sx-ld-list', { '@context': 'https://schema.org', '@type': 'ItemList', name: 'Tour packages from Kerala', numberOfItems: this.packages.length,
+          itemListElement: this.packages.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: B + 'package-' + p.slug + '.html', name: p.title })) });
+      }
+      if (s.page === 'detail') {
+        const p = this.packages.find(x => x.slug === s.slug) || this.packages[0], info = this.detailFor(p.slug);
+        const it = this.dxSplit(this.itineraries[p.slug] || []).it;
+        const trip = { '@context': 'https://schema.org', '@type': 'TouristTrip', name: p.title, url: B + 'package-' + p.slug + '.html',
+          image: /^https?:/.test(p.photo) ? p.photo : B + p.photo, description: String(info.overview || '').replace(/\s+/g, ' ').slice(0, 500),
+          touristType: info.tourType, provider: { '@type': 'TravelAgency', '@id': B + '#agency', name: 'Sahapathika Holidays', telephone: '+91-9072769547' } };
+        if (it.length) trip.itinerary = { '@type': 'ItemList', numberOfItems: it.length, itemListElement: it.map((d, i) => ({ '@type': 'ListItem', position: i + 1, name: String(d.title || '') })) };
+        put('sx-ld-trip', trip);
+        if (info.faqs && info.faqs.length) put('sx-ld-faq', faqLd(info.faqs));
+      }
+    } catch (e) {}
+  }
 
   sxVals() {
     const s = this.state, P = this.packages;
@@ -5409,6 +5718,95 @@ class Component extends DCLogic {
   _mo.observe(document.body, { childList: true, subtree: true });
 </script>
 <script src="./motion.js" defer></script>
+<script>
+  /* Mobile bottom navigation (Home · Packages · Destinations · Contact) with slide-up panels, plus a floating call button */
+  (function () {
+    var K = 'https://i.pinimg.com/736x/b4/88/63/b48863982d7b8c63a8d633405da62b2b.jpg';
+    var ic = {
+      home: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-8Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>',
+      pkg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="7" width="17" height="13" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3.5 12.5h17" stroke="currentColor" stroke-width="1.9"/></svg>',
+      dest: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.9"/></svg>',
+      contact: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 3.5V17H6.5A2.5 2.5 0 0 1 4 14.5v-8Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>',
+      phone: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1.1 1A16 16 0 0 1 4 5.1 1 1 0 0 1 5 4Z" fill="currentColor"/></svg>'
+    };
+    var themes = [
+      ['Pilgrimage Yatras', 'Pilgrimage%20Yatra', '#B5822A'], ['Hill &amp; Backwater', 'Hill%20%26%20Backwater', '#2F7A63'], ['Honeymoon', 'Honeymoon', '#C4362C'],
+      ['Heritage &amp; Temple', 'Heritage%20%26%20Temple', '#B5822A'], ['Beach &amp; Coastal', 'Beach%20%26%20Coastal', '#3C6F63'], ['Ayurveda &amp; Wellness', 'Ayurveda%20%26%20Wellness', '#2E6E6A']
+    ];
+    var fests = [
+      [[8, 9], 'Pitru Paksha', 'पितृ पक्ष', 'Sep – Oct', 'kashi-gaya-prayag-ayodhya-pitru-moksha-yatra'],
+      [[8, 9], 'Navratri', 'नवरात्रि', 'Sep – Oct', 'himachal-devi-yatra-with-vaishno-devi-mansa-devi'],
+      [[9, 10], 'Deepavali', 'दीपावली', 'Oct – Nov', 'lucknow-naimisharanya-ayodhya-prayagraj-varanasi-y'],
+      [[10], 'Dev Deepawali', 'देव दीपावली', 'Nov', 'varanasi-tour-packages-from-kerala'],
+      [[0, 1], 'Magh Mela', 'माघ मेला', 'Jan – Feb', 'kashi-prayag-chitrakoot-ayodhya-yatra'],
+      [[1, 2], 'Maha Shivaratri', 'महाशिवरात्रि', 'Feb – Mar', 'varanasi-tour-packages-from-kerala'],
+      [[2], 'Holi in Braj', 'होली', 'Mar', 'mathura-vrindavan-braj-agra-yatra'],
+      [[5, 6], 'Rath Yatra', 'रथ यात्रा', 'Jun – Jul', 'puri-jagannath-konark-chilika-bhubaneswar']
+    ];
+    var dests = [
+      ['Kashmir', 'packages.html?q=kashmir', 'packages_cards/kashmir(lake_boat).jpg'], ['Himachal', 'packages.html?q=himachal', 'packages_cards/manali.jpg'],
+      ['Varanasi &amp; Kashi', 'packages.html?q=kashi', 'packages_cards/varanasi(aarti).jpg'], ['Ayodhya', 'packages.html?q=ayodhya', 'packages_cards/ayodhya.jpg'],
+      ['Mathura Vrindavan', 'package-mathura-vrindavan-braj-agra-yatra.html', 'packages_cards/virdavan(prem_mandir).jpg'], ['Amritsar', 'package-shimla-manali-amritsar.html', 'packages_cards/amritsar.jpg'],
+      ['Kerala', 'packages.html?q=kerala', K], ['Puri &amp; Konark', 'package-puri-jagannath-konark-chilika-bhubaneswar.html', 'packages_cards/jaganathpuri.jpg']
+    ];
+    function build() {
+      if (document.getElementById('sx-bnav')) return;
+      var path = (location.pathname.split('/').pop() || 'index.html');
+      var active = path === '' || path === 'index.html' ? 'home' : (path === 'packages.html' || path.indexOf('package-') === 0 ? 'pkg' : (path === 'contact.html' ? 'contact' : ''));
+      var now = new Date().getMonth();
+      var dist = function (f) { return Math.min.apply(null, f[0].map(function (x) { return (x - now + 12) % 12; })); };
+      var fs = fests.slice().sort(function (a, b) { return dist(a) - dist(b); });
+      var wrap = document.createElement('div');
+      wrap.innerHTML =
+        '<nav id="sx-bnav" aria-label="Quick navigation">' +
+          '<a href="index.html" class="sx-bn' + (active === 'home' ? ' on' : '') + '">' + ic.home + '<span>Home</span></a>' +
+          '<button type="button" class="sx-bn' + (active === 'pkg' ? ' on' : '') + '" data-sheet="pkg" aria-haspopup="dialog">' + ic.pkg + '<span>Packages</span></button>' +
+          '<button type="button" class="sx-bn" data-sheet="dest" aria-haspopup="dialog">' + ic.dest + '<span>Destinations</span></button>' +
+          '<a href="contact.html" class="sx-bn' + (active === 'contact' ? ' on' : '') + '">' + ic.contact + '<span>Contact</span></a>' +
+        '</nav>' +
+        '<a id="sx-call" href="tel:+919072769547" aria-label="Call Sahapathika Holidays on +91 90727 69547">' + ic.phone + '<span>Call us</span></a>' +
+        '<div id="sx-bsheet-bg" hidden></div>' +
+        '<div id="sx-bsheet" role="dialog" aria-modal="true" aria-label="Browse" hidden>' +
+          '<div class="sx-bs-grab"></div>' +
+          '<div class="sx-bs-panel" data-panel="pkg">' +
+            '<div class="sx-bs-h"><strong>Packages</strong><button type="button" class="sx-bs-x" aria-label="Close">✕</button></div>' +
+            '<div class="sx-bs-body">' +
+              '<a class="sx-bs-all" href="packages.html"><span class="sx-bs-all-imgs"><img src="packages_cards/kashmir(lake_boat).jpg" alt=""><img src="packages_cards/varanasi(aarti).jpg" alt=""><img src="packages_cards/manali.jpg" alt=""></span><span class="sx-bs-all-b"><small>॥ सभी यात्राएँ ॥</small><strong>Explore all packages</strong></span><i>→</i></a>' +
+              '<div class="sx-bs-l">Pick your theme</div>' +
+              '<div class="sx-bs-themes">' + themes.map(function (t) { return '<a href="packages.html?cat=' + t[1] + '"><i style="background:' + t[2] + '"></i>' + t[0] + '</a>'; }).join('') + '</div>' +
+              '<div class="sx-bs-l">Plan by festival</div>' +
+              '<div class="sx-bs-fests">' + fs.map(function (f) { var d = dist(f); return '<a href="package-' + f[4] + '.html"><span class="sx-bs-fd">' + f[2] + '</span><strong>' + f[1] + '</strong><small>' + f[3] + '</small>' + (d === 0 ? '<em>This season</em>' : (d <= 2 ? '<em class="soon">Coming up</em>' : '')) + '</a>'; }).join('') + '</div>' +
+              '<a class="sx-bs-custom" href="https://wa.me/919072769547?text=Hi%20Sahapathika%20Holidays%2C%20I%27d%20like%20help%20choosing%20a%20package." target="_blank" rel="noopener">Not sure? Ask a planner on WhatsApp →</a>' +
+            '</div>' +
+          '</div>' +
+          '<div class="sx-bs-panel" data-panel="dest">' +
+            '<div class="sx-bs-h"><strong>Destinations</strong><button type="button" class="sx-bs-x" aria-label="Close">✕</button></div>' +
+            '<div class="sx-bs-body">' +
+              '<div class="sx-bs-dests">' + dests.map(function (d) { return '<a href="' + d[1] + '"><img src="' + d[2] + '" alt="" loading="lazy"><span>' + d[0] + '</span></a>'; }).join('') + '</div>' +
+              '<a class="sx-bs-custom" href="contact.html">Somewhere else? We plan custom trips across India &amp; abroad →</a>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
+      var bg = document.getElementById('sx-bsheet-bg'), sh = document.getElementById('sx-bsheet');
+      function open(which) {
+        sh.querySelectorAll('.sx-bs-panel').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== which; });
+        bg.hidden = false; sh.hidden = false; document.body.style.overflow = 'hidden';
+        requestAnimationFrame(function () { bg.classList.add('in'); sh.classList.add('in'); });
+      }
+      function close() {
+        bg.classList.remove('in'); sh.classList.remove('in'); document.body.style.overflow = '';
+        setTimeout(function () { bg.hidden = true; sh.hidden = true; }, 320);
+      }
+      document.querySelectorAll('#sx-bnav [data-sheet]').forEach(function (b) { b.addEventListener('click', function () { open(b.getAttribute('data-sheet')); }); });
+      bg.addEventListener('click', close);
+      sh.querySelectorAll('.sx-bs-x').forEach(function (b) { b.addEventListener('click', close); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sh.hidden) close(); });
+      sh.querySelectorAll('.sx-bs-dests a, .sx-bs-themes a, .sx-bs-fests a, .sx-bs-all').forEach(function (a) { a.addEventListener('click', function () { document.body.style.overflow = ''; }); });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+  })();
+</script>
 <script>
   /* Mobile menu: real destinations with thumbnails, themes, and an "Explore all packages" card */
   (function () {
