@@ -30,9 +30,10 @@ require crediting the photographer wherever the image is shown or in a credits p
 | kerala_vembanad.jpg | [File:Astamudi Lake Kerala.jpg](https://commons.wikimedia.org/wiki/File:Astamudi_Lake_Kerala.jpg) | CC BY-SA 4.0 | Sanunsanu |
 | kerala_wayanad.jpg | [File:Chembra Peak.JPG](https://commons.wikimedia.org/wiki/File:Chembra_Peak.JPG) | CC0 | Apletters |
 | konark.jpg | [File:Chariot wheel, Konârak 03.jpg](https://commons.wikimedia.org/wiki/File:Chariot_wheel,_Kon%C3%A2rak_03.jpg) | CC BY-SA 3.0 | Bernard Gagnon |
-| lucknow.jpg | [File:Imambara of Asaf-ud-daula Bara imambara.JPG](https://commons.wikimedia.org/wiki/File:Imambara_of_Asaf-ud-daula_Bara_imambara.JPG) | CC BY-SA 3.0 | <a href="//commons.wikimedia.org/w/index.php?title=User:Nikhil2789&action=edit&redlink=1" class="new" title="Use |
+| lucknow.jpg (removed) | [File:Imambara of Asaf-ud-daula Bara imambara.JPG](https://commons.wikimedia.org/wiki/File:Imambara_of_Asaf-ud-daula_Bara_imambara.JPG) | CC BY-SA 3.0 | <a href="//commons.wikimedia.org/w/index.php?title=User:Nikhil2789&action=edit&redlink=1" class="new" title="Use |
 | naimisharanya.jpg | [File:8 gods of Naimisharanya ksetra.jpg](https://commons.wikimedia.org/wiki/File:8_gods_of_Naimisharanya_ksetra.jpg) | CC BY-SA 4.0 | Lusifor ,manoj shrestha |
 | kashi_bhu_vishwanath.jpg | [File:New Vishwanath Temple (BHU).jpg](https://commons.wikimedia.org/wiki/File:New_Vishwanath_Temple_(BHU).jpg) | CC BY-SA 4.0 | Heliophilous |
 | kashi_durgakund.jpg | [File:Durga Kund Temple.jpg](https://commons.wikimedia.org/wiki/File:Durga_Kund_Temple.jpg) | CC BY-SA 4.0 | <a href="//commons.wikimedia.org/w/index.php?title=User:Nikhil399792&action=edit&redlink=1" class="new" title="U |
 | kashi_sankatmochan.jpg | [File:Sankat Mochan temple entrance, Varanasi - IRCTC 2017.jpg](https://commons.wikimedia.org/wiki/File:Sankat_Mochan_temple_entrance,_Varanasi_-_IRCTC_2017.jpg) | CC BY-SA 4.0 | Vinayaraj |
 | kashi_tulsimanas.jpg | [File:Manas Mandir.jpg](https://commons.wikimedia.org/wiki/File:Manas_Mandir.jpg) | CC BY-SA 4.0 | <a href="//commons.wikimedia.org/w/index.php?title=User:Nikhil399792&action=edit&redlink=1" class="new" title="U |
+| lucknow_mandir.jpg | [File:Chandrika devi temple lucknow.jpg](https://commons.wikimedia.org/wiki/File:Chandrika_devi_temple_lucknow.jpg) | CC BY 4.0 | Yatradham |
