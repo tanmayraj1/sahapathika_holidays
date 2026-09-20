@@ -1393,6 +1393,13 @@
   .sx-mob-social a { width:42px; height:42px; border-radius:99px; display:grid; place-items:center; background:#FFF4E2; border:1px solid rgba(232,135,30,.3); color:#7A1F16 !important; text-decoration:none; }
   .sx-mob-social a:active { background:#FFE7BF; }
   .sx-mob-social svg { width:19px; height:19px; }
+  /* Header social icons (desktop) */
+  .sx-hsoc { display:flex; align-items:center; gap:0; }
+  .sx-hsoc a { width:27px; height:27px; border-radius:99px; display:grid; place-items:center; color:#16211D; opacity:.62; text-decoration:none; transition:opacity .22s, background .22s, color .22s, transform .22s cubic-bezier(.22,1,.36,1); }
+  .sx-hsoc a svg { width:15px; height:15px; display:block; }
+  .sx-hsoc a:hover { opacity:1; color:#C4362C; background:#FFF4E2; transform:translateY(-1px); }
+  .sx-hsoc-sep { width:1px; height:20px; background:rgba(22,33,29,.14); margin:0 3px; }
+  @media (max-width:1360px) { .sx-hsoc, .sx-hsoc-sep { display:none !important; } }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -1431,6 +1438,13 @@
       </nav>
 
       <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <div class="sx-hsoc">
+          <a href="https://www.instagram.com/sahapathika_holidays/" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.facebook.com/sahapathika" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Facebook" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21.9V14h2.6l.5-3.1h-3.1V8.9c0-.9.4-1.7 1.8-1.7h1.4V4.5S15.5 4.3 14.4 4.3c-2.3 0-3.8 1.4-3.8 3.9v2.7H7.7V14h2.9v7.9a10 10 0 1 0 2.9 0Z"/></svg></a>
+          <a href="https://www.threads.com/@sahapathika_holidays" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Threads" title="Threads"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>
+          <a href="https://www.youtube.com/@sahapathikateam8537" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+        </div>
+        <span class="sx-hsoc-sep" aria-hidden="true"></span>
         <a href="tel:+919072769547" style="color:#16211D;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px;opacity:.9" class="sh-tel-link">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1.1 1A16 16 0 0 1 4 5.1 1 1 0 0 1 5 4Z" stroke="#E5483D" strokeWidth="1.5" strokeLinejoin="round"/></svg>
           +91 90727 69547
