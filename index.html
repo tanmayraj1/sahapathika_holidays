@@ -6470,7 +6470,8 @@ class Component extends DCLogic {
       /* Video stories — to add a video, put the .mp4 (and a poster .jpg) in /videos and add one line below */
       hxReels: [
         { src: 'videos/moment-02.mp4', poster: 'videos/moment-02.jpg', tag: 'Kashi Yatra', lang: 'Malayalam', title: 'To Mahadev\'s own Kashi', sub: 'Ganga aarti on the ghats of Varanasi', href: 'package-varanasi-tour-packages-from-kerala.html', cta: 'Explore the Varanasi yatra' },
-        { src: 'videos/moment-01.mp4', poster: 'videos/moment-01.jpg', tag: 'Travel tip', lang: 'Travel tips', title: 'Mundu or dhoti?', sub: 'A quick guide from our team', href: 'packages.html?cat=Pilgrimage%20Yatra', cta: 'Browse pilgrimage yatras' }
+        { src: 'videos/moment-01.mp4', poster: 'videos/moment-01.jpg', tag: 'Travel tip', lang: 'Travel tips', title: 'Mundu or dhoti?', sub: 'A quick guide from our team', href: 'packages.html?cat=Pilgrimage%20Yatra', cta: 'Browse pilgrimage yatras' },
+        { src: 'videos/moment-03.mp4', poster: 'videos/moment-03.jpg', tag: 'Kerala', lang: 'Kerala holidays', title: 'God\'s Own Country', sub: 'Backwaters, Jatayu Earth\'s Center, a banana-leaf sadhya and Munnar mists', href: 'packages.html?q=kerala', cta: 'Explore Kerala holidays' }
       ].map(r => Object.assign({ aria: r.title + ' — video. Tap to turn sound on or off.' }, r)),
       hxReelsRef: el => { this.reelsRail = el; },
       hxReelsPrev: () => this.reelsRail && this.reelsRail.scrollBy({ left: -300, behavior: 'smooth' }),
