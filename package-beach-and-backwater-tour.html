@@ -1445,6 +1445,7 @@
     .rv-card:hover { transform:none; }
   }
   @media (prefers-reduced-motion: reduce) { .rv-card, .rv-card:hover { transition:none; transform:none; } }
+  .dx-cal-nav[disabled], .hx-cal-nav[disabled] { opacity:.3; cursor:not-allowed; }
 </style>
 <script src="./image-slot.js"></script>
 </helmet>
@@ -2365,7 +2366,7 @@
               <sc-if value="{{ openDateList }}" hint-placeholder-val="{{ false }}">
                 <div class="dx-cal">
                   <div class="dx-cal-head">
-                    <button class="dx-cal-nav" onClick="{{ prevMonth }}" aria-label="Previous month">‹</button>
+                    <button class="dx-cal-nav" disabled="{{ prevMonthOff }}" onClick="{{ prevMonth }}" aria-label="Previous month">‹</button>
                     <strong>{{ monthLabel }}</strong>
                     <button class="dx-cal-nav" onClick="{{ nextMonth }}" aria-label="Next month">›</button>
                   </div>
@@ -3329,7 +3330,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     setTimeout(() => this.sxSeo(), 50);
-    this.setState({ month: new Date(2026, 8, 1) });
+    this.setState({ month: this.calStart() });
     const params = new URLSearchParams(window.location.search);
     const updates = {};
     if (params.has('cat')) updates.fCat = params.get('cat');
@@ -3427,16 +3428,18 @@ class Component extends DCLogic {
     return 'display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1.5px solid ' + (active ? '#E5483D' : 'rgba(22,33,29,.1)') + ';padding:14px 18px;border-radius:16px;cursor:pointer;transition:border-color .2s';
   }
 
+  /* first day of the month the calendar opens on — always the real current month */
+  calStart() { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), 1); }
   monthCells() {
-    const m = this.state.month || new Date(2026, 8, 1);
+    const m = this.state.month || this.calStart();
     const first = new Date(m.getFullYear(), m.getMonth(), 1);
     const start = new Date(first); start.setDate(1 - first.getDay());
-    const today = new Date(2026, 8, 4);
+    const today = new Date(); today.setHours(0, 0, 0, 0);
     const out = [];
     for (let i = 0; i < 42; i++) {
       const d = new Date(start); d.setDate(start.getDate() + i);
       const other = d.getMonth() !== m.getMonth();
-      const iso = d.toISOString().slice(0, 10);
+      const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
       const sel = this.state.date === iso;
       const past = d < today;
       out.push({
@@ -5664,7 +5667,7 @@ class Component extends DCLogic {
     const navBtn = on => 'background:' + (on ? 'rgba(22,33,29,.06)' : 'transparent') + ';border:0;color:#16211D;padding:10px 15px;border-radius:99px;font-size:14.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px';
     const dLabel = s.date ? new Date(s.date + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) : 'Any date';
     const dSub = s.date ? new Date(s.date + 'T00:00').toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric' }) : 'When would you like to travel?';
-    const m = s.month || new Date(2026, 8, 1);
+    const m = s.month || this.calStart();
     const tbcTag = 'display:inline-block;margin-top:9px;font-size:9.5px;font-weight:800;letter-spacing:.12em;padding:5px 10px;border-radius:99px;background:rgba(217,164,65,.22);color:#8A6316';
     const okTag = 'display:inline-block;margin-top:9px;font-size:9.5px;font-weight:800;letter-spacing:.12em;padding:5px 10px;border-radius:99px;background:rgba(95,169,140,.2);color:#2F7A63';
 
@@ -5756,7 +5759,8 @@ class Component extends DCLogic {
       weekdays: ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((l, i) => ({ l, i })),
       dayCells: this.monthCells(),
       monthLabel: m.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
-      prevMonth: () => this.setState({ month: new Date(m.getFullYear(), m.getMonth() - 1, 1) }),
+      prevMonth: () => { const c = this.calStart(); const p = new Date(m.getFullYear(), m.getMonth() - 1, 1); if (p >= c) this.setState({ month: p }); },
+      prevMonthOff: new Date(m.getFullYear(), m.getMonth(), 1) <= this.calStart(),
       nextMonth: () => this.setState({ month: new Date(m.getFullYear(), m.getMonth() + 1, 1) }),
       doSearch: () => this.filterTo(s.exp || 'All', 'All'),
 
