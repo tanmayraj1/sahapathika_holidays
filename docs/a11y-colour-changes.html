@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colour changes for contrast | Sahapathika Holidays</title>
+<style>
+  :root { --ink:#16211D; --muted:#5E5850; --line:rgba(22,33,29,.12); --cream:#FAF6EF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font: 15px/1.55 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  main { max-width: 1060px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font: 600 30px/1.2 Georgia, serif; margin: 0 0 8px; }
+  .lead { margin: 0 0 28px; max-width: 70ch; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 0 var(--line); }
+  th, td { padding: 14px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+  th { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: #F4EFE6; }
+  td.where { width: 30%; }
+  td.where small { display: block; color: var(--muted); }
+  .sample { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; font-weight: 700; min-width: 210px; }
+  .ratio { display: block; margin-top: 6px; font-size: 12.5px; font-weight: 700; }
+  .fail { color: #9A1F17; } .pass { color: #1F6B4F; }
+  code { font-size: 12.5px; background: #F4EFE6; padding: 1px 5px; border-radius: 5px; }
+  .note { margin-top: 24px; color: var(--muted); max-width: 75ch; }
+  @media (max-width: 720px) {
+    table, tbody, tr, td { display: block; width: 100%; }
+    thead { display: none; }
+    tr { border-bottom: 8px solid var(--cream); }
+    td.where { width: 100%; }
+    .sample { min-width: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Colour changes for readable text</h1>
+  <p class="lead">Each row shows text exactly as it appeared before, and as it appears now. WCAG 2.2 AA asks for a contrast ratio of at least 4.5:1 for normal text and 3:1 for large text (24px, or 19px bold) and icons. Only colours that sit behind or under text or icons changed. Decorative lines, dots and borders, and the large coral heading accents, keep the original palette.</p>
+
+  <table>
+    <thead><tr><th>Where</th><th>Before</th><th>After</th></tr></thead>
+    <tbody>
+      <tr><td class="where">Buttons: Plan My Trip, Get a quote, Send enquiry, count badges<small>white on coral · <code>#E5483D</code> → <code>#C4362C</code>; hover <code>#A82E25</code></small></td>
+        <td><span class="sample" style="background:#E5483D;color:#fff">Plan My Trip</span><span class="ratio fail">3.94 : 1 fails</span></td>
+        <td><span class="sample" style="background:#C4362C;color:#fff">Plan My Trip</span><span class="ratio pass">5.37 : 1 passes</span></td></tr>
+      <tr><td class="where">"Call us" button, reel tags, step numbers, "Show N journeys"<small>white on orange→red gradient · orange end <code>#E8871E</code> → <code>#A45F15</code></small></td>
+        <td><span class="sample" style="background:linear-gradient(135deg,#E8871E,#C4362C);color:#fff">Call us</span><span class="ratio fail">2.65 : 1 at the orange end, fails</span></td>
+        <td><span class="sample" style="background:linear-gradient(135deg,#A45F15,#C4362C);color:#fff">Call us</span><span class="ratio pass">4.97 : 1 or more everywhere, passes</span></td></tr>
+      <tr><td class="where">Hindi section labels on package pages, bottom sheet<small>saffron on cream · <code>#E8871E</code> → <code>#A45F15</code></small></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#E8871E;font-weight:400" lang="hi">यात्रा क्रम</span><span class="ratio fail">2.46 : 1 fails</span></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#A45F15;font-weight:400" lang="hi">यात्रा क्रम</span><span class="ratio pass">4.61 : 1 passes</span></td></tr>
+      <tr><td class="where">Hero "&amp; everywhere beyond", big day numbers (large text)<small>saffron on cream · <code>#E8871E</code> → <code>#CD771B</code></small></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#E8871E;font:italic 400 30px Georgia,serif">&amp; everywhere</span><span class="ratio fail">2.46 : 1 fails (large needs 3)</span></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#CD771B;font:italic 400 30px Georgia,serif">&amp; everywhere</span><span class="ratio pass">3.12 : 1 passes</span></td></tr>
+      <tr><td class="where">WhatsApp buttons and the floating WhatsApp icon<small>white on green · <code>#1FAF55</code> / <code>#25D366</code> → <code>#188641</code></small></td>
+        <td><span class="sample" style="background:#25D366;color:#fff">Get a quote on WhatsApp</span><span class="ratio fail">1.98 – 2.87 : 1 fails</span></td>
+        <td><span class="sample" style="background:#188641;color:#fff">Get a quote on WhatsApp</span><span class="ratio pass">4.64 : 1 passes</span></td></tr>
+      <tr><td class="where">Gold labels (journal kickers, Varanasi heading) and Pilgrimage / Heritage chips<small><code>#B5822A</code> → <code>#8A6316</code></small></td>
+        <td><span class="sample" style="background:#fff;color:#B5822A;font-size:12px;letter-spacing:.1em">SEASONS</span> <span class="sample" style="background:#B5822A;color:#fff;font-size:11px;min-width:0">PILGRIMAGE YATRA</span><span class="ratio fail">3.39 : 1 fails</span></td>
+        <td><span class="sample" style="background:#fff;color:#8A6316;font-size:12px;letter-spacing:.1em">SEASONS</span> <span class="sample" style="background:#8A6316;color:#fff;font-size:11px;min-width:0">PILGRIMAGE YATRA</span><span class="ratio pass">5.42 : 1 passes</span></td></tr>
+      <tr><td class="where">Green text on mint panels (notes, pills)<small><code>#2F7A63</code> → <code>#2D745E</code></small></td>
+        <td><span class="sample" style="background:#DCEEE7;color:#2F7A63">Good to know</span><span class="ratio fail">4.26 : 1 fails</span></td>
+        <td><span class="sample" style="background:#DCEEE7;color:#2D745E">Good to know</span><span class="ratio pass">4.62 : 1 passes</span></td></tr>
+      <tr><td class="where">Red labels on mint (eyebrows, phone link in booking help)<small><code>#C4362C</code> → <code>#A82E25</code></small></td>
+        <td><span class="sample" style="background:#DCEEE7;color:#C4362C;font-size:12px;letter-spacing:.2em">OUR TOP PICKS</span><span class="ratio fail">4.45 : 1 fails</span></td>
+        <td><span class="sample" style="background:#DCEEE7;color:#A82E25;font-size:12px;letter-spacing:.2em">OUR TOP PICKS</span><span class="ratio pass">5.65 : 1 passes</span></td></tr>
+      <tr><td class="where">Scrolling credentials strip (marquee)<small><code>#8E877C</code> → <code>#6B655C</code></small></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#8E877C;font-size:13px;letter-spacing:.14em">IATO &amp; ADTOI MEMBERS</span><span class="ratio fail">3.30 : 1 fails</span></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#6B655C;font-size:13px;letter-spacing:.14em">IATO &amp; ADTOI MEMBERS</span><span class="ratio pass">5.35 : 1 passes</span></td></tr>
+      <tr><td class="where">"SINCE 2015" in the header, small coral headings and links<small>coral on cream · <code>#E5483D</code> → <code>#C4362C</code></small></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#E5483D;font-size:11px;letter-spacing:.3em">SINCE 2015</span><span class="ratio fail">3.66 : 1 fails</span></td>
+        <td><span class="sample" style="background:#FAF6EF;color:#C4362C;font-size:11px;letter-spacing:.3em">SINCE 2015</span><span class="ratio pass">4.98 : 1 passes</span></td></tr>
+      <tr><td class="where">Unchanged: big italic heading accents<small>coral <code>#E5483D</code> stays: large text needs only 3 : 1</small></td>
+        <td colspan="2"><span class="sample" style="background:#FAF6EF;color:#16211D;font:400 28px Georgia,serif">Travel the way <em style="color:#E5483D">you like to</em></span><span class="ratio pass">3.66 : 1 passes for large text</span></td></tr>
+    </tbody>
+  </table>
+
+  <p class="note">All ratios use the WCAG 2.x relative-luminance formula. The changes are applied by <code>tools/a11y-edits.js</code> (edits named <code>cc-*</code>), so they can be reviewed or reverted together. Text over photographs (destination tiles, reel captions) sits on dark overlay panels and was checked by eye. Automated tools can't measure it.</p>
+</main>
+</body>
+</html>

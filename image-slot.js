@@ -438,7 +438,7 @@
 
   class ImageSlot extends HTMLElement {
     static get observedAttributes() {
-      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href'];
+      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href', 'alt'];
     }
 
     /** Duplicate-slide hook (called by deck-stage, see its
@@ -845,6 +845,12 @@
     // in the same task, and clearing _swapGen on those would let the
     // same-src branch unmask the old image mid-encode.
     attributeChangedCallback(name, oldVal, newVal) {
+      // Accessibility: the slot's alt attribute becomes the photo's text alternative.
+      // No alt (or alt="") = decorative, announced as nothing. alt needs no re-render.
+      if (name === 'alt') {
+        if (this._img) this._img.alt = newVal || '';
+        return;
+      }
       if (name === 'src' && oldVal !== newVal) {
         this._gen++;
         this._swapGen = 0;
