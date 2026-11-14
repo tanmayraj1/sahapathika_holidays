@@ -89,7 +89,10 @@ html.a11y-contrast-4 body video,
 html.a11y-contrast-4 body image-slot,
 html.a11y-contrast-4 body iframe,
 html.a11y-contrast-4 body picture,
-html.a11y-contrast-4 #a11y-ui { filter: invert(1) hue-rotate(180deg); }
+/* The toolbar is inverted back piece by piece, never on #a11y-ui itself: a filter on that
+   wrapper would become the containing block for its position:fixed children and throw the
+   button and panel to the end of the page (it did). Each child is fixed, so a filter on it is safe. */
+html.a11y-contrast-4 #a11y-ui > * { filter: invert(1) hue-rotate(180deg); }
 
 /* Dark contrast (1) and light contrast (2). Empty elements are usually photo overlays
    and gradients, so they go transparent instead of covering the photo. */
@@ -267,8 +270,9 @@ html.a11y-focus body :focus {
 }
 #a11y-ui.a11y-right #a11y-panel { left: auto; right: 12px; }
 @media (max-width: 480px) {
-  #a11y-panel { top: 0; bottom: 0; left: 0; width: 100vw; border-radius: 0; border: 0; }
-  #a11y-ui.a11y-right #a11y-panel { right: 0; }
+  /* Full screen by pinning both edges, not width:100vw — vw includes the scrollbar, which put
+     the panel 15px under it (button left) or 15px off the left edge (button right). */
+  #a11y-panel, #a11y-ui.a11y-right #a11y-panel { top: 0; bottom: 0; left: 0; right: 0; width: auto; border-radius: 0; border: 0; }
 }
 #a11y-backdrop { position: fixed; inset: 0; z-index: 2147482999; background: rgba(22,15,10,.35); }
 
@@ -355,7 +359,7 @@ html.a11y-focus body :focus {
 /* Read-aloud player */
 #a11y-player {
   position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 2147482500;
-  display: flex; align-items: center; gap: 6px; padding: 8px; max-width: calc(100vw - 24px);
+  display: flex; align-items: center; gap: 6px; padding: 8px; max-width: calc(100% - 24px); /* % = visible width; vw counts the scrollbar */
   background: var(--a-ink); color: #fff; border-radius: 18px; box-shadow: 0 20px 50px -18px rgba(0,0,0,.6);
 }
 @media (max-width: 768px) { #a11y-player { bottom: calc(150px + env(safe-area-inset-bottom, 0px)); } }
@@ -374,7 +378,10 @@ html.a11y-focus body :focus {
   position: fixed; left: 0; right: 0; height: 12px; z-index: 2147481000; pointer-events: none;
   background: #16211D; border-top: 3px solid #FFE14D; border-bottom: 3px solid #FFE14D;
 }
-.a11y-mask { position: fixed; left: 0; right: 0; z-index: 2147481000; pointer-events: none; background: rgba(10,14,12,.62); }
+/* NB: settings put "a11y-<key>" classes on <html> (a11y-mask, a11y-guide, a11y-links…), so
+   never reuse those names for an element class. ".a11y-mask" here once matched <html> itself
+   when Reading mask / ADHD friendly was on, making the whole page unclickable. */
+.a11y-maskbar { position: fixed; left: 0; right: 0; z-index: 2147481000; pointer-events: none; background: rgba(10,14,12,.62); }
 #a11y-mask-top { top: 0; }
 #a11y-mask-bottom { bottom: 0; }
 

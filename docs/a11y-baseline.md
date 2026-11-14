@@ -230,3 +230,28 @@ All 35 pages were checked, each in a same-origin frame at 1280 px and 375 px.
 - "Hide button" hid the launcher on every page for the rest of the visit. The only ways back were Alt+A or the keyboard skip link, and a phone or mouse user has neither.
 - It also left `tabindex="-1"` on `<main>`, so later mouse clicks focused the whole page content.
 - It is now **"Minimise button"**: the launcher shrinks to a slim tab on the same screen edge, above the phone booking bar. One tap or click restores it, with focus. The minimised state is remembered for the visit only.
+
+### Toolbar bugs found by real-click testing — 2026-11-14
+
+Earlier toolbar tests clicked buttons from script. Scripted `.click()` ignores `pointer-events` and positioning, so it could not see these three bugs. The new test checks every state with `elementFromPoint` hit-testing, which is what a real mouse or finger reaches.
+
+1. **ADHD friendly / Reading mask froze the page.**
+   - Settings add `a11y-<key>` classes to `<html>`. The reading-mask bars also used the class `.a11y-mask`, so turning the mask on gave `<html>` the bar styles: `pointer-events: none`, `position: fixed`, and a dark tint.
+   - Nothing could be clicked, including the toolbar to undo it.
+   - **Fix:** the bars are now `.a11y-maskbar`. A comment reserves the setting class names.
+2. **Invert colours sent the button and panel to the end of the page.**
+   - The toolbar was re-inverted with a `filter` on `#a11y-ui`. A filter makes that wrapper the containing block for its fixed children, which moved the launcher to y ≈ 20,000 px, so it was impossible to switch Invert off.
+   - **Fix:** the filter is applied to each direct child instead (`#a11y-ui > *`).
+3. **"Move button right" pushed the phone-width panel off screen.**
+   - At ≤480 px the panel was `width: 100vw`. `vw` includes the scrollbar, so the panel sat 15 px under the scrollbar (button on the left) or 15 px off the left edge (button on the right).
+   - **Fix:** pin `left: 0; right: 0`. The read-aloud player also uses `100%` instead of `100vw`.
+
+**Re-test after the fixes:**
+- **Pages:** 7 page types (home, packages, package detail, contact, about, statement, legal stub), each at 1280 px and 375 px.
+- **States:** every setting at every level, every profile, all profiles together, Invert + 150% text, 150% text + button right, button right, and minimised (left and right).
+- **Checks in each state:**
+  - the page stays clickable;
+  - the launcher (or restore tab) is clickable and fully visible;
+  - the panel fits the visible width;
+  - Profiles, Reset, Close, Move and Minimise are all clickable.
+- **Result:** 0 failures, 0 script errors. The legal stub's "page middle" result was a test artifact: its content ends at 314 px, above the middle of the screen.

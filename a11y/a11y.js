@@ -326,7 +326,7 @@
         '<button type="button" data-say="stop" aria-label="Stop reading">' + svg(ICONS.stop) + '</button>' +
       '</div>' +
       '<div id="a11y-guide" hidden></div>' +
-      '<div id="a11y-mask-top" class="a11y-mask" hidden></div><div id="a11y-mask-bottom" class="a11y-mask" hidden></div>' +
+      '<div id="a11y-mask-top" class="a11y-maskbar" hidden></div><div id="a11y-mask-bottom" class="a11y-maskbar" hidden></div>' +
       '<div id="a11y-tip" role="tooltip" hidden></div>' +
       '<div id="a11y-live" class="a11y-sr" aria-live="polite" aria-atomic="true"></div>';
 
