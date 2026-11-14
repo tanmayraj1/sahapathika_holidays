@@ -230,6 +230,22 @@ html.a11y-focus body :focus {
 #a11y-launch svg { width: 30px; height: 30px; }
 #a11y-ui.a11y-right #a11y-launch { left: auto; right: 24px; bottom: 100px; }
 #a11y-ui.a11y-hidden-launch #a11y-launch { display: none; }
+
+/* Minimised launcher: a slim tab on the same edge, always there to bring the button back */
+#a11y-restore {
+  display: none; position: fixed; left: 0; bottom: 34px; z-index: 2147482000;
+  width: 30px; height: 48px; padding: 0 4px 0 2px; border: 2px solid #fff; border-left: 0;
+  border-radius: 0 14px 14px 0; background: var(--a-ink); color: #fff; cursor: pointer;
+  place-items: center; box-shadow: 0 10px 24px -10px rgba(22,33,29,.6);
+}
+#a11y-restore svg { width: 20px; height: 20px; }
+#a11y-ui.a11y-hidden-launch #a11y-restore { display: grid; }
+#a11y-ui.a11y-right #a11y-restore { left: auto; right: 0; bottom: 108px; border: 2px solid #fff; border-right: 0; border-radius: 14px 0 0 14px; padding: 0 2px 0 4px; }
+@media (max-width: 768px) {
+  #a11y-restore { bottom: calc(82px + env(safe-area-inset-bottom, 0px)); }
+  body:has(.dx-mbar) ~ #a11y-ui #a11y-restore { bottom: calc(164px + env(safe-area-inset-bottom, 0px)); }
+  #a11y-ui.a11y-right #a11y-restore { bottom: calc(208px + env(safe-area-inset-bottom, 0px)); }
+}
 @media (max-width: 768px) {
   #a11y-launch { left: 14px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); width: 52px; height: 52px; }
   #a11y-ui.a11y-right #a11y-launch { left: auto; right: 14px; bottom: calc(206px + env(safe-area-inset-bottom, 0px)); }

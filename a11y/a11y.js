@@ -294,6 +294,7 @@
 
     ui.innerHTML =
       '<button type="button" id="a11y-launch" aria-label="Accessibility options" title="Accessibility options (Alt+A)" aria-keyshortcuts="Alt+A" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel">' + svg(ICONS.access, ' stroke-width="1.6"') + '</button>' +
+      '<button type="button" id="a11y-restore" aria-label="Show the accessibility button" title="Show the accessibility button">' + svg(ICONS.access, ' stroke-width="1.8"') + '</button>' +
       '<div id="a11y-backdrop" hidden></div>' +
       '<div id="a11y-panel" role="dialog" aria-modal="true" aria-labelledby="a11y-title" aria-describedby="a11y-desc" tabindex="-1" hidden>' +
         '<div class="a11y-head"><div class="a11y-head-text"><h2 id="a11y-title">Accessibility</h2><p id="a11y-desc">Adjust this site to suit how you see, read and browse. Shortcut: Alt+A.</p></div>' +
@@ -312,7 +313,7 @@
         '<div class="a11y-foot">' +
           '<button type="button" class="a11y-btn a11y-btn-primary" data-act="reset">Reset all</button>' +
           '<button type="button" class="a11y-btn" data-act="side"></button>' +
-          '<button type="button" class="a11y-btn" data-act="hide">Hide button</button>' +
+          '<button type="button" class="a11y-btn" data-act="hide">Minimise button</button>' +
           (STATEMENT_URL ? '<a href="' + STATEMENT_URL + '">Accessibility statement</a>' : '') +
         '</div>' +
       '</div>' +
@@ -344,11 +345,22 @@
 
     try { if (sessionStorage.getItem(HIDE_KEY) === '1') ui.classList.add('a11y-hidden-launch'); } catch (e) { /* ignore */ }
 
+    ui.querySelector('#a11y-restore').addEventListener('click', function () {
+      setMinimised(false);
+      announce('Accessibility button restored.');
+      launcher.focus();
+    });
     launcher.addEventListener('click', function () { isOpen() ? close() : open(launcher); });
     backdrop.addEventListener('click', function () { close(); });
     panel.addEventListener('click', onPanelClick);
     player.addEventListener('click', onPlayerClick);
     renderAll();
+  }
+
+  /* Minimised launcher: remembered for this visit (sessionStorage), always restorable */
+  function setMinimised(on) {
+    ui.classList.toggle('a11y-hidden-launch', on);
+    try { if (on) sessionStorage.setItem(HIDE_KEY, '1'); else sessionStorage.removeItem(HIDE_KEY); } catch (e) { /* ignore */ }
   }
 
   /* ───────────── Panel open / close ───────────── */
@@ -474,12 +486,13 @@
     else if (act === 'reset') resetAll();
     else if (act === 'side') { state.side = state.side === 'right' ? 'left' : 'right'; save(); renderAll(); announce('Accessibility button moved ' + state.side); }
     else if (act === 'hide') {
-      try { sessionStorage.setItem(HIDE_KEY, '1'); } catch (er) { /* ignore */ }
-      ui.classList.add('a11y-hidden-launch');
+      /* Minimise, never remove: the button shrinks to a slim edge tab that brings it back
+         (a fully hidden button stranded touch users — Alt+A needs a keyboard). */
+      setMinimised(true);
       close(false);
-      announce('Accessibility button hidden for this visit. Press Alt+A to open the options.');
-      var first = document.querySelector('main') || document.body;
-      if (first) { if (!first.hasAttribute('tabindex')) first.setAttribute('tabindex', '-1'); first.focus({ preventScroll: true }); }
+      announce('Accessibility button minimised to a small tab at the edge of the screen.');
+      var tab = ui.querySelector('#a11y-restore');
+      if (tab) tab.focus();
     }
     else if (act === 'back') showMain(true);
   }

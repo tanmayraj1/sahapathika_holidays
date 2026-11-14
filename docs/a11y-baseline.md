@@ -205,3 +205,28 @@ axe is unchanged: colour contrast is the only rule it still flags (Phase 5). axe
 - Screen-reader testing with real users (NVDA, VoiceOver).
 - A Lighthouse score.
 - Real content for the Privacy, Terms and Cookie pages.
+
+### Display check on every page — 2026-11-14
+
+All 35 pages were checked, each in a same-origin frame at 1280 px and 375 px.
+
+**Is the button usable?**
+- The button exists, is visible, is inside the viewport and is not covered by anything.
+- The panel opens inside the viewport, on top of the page.
+- The skip links are present.
+- **Result:** all pages pass.
+
+**Duplicates, measured live on every page:**
+- Exactly 1 of each: toolbar, button, panel, restore tab, read-aloud player, skip-link block.
+- The site's own parts are also single: app root, mobile menu, bottom nav.
+- In the files, the toolbar script and stylesheet are included exactly once per page.
+
+**Script errors:**
+- With `error`, `unhandledrejection` and `console.error` listeners attached, every tile was cycled through all its levels on every page.
+- Also exercised: every profile on and off, the page-structure view, Reset, and Minimise/Restore.
+- **Result:** 0 errors on all 35 pages. Reset leaves no toolbar classes behind.
+
+**Bug fixed: hiding the button stranded touch users.**
+- "Hide button" hid the launcher on every page for the rest of the visit. The only ways back were Alt+A or the keyboard skip link, and a phone or mouse user has neither.
+- It also left `tabindex="-1"` on `<main>`, so later mouse clicks focused the whole page content.
+- It is now **"Minimise button"**: the launcher shrinks to a slim tab on the same screen edge, above the phone booking bar. One tap or click restores it, with focus. The minimised state is remembered for the visit only.
