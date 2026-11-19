@@ -17,17 +17,25 @@
   a { color: #C4362C; text-decoration: none; }
   .container { max-width: 800px; margin: 120px auto; padding: 0 24px; }
   h1 { font-weight: 600; font-size: clamp(30px, 4vw, 44px); line-height: 1.3; margin-bottom: 24px; }
-  p { line-height: 1.75; font-size: 16px; color: #3A4A44; margin-bottom: 16px; }
+  p { line-height: 1.75; font-size: 1rem; color: #3A4A44; margin-bottom: 16px; }
   .container p a, .container li a { text-decoration: underline; text-underline-offset: 3px; }
-  h2 { font-weight: 600; font-size: 25px; line-height: 1.35; margin: 44px 0 12px; color: #16211D; }
+  h2 { font-weight: 600; font-size: 1.5625rem; line-height: 1.35; margin: 44px 0 12px; color: #16211D; }
   ul { margin: 0 0 16px; padding-left: 22px; }
-  li { line-height: 1.75; font-size: 16px; color: #3A4A44; margin-bottom: 6px; }
-  .updated { font-size: 14px; color: #6B655C; margin-top: -8px; }
-  .langs { font-size: 15px; margin-top: -4px; }
+  li { line-height: 1.75; font-size: 1rem; color: #3A4A44; margin-bottom: 6px; }
+  .updated { font-size: 0.875rem; color: #6B655C; margin-top: -8px; }
+  .langs { font-size: 0.9375rem; margin-top: -4px; }
   .keys { width: 100%; border-collapse: collapse; margin: 8px 0 16px; background: #fff; border-radius: 14px; overflow: hidden; }
-  .keys th, .keys td { text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(22,33,29,.1); font-size: 15px; line-height: 1.6; color: #3A4A44; vertical-align: top; }
+  .keys th, .keys td { text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(22,33,29,.1); font-size: 0.9375rem; line-height: 1.6; color: #3A4A44; vertical-align: top; }
   .keys th { font-weight: 700; color: #16211D; background: #F4EFE6; }
   kbd { font: 700 13px/1 'Plus Jakarta Sans', system-ui, sans-serif; padding: 3px 7px; border-radius: 6px; border: 1px solid rgba(22,33,29,.25); background: #fff; color: #16211D; white-space: nowrap; }
+  /* narrow screens: stack the shortcuts table (no sideways scrolling at 320px, WCAG 1.4.10) */
+  @media (max-width: 480px) {
+    .keys thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .keys, .keys tbody, .keys tr, .keys td { display: block; width: auto; }
+    .keys tr { border-bottom: 1px solid rgba(22,33,29,.1); padding: 8px 0; }
+    .keys td { border: 0; padding: 4px 14px; }
+    kbd { white-space: normal; }
+  }
   .contact { background: #DCEEE7; border-radius: 18px; padding: 20px 22px; margin: 12px 0 0; }
   .contact p { margin: 0 0 8px; color: #16211D; }
   .contact p:last-child { margin-bottom: 0; }
@@ -37,11 +45,12 @@
 <link rel="stylesheet" href="./a11y/a11y.css">
 <script src="./a11y/a11y.js"></script>
 <!-- a11y: colour contrast v1 -->
+<!-- a11y: rem text v1 -->
 </head>
 <body>
 <div class="a11y-skip"><a class="a11y-skip-link" href="#main-content">मुख्य सामग्री पर जाएँ</a><button type="button" class="a11y-skip-link" data-a11y-open>सुगम्यता विकल्प (Alt+A)</button></div>
   <main id="main-content" class="container">
-    <a href="index.html" style="display:inline-block; margin-bottom:32px;">&larr; होम पेज पर वापस जाएँ</a>
+    <a href="index.html" style="display:inline-block; margin-bottom:32px;"><span aria-hidden="true">&larr;</span> होम पेज पर वापस जाएँ</a>
     <h1>सुगम्यता विवरण</h1>
     <p class="updated">पिछली समीक्षा: 19 नवंबर 2026</p>
     <p class="langs">अन्य भाषाओं में: <a href="accessibility.html" lang="en" hreflang="en">English</a> · <a href="accessibility-ml.html" lang="ml" hreflang="ml">മലയാളം</a></p>
@@ -59,6 +68,7 @@
       <li>पूछताछ फ़ॉर्म और न्यूज़लेटर में लेबल हैं, वे बताते हैं कि किस फ़ील्ड को ठीक करना है, और संदेश भेजे जाने पर सूचना देते हैं।</li>
       <li>वीडियो रोके जा सकते हैं, और हमारे यात्रा वीडियो में स्क्रीन पर कैप्शन दिखते हैं। कम गति (reduced motion) चुनने वाले विज़िटर के लिए पृष्ठभूमि वीडियो लोड नहीं होता।</li>
       <li>टेक्स्ट और बटन के रंग WCAG कंट्रास्ट अनुपात 4.5 : 1 पूरा करते हैं (बड़े अक्षरों और आइकन के लिए 3 : 1)।</li>
+      <li>टेक्स्ट आपके ब्राउज़र या फ़ोन में चुने गए फ़ॉन्ट आकार के अनुसार बदलता है, और साइट Windows कंट्रास्ट थीम और आपके डिवाइस की “कंट्रास्ट बढ़ाएँ” सेटिंग के साथ काम करती है।</li>
     </ul>
 
     <h2>स्क्रीन रीडर के साथ तेज़</h2>
@@ -80,7 +90,7 @@
     <ul>
       <li><strong>प्रोफ़ाइल</strong> — दृष्टिहीन, कम दृष्टि, रंग-अंधता, डिस्लेक्सिया, दौरे से सुरक्षित, ADHD के अनुकूल, समझने और सीखने में सहायता, या हाथों की गतिशीलता और कीबोर्ड के लिए एक टैप।</li>
       <li><strong>पढ़कर सुनाएँ</strong> — पूरा पेज, आपका चुना हुआ टेक्स्ट, या जिस हिस्से पर आप क्लिक करें या टैब से पहुँचें, उसे आपके डिवाइस की अपनी आवाज़ों में पढ़ता है। फ़ोटो के विवरण भी पढ़े जाते हैं और मेनू छोड़ दिए जाते हैं। अंग्रेज़ी, मलयालम और हिन्दी टेक्स्ट, डिवाइस में आवाज़ होने पर, उसी भाषा की आवाज़ में पढ़ा जाता है; न होने पर पैनल बताता है कि आवाज़ कैसे जोड़ें। आपकी पढ़ने की गति याद रहती है।</li>
-      <li><strong>दृष्टि</strong> — कंट्रास्ट मोड, बड़ा टेक्स्ट, रंगों की गहराई, हाइलाइट किए गए लिंक, बड़ा कर्सर, चित्र छिपाना, एनिमेशन रोकना।</li>
+      <li><strong>दृष्टि</strong> — कंट्रास्ट मोड, बड़ा टेक्स्ट, रंगों की गहराई, हाइलाइट किए गए लिंक, बड़ा कर्सर, चित्र छिपाना, एनिमेशन रोकना, और टेक्स्ट आवर्धक, जो पॉइंटर या कीबोर्ड फ़ोकस वाला टेक्स्ट बड़े अक्षरों में दिखाता है।</li>
       <li><strong>पढ़ना</strong> — पढ़ने में आसान फ़ॉन्ट, डिस्लेक्सिया के अनुकूल फ़ॉन्ट (OpenDyslexic), अक्षरों के बीच दूरी, पंक्तियों के बीच दूरी, टेक्स्ट संरेखण, पढ़ने की पट्टी और रीडिंग मास्क।</li>
       <li><strong>नेविगेशन</strong> — पेज के शीर्षकों, क्षेत्रों और लिंक की सूची (सीधे जाने के लिए), गहरी फ़ोकस रेखा, और आइकन बटन के लेबल।</li>
     </ul>

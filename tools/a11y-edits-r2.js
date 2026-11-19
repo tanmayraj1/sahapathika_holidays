@@ -8,6 +8,7 @@
 
 var HOME_ONLY = (n) => (f) => f === 'index.html' ? n : 0;
 var CONTACT_ONLY = (n) => (f) => f === 'contact.html' ? n : 0;
+var REM_MARK = '<!-- a11y: rem text v1 -->';
 var NO_ITINERARY = (f) => f === 'package-varanasi-tour-packages-from-kerala.html' ? 0 : 1;
 var SOCIAL = {
   instagram: 'Instagram, @sahapathika_holidays',
@@ -35,7 +36,7 @@ module.exports = [
     replace: (m, lead) => (lead.indexOf('Packages') === 0
       ? 'Packages <span class="sx-nav-count"><span class="a11y-sr">, </span>{{ sxPkgCount }}<span class="a11y-sr"> journeys</span></span>'
       : lead) + '<span style="font-size:10px" aria-hidden="true">&#x25BE;</span>',
-    applied: '<span style="font-size:10px" aria-hidden="true">&#x25BE;</span>',
+    applied: '" aria-hidden="true">&#x25BE;</span>', /* font size becomes rem in Phase 4 */
     expect: 2
   },
   {
@@ -465,6 +466,30 @@ module.exports = [
     find: '          <div class="dx-sec" id="dx-map">',
     replace: '          <div class="dx-sec sh-trip-access" id="dx-access" hidden="{{ true }}"></div>\n\n          <div class="dx-sec" id="dx-map">',
     applied: 'id="dx-access"',
+    expect: 1
+  },
+
+  /* ── Round 2, Phase 4: low vision ──
+     Font sizes in rem instead of px, so text follows the visitor's own browser or phone
+     font-size setting (WCAG 1.4.4). The site sets no root size, so 1rem = 16px and nothing
+     changes at default settings. Line-heights are already unitless. clamp() sizes are left
+     alone. The rem edit must stay before its sentinel. */
+  {
+    id: 'r2-rem-text',
+    description: 'Font sizes: px → rem (follows the browser font-size setting)',
+    appliesTo: 'all',
+    find: /font-size:(\s?)(\d*\.?\d+)px/g,
+    replace: (m, sp, n) => 'font-size:' + sp + (+(n / 16).toFixed(6)) + 'rem',
+    applied: REM_MARK, markerFrom: 'r2-rem-sentinel',
+    expect: { min: 1 }
+  },
+  {
+    id: 'r2-rem-sentinel',
+    description: 'Marks pages whose font sizes are in rem',
+    appliesTo: 'all',
+    find: '</head>',
+    replace: REM_MARK + '\n</head>',
+    applied: REM_MARK,
     expect: 1
   }
 ];

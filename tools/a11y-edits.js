@@ -195,6 +195,7 @@ module.exports = [
     appliesTo: 'full',
     find: '<div id="enquiry-form" style="font-family:\'Fraunces\',serif;font-size:27px;letter-spacing:-.01em;margin-bottom:26px;scroll-margin-top:100px;">Send an enquiry</div>',
     replace: '<h2 id="enquiry-form" style="font-family:\'Fraunces\',serif;font-size:27px;font-weight:400;line-height:1.2;letter-spacing:-.01em;margin:0 0 26px;scroll-margin-top:100px;">Send an enquiry</h2>',
+    applied: '<h2 id="enquiry-form"', /* round 2 turns the px font size into rem */
     expect: 1
   },
   {
@@ -697,6 +698,7 @@ module.exports = [
     appliesTo: 'full',
     find: '<div style="font-family:\'Fraunces\',serif;font-size:30px;letter-spacing:-.015em;margin-bottom:10px">Enquiry received</div>',
     replace: '<h2 id="enq-done" tabindex="-1" style="font-family:\'Fraunces\',serif;font-size:30px;font-weight:400;line-height:1.2;letter-spacing:-.015em;margin:0 0 10px">Enquiry received</h2>',
+    applied: '<h2 id="enq-done"', /* round 2 turns the px font size into rem */
     expect: 1
   },
 
@@ -737,6 +739,7 @@ module.exports = [
     appliesTo: ['index.html'],
     find: '<div style="font-weight:700;font-size:15.5px">You\'re on the list — your code is on its way.</div>',
     replace: '<div role="status" style="font-weight:700;font-size:15.5px">You\'re on the list — your code is on its way.</div>',
+    applied: '<div role="status" style="font-weight:700;font-size:', /* round 2 turns the px size into rem */
     expect: 1
   },
 

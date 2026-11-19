@@ -45,6 +45,8 @@ When the site's design changes (for example, a new section copied into every pag
 - **State.** Toggles say `aria-pressed`, disclosures say `aria-expanded`, the current step says `aria-current`. The template can compare strings: `aria-pressed="{{ o.cls === 'on' }}"`.
 - **Pop-ups.** A new dialog or sheet should be added to the `DIALOGS` list in `a11y.js`. That gives it focus moving in, staying inside, Escape, and focus returning to its opener.
 - **Forms.** Every field needs a label. Errors name the field, set `aria-invalid`, are linked with `aria-describedby`, and move focus to the field.
+- **Text size.** Write font sizes in `rem` (16px = 1rem), never `px`, so text follows the visitor's browser or phone font-size setting. The injector converts `px` font sizes once per page (`r2-rem-text`); new markup should use `rem` from the start. Avoid fixed heights on boxes that hold text.
+- **Contrast themes.** Anything shown only by a background colour (a selected chip, a button's shape, a white icon on a coloured circle) disappears in Windows contrast themes. Use `aria-pressed` / `aria-current` for state: `a11y.css` then shows it with the system highlight colour. Icons should use `currentColor`.
 - **Colour.** Text needs 4.5:1 against its background (3:1 if 24px+, or 19px+ bold). Icons and focus rings need 3:1. Use the tokens below. Check new pairs before using them.
 - **Video.** Must be pausable, and anything spoken must be captioned (the reels use burned-in captions). Respect `prefers-reduced-motion` and `window.__a11yReduceMotion`.
 - **New reel.** Add a `desc` to its entry in `hxReels`: one short paragraph of what is *shown*, in order, including any text on screen. Without it, a blind visitor gets nothing from the visuals (WCAG 1.2.5).

@@ -403,3 +403,39 @@ At 375 px the "after" column is also all zeros (before: 37, 120, 17, 12, 31).
 **Still to do:**
 - **Native-speaker review** of `a11y/lang/ml.json`, `a11y/lang/hi.json` and both statement pages. They were drafted without one. Long Malayalam words break mid-word in the narrow profile buttons; a reviewer may prefer shorter labels.
 - **Real voice test** on a phone with Malayalam and Hindi voices installed (Phase 5).
+
+### Round 2, Phase 4: low vision — 2026-11-19
+
+**What changed:**
+- **Text follows the visitor's font-size setting (WCAG 1.4.4).**
+  - Every `px` font size in the 37 live pages is now `rem` (`r2-rem-text`, about 360–400 per full page).
+  - The site sets no root size, so at default settings nothing moves. Checked element by element: every element's computed font size on home, packages, a package page and contact, at 1280 px and 375 px, is identical to the previous commit.
+  - Someone who sets Chrome's font size, or their phone's text size, larger now gets larger text. Before, the setting had no effect.
+- **Windows contrast themes** (`@media (forced-colors: active)` in `a11y.css`):
+  - Every button and button-styled link keeps an edge.
+  - Pressed, current and selected items use the system highlight colour.
+  - Icons follow the text colour (a white icon on a green circle would otherwise vanish), and the focus ring is drawn in the system highlight colour.
+  - Disabled calendar days look disabled. The reading guide and mask keep their look.
+- **"Increase contrast" setting** (`@media (prefers-contrast: more)`):
+  - Muted grey text becomes near-black. This works through the pages' `--muted` / `--soft` variables, and through inline colours in the `rgb()` form React writes into the page.
+  - Links in running text are underlined, form fields get a dark edge, the focus ring gets thicker, and placeholders are darker.
+- **Text magnifier** (new Vision tile, translated into Malayalam and Hindi): the text under the pointer, or the control with keyboard focus, is repeated in 28 px white-on-black with a yellow border, beside it. Escape hides it. It is hidden from screen readers (`aria-hidden`), which already have the text.
+- **Phone bottom bar:** with larger text, its four labels spilled past the screen edge. The columns now shrink and the labels wrap.
+- **Statement pages:** the shortcuts table stacks on narrow screens. It scrolled sideways at 320 px. The "← Back to Home" arrow is no longer read aloud.
+
+**Checked:**
+- **200% text** (root font size doubled, as with a browser font-size setting) on home, packages, a package page and contact, at 1280 px and 375 px:
+  - No text newly cut off.
+  - No sideways scroll, once the bottom bar was fixed.
+  - I looked at the boxes the check had flagged even at normal size (festival cards, "Atithi Devo Bhava" box): all their text is visible at 200%. The extra height is decoration or screen-reader-only text.
+- **Reflow at 320 px** (400% zoom): no sideways scroll on the four pages or the three statements. The package page's photo strip and day route scroll inside themselves; `html` and `body` clip overflow, so the page can't move sideways.
+- **Text spacing (WCAG 1.4.12):** line height 1.5, letter spacing 0.12em, word spacing 0.16em, paragraph spacing 2em. No text newly cut off on any of the five pages.
+- **Contrast media queries:** browsers can't switch these on from a script.
+  - "More contrast": its rules were applied directly. Muted text went from rgb(107,101,92) to rgb(27,26,23).
+  - "Contrast theme": its rules parse, and applied directly they reach the right elements (pressed button and breadcrumb → highlight, button edges).
+  - A real Windows contrast theme still needs a visual check on a Windows machine.
+- **Magnifier:** real mouse hover shows the paragraph's text; Tab to an icon link shows its name; Escape hides it.
+- **axe-core 4.10.2:** 0 violations on home, packages, a package page, contact, about and the statement. Noise check 0 in every category.
+- **Hit-testing:** the panel (including the magnifier tile) and the phone bottom bar are clickable at 375 px with 200% text.
+
+**Not changed:** large headings sized with `clamp(…px, …vw, …px)` don't grow with the font-size setting. They are already large, and they still scale with browser zoom.

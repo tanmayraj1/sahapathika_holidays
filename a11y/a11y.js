@@ -30,7 +30,7 @@
   var DEFAULTS = {
     contrast: 0, saturation: 0, text: 0, spacing: 0, lineHeight: 0, align: 0, cursor: 0,
     links: false, hideImages: false, pause: false, readable: false, dyslexia: false,
-    guide: false, mask: false, labels: false, focus: false, clickRead: false,
+    guide: false, mask: false, labels: false, focus: false, clickRead: false, magnifier: false,
     profiles: [], side: 'left',
     lang: '',  /* '' = follow the browser language (en, ml or hi) */
     rate: 1    /* read-aloud speed: index into RATES */
@@ -259,7 +259,8 @@
     pauseSmall: '<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" stroke="none"/>',
     stop: '<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor" stroke="none"/>',
     prev: p('M18 6l-8 6 8 6zM6 6v12'),
-    next: p('M6 6l8 6-8 6zM18 6v12')
+    next: p('M6 6l8 6-8 6zM18 6v12'),
+    magnifier: '<circle cx="10.5" cy="10.5" r="6.5"/>' + p('M15.5 15.5 21 21M8 10.5h5M10.5 8v5')
   };
 
   /* ───────────── Panel content ───────────── */
@@ -283,6 +284,7 @@
     { title: 'Vision', tiles: [
       { key: 'contrast', label: 'Contrast' },
       { key: 'text', label: 'Bigger text' },
+      { key: 'magnifier', label: 'Text magnifier' },
       { key: 'saturation', label: 'Saturation' },
       { key: 'links', label: 'Highlight links' },
       { key: 'cursor', label: 'Big cursor' },
@@ -310,7 +312,7 @@
 
   /* ───────────── Build the UI ───────────── */
 
-  var ui, launcher, panel, backdrop, mainView, structView, player, guide, maskTop, maskBottom, tip;
+  var ui, launcher, panel, backdrop, mainView, structView, player, guide, maskTop, maskBottom, tip, mag;
   var release = null;
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -382,6 +384,7 @@
       '<div id="a11y-guide" hidden></div>' +
       '<div id="a11y-mask-top" class="a11y-maskbar" hidden></div><div id="a11y-mask-bottom" class="a11y-maskbar" hidden></div>' +
       '<div id="a11y-tip" role="tooltip" hidden></div>' +
+      '<div id="a11y-mag" aria-hidden="true" hidden></div>' +
       '<div id="a11y-live" class="a11y-sr" aria-live="polite" aria-atomic="true"></div>';
 
     root.appendChild(ui);
@@ -395,6 +398,7 @@
     maskTop = ui.querySelector('#a11y-mask-top');
     maskBottom = ui.querySelector('#a11y-mask-bottom');
     tip = ui.querySelector('#a11y-tip');
+    mag = ui.querySelector('#a11y-mag');
     liveEl = ui.querySelector('#a11y-live');
 
     try { if (sessionStorage.getItem(HIDE_KEY) === '1') ui.classList.add('a11y-hidden-launch'); } catch (e) { /* ignore */ }
@@ -894,6 +898,35 @@
   }
   function hideTip() { if (tip) tip.hidden = true; }
 
+  /* Text magnifier (round 2, Phase 4): the text under the pointer, or the control that has
+     keyboard focus, repeated large in a high-contrast box beside it. It is a visual aid only
+     (aria-hidden): screen readers already have the text. */
+  function magText(el) {
+    var ctl = el.closest('a[href],button,input,select,textarea,[role="button"],[role="link"],label');
+    if (ctl) {
+      var v = (ctl.tagName === 'INPUT' || ctl.tagName === 'TEXTAREA') && ctl.value ? ctl.value : '';
+      return { el: ctl, text: [nameOf(ctl), v].filter(Boolean).join(': ') };
+    }
+    var b = blockOf(el);
+    if (!b || b === document.body || b === document.documentElement) return null;
+    return { el: b, text: (b.innerText || '').replace(/\s+/g, ' ').trim() };
+  }
+  function showMag(e) {
+    if (!state.magnifier || !mag || !(e.target instanceof Element) || ui.contains(e.target)) return;
+    if (e.type === 'focusin' && !e.target.matches(':focus-visible')) return;
+    var found = magText(e.target);
+    if (!found || !found.text) { mag.hidden = true; return; }
+    var text = found.text.length > 280 ? found.text.slice(0, 277) + '…' : found.text;
+    if (mag.textContent !== text) mag.textContent = text;
+    mag.hidden = false;
+    var r = found.el.getBoundingClientRect(), mw = mag.offsetWidth, mh = mag.offsetHeight;
+    var x = Math.min(Math.max(12, r.left), window.innerWidth - mw - 12);
+    var below = r.bottom + 10, above = r.top - mh - 10;
+    var y = below + mh <= window.innerHeight - 8 ? below : (above >= 8 ? above : Math.max(8, window.innerHeight - mh - 8));
+    mag.style.left = x + 'px'; mag.style.top = y + 'px';
+  }
+  function hideMag() { if (mag) mag.hidden = true; }
+
   /* A play the visitor asked for (tapping a reel, its Play button) is allowed even while
      "Pause animations" is on; anything that starts by itself is stopped. */
   var userPlayAt = 0;
@@ -958,6 +991,7 @@
     maskTop.hidden = maskBottom.hidden = !state.mask;
     placeAids();
     if (!state.labels) hideTip();
+    if (!state.magnifier) hideMag();
     syncVideos();
     if (!state.clickRead && !speech.active && hasTTS) { speech.token++; synth.cancel(); light(null); }
   }
@@ -1441,6 +1475,11 @@
     document.addEventListener('mouseout', function (e) { if (!e.relatedTarget || !labelFor(e.relatedTarget)) hideTip(); });
     document.addEventListener('focusout', hideTip);
     window.addEventListener('scroll', hideTip, { passive: true });
+    document.addEventListener('mouseover', showMag);
+    document.addEventListener('focusin', showMag);
+    document.addEventListener('mouseleave', hideMag);
+    window.addEventListener('scroll', hideMag, { passive: true });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideMag(); });
     window.addEventListener('resize', function () { placeAids(); });
     document.addEventListener('play', onPlay, true);
     document.addEventListener('click', onReelClick, true);

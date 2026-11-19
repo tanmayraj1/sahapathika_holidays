@@ -17,17 +17,25 @@
   a { color: #C4362C; text-decoration: none; }
   .container { max-width: 800px; margin: 120px auto; padding: 0 24px; }
   h1 { font-weight: 600; font-size: clamp(30px, 4vw, 42px); line-height: 1.3; margin-bottom: 24px; }
-  p { line-height: 1.8; font-size: 16px; color: #3A4A44; margin-bottom: 16px; }
+  p { line-height: 1.8; font-size: 1rem; color: #3A4A44; margin-bottom: 16px; }
   .container p a, .container li a { text-decoration: underline; text-underline-offset: 3px; }
-  h2 { font-weight: 600; font-size: 24px; line-height: 1.4; margin: 44px 0 12px; color: #16211D; }
+  h2 { font-weight: 600; font-size: 1.5rem; line-height: 1.4; margin: 44px 0 12px; color: #16211D; }
   ul { margin: 0 0 16px; padding-left: 22px; }
-  li { line-height: 1.8; font-size: 16px; color: #3A4A44; margin-bottom: 6px; }
-  .updated { font-size: 14px; color: #6B655C; margin-top: -8px; }
-  .langs { font-size: 15px; margin-top: -4px; }
+  li { line-height: 1.8; font-size: 1rem; color: #3A4A44; margin-bottom: 6px; }
+  .updated { font-size: 0.875rem; color: #6B655C; margin-top: -8px; }
+  .langs { font-size: 0.9375rem; margin-top: -4px; }
   .keys { width: 100%; border-collapse: collapse; margin: 8px 0 16px; background: #fff; border-radius: 14px; overflow: hidden; }
-  .keys th, .keys td { text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(22,33,29,.1); font-size: 15px; line-height: 1.6; color: #3A4A44; vertical-align: top; }
+  .keys th, .keys td { text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(22,33,29,.1); font-size: 0.9375rem; line-height: 1.6; color: #3A4A44; vertical-align: top; }
   .keys th { font-weight: 700; color: #16211D; background: #F4EFE6; }
   kbd { font: 700 13px/1 'Plus Jakarta Sans', system-ui, sans-serif; padding: 3px 7px; border-radius: 6px; border: 1px solid rgba(22,33,29,.25); background: #fff; color: #16211D; white-space: nowrap; }
+  /* narrow screens: stack the shortcuts table (no sideways scrolling at 320px, WCAG 1.4.10) */
+  @media (max-width: 480px) {
+    .keys thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .keys, .keys tbody, .keys tr, .keys td { display: block; width: auto; }
+    .keys tr { border-bottom: 1px solid rgba(22,33,29,.1); padding: 8px 0; }
+    .keys td { border: 0; padding: 4px 14px; }
+    kbd { white-space: normal; }
+  }
   .contact { background: #DCEEE7; border-radius: 18px; padding: 20px 22px; margin: 12px 0 0; }
   .contact p { margin: 0 0 8px; color: #16211D; }
   .contact p:last-child { margin-bottom: 0; }
@@ -37,11 +45,12 @@
 <link rel="stylesheet" href="./a11y/a11y.css">
 <script src="./a11y/a11y.js"></script>
 <!-- a11y: colour contrast v1 -->
+<!-- a11y: rem text v1 -->
 </head>
 <body>
 <div class="a11y-skip"><a class="a11y-skip-link" href="#main-content">പ്രധാന ഉള്ളടക്കത്തിലേക്ക് പോകുക</a><button type="button" class="a11y-skip-link" data-a11y-open>പ്രവേശനക്ഷമത ഓപ്ഷനുകൾ (Alt+A)</button></div>
   <main id="main-content" class="container">
-    <a href="index.html" style="display:inline-block; margin-bottom:32px;">&larr; ഹോം പേജിലേക്ക് മടങ്ങുക</a>
+    <a href="index.html" style="display:inline-block; margin-bottom:32px;"><span aria-hidden="true">&larr;</span> ഹോം പേജിലേക്ക് മടങ്ങുക</a>
     <h1>പ്രവേശനക്ഷമത പ്രസ്താവന</h1>
     <p class="updated">അവസാനം പരിശോധിച്ചത്: 2026 നവംബർ 19</p>
     <p class="langs">മറ്റു ഭാഷകളിൽ: <a href="accessibility.html" lang="en" hreflang="en">English</a> · <a href="accessibility-hi.html" lang="hi" hreflang="hi">हिन्दी</a></p>
@@ -59,6 +68,7 @@
       <li>അന്വേഷണ ഫോമിനും ന്യൂസ്‌ലെറ്ററിനും ലേബലുകളുണ്ട്; ഏത് ഫീൽഡ് ശരിയാക്കണമെന്ന് പറയുന്നു; സന്ദേശം അയച്ചാൽ അറിയിക്കുന്നു.</li>
       <li>വീഡിയോകൾ നിർത്താം; ഞങ്ങളുടെ യാത്രാ വീഡിയോകൾക്ക് സ്ക്രീനിൽ കാണിക്കുന്ന അടിക്കുറിപ്പുകളുണ്ട്. ചലനം കുറയ്ക്കാൻ ആവശ്യപ്പെട്ട സന്ദർശകർക്ക് പശ്ചാത്തല വീഡിയോ ലോഡ് ചെയ്യില്ല.</li>
       <li>എഴുത്തിന്റെയും ബട്ടണുകളുടെയും നിറങ്ങൾ WCAG കോൺട്രാസ്റ്റ് അനുപാതമായ 4.5 : 1 പാലിക്കുന്നു (വലിയ അക്ഷരങ്ങൾക്കും ഐക്കണുകൾക്കും 3 : 1).</li>
+      <li>നിങ്ങളുടെ ബ്രൗസറിലോ ഫോണിലോ സജ്ജമാക്കിയ അക്ഷര വലുപ്പം ടെക്സ്റ്റ് പിന്തുടരും; Windows കോൺട്രാസ്റ്റ് തീമുകളിലും ഉപകരണത്തിലെ “കോൺട്രാസ്റ്റ് കൂട്ടുക” ക്രമീകരണത്തിലും സൈറ്റ് പ്രവർത്തിക്കും.</li>
     </ul>
 
     <h2>സ്ക്രീൻ റീഡർ ഉപയോഗിക്കുന്നവർക്ക് വേഗത്തിൽ</h2>
@@ -80,7 +90,7 @@
     <ul>
       <li><strong>പ്രൊഫൈലുകൾ</strong> — കാഴ്ചയില്ലാത്തവർ, കാഴ്ചക്കുറവുള്ളവർ, വർണാന്ധത, ഡിസ്‌ലെക്സിയ, അപസ്മാര സുരക്ഷ, ADHD സൗഹൃദം, ഗ്രഹണവും പഠനവും, ചലനശേഷിയും കീബോർഡും എന്നിവയ്ക്കായി ഒറ്റ ടാപ്പ്.</li>
       <li><strong>ഉറക്കെ വായിക്കുക</strong> — പേജ് മുഴുവനും, നിങ്ങൾ തിരഞ്ഞെടുത്ത ടെക്സ്റ്റും, ക്ലിക്ക് ചെയ്യുന്നതോ ടാബ് ചെയ്ത് എത്തുന്നതോ ആയ ഭാഗവും നിങ്ങളുടെ ഉപകരണത്തിലെ ശബ്ദങ്ങൾ ഉപയോഗിച്ച് വായിക്കുന്നു. ഫോട്ടോ വിവരണങ്ങളും വായിക്കും; മെനുകൾ ഒഴിവാക്കും. ഇംഗ്ലീഷ്, മലയാളം, ഹിന്ദി ടെക്സ്റ്റുകൾ ഉപകരണത്തിൽ ശബ്ദമുണ്ടെങ്കിൽ അതത് ഭാഷയുടെ ശബ്ദത്തിൽ വായിക്കും; ഇല്ലെങ്കിൽ എങ്ങനെ ചേർക്കാമെന്ന് പാനൽ പറയും. നിങ്ങളുടെ വായനാ വേഗം ഓർമ്മിക്കപ്പെടും.</li>
-      <li><strong>കാഴ്ച</strong> — കോൺട്രാസ്റ്റ് രീതികൾ, വലിയ അക്ഷരങ്ങൾ, നിറങ്ങളുടെ തീവ്രത, എടുത്തുകാട്ടിയ ലിങ്കുകൾ, വലിയ കഴ്സർ, ചിത്രങ്ങൾ മറയ്ക്കൽ, ആനിമേഷനുകൾ നിർത്തൽ.</li>
+      <li><strong>കാഴ്ച</strong> — കോൺട്രാസ്റ്റ് രീതികൾ, വലിയ അക്ഷരങ്ങൾ, നിറങ്ങളുടെ തീവ്രത, എടുത്തുകാട്ടിയ ലിങ്കുകൾ, വലിയ കഴ്സർ, ചിത്രങ്ങൾ മറയ്ക്കൽ, ആനിമേഷനുകൾ നിർത്തൽ, പോയിന്ററിനു കീഴിലോ കീബോർഡ് ഫോക്കസിലോ ഉള്ള ടെക്സ്റ്റ് വലിയ അക്ഷരത്തിൽ കാണിക്കുന്ന ടെക്സ്റ്റ് മാഗ്നിഫയർ.</li>
       <li><strong>വായന</strong> — വായിക്കാൻ എളുപ്പമുള്ള ഫോണ്ട്, ഡിസ്‌ലെക്സിയ ഫോണ്ട് (OpenDyslexic), അക്ഷര അകലം, വരികൾക്കിടയിലെ അകലം, ടെക്സ്റ്റ് വിന്യാസം, വായനാ വര, വായനാ മാസ്ക്.</li>
       <li><strong>നാവിഗേഷൻ</strong> — പേജിലെ തലക്കെട്ടുകൾ, ഭാഗങ്ങൾ, ലിങ്കുകൾ എന്നിവയുടെ ലിസ്റ്റ് (നേരിട്ട് പോകാൻ), കട്ടിയുള്ള ഫോക്കസ് ഔട്ട്‌ലൈൻ, ഐക്കൺ ബട്ടണുകൾക്ക് ലേബലുകൾ.</li>
     </ul>
