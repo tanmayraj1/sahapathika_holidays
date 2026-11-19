@@ -1523,18 +1523,18 @@
 
   <header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:60;background:rgba(251,247,238,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#16211D" onMouseLeave="{{ closeMenu }}">
     <div style="{{ headerInnerStyle }}">
-      <a href="index.html" onClick="{{ goHome }}" style="display:flex;align-items:center;gap:14px;cursor:pointer;flex:0 0 auto;text-decoration:none;color:inherit;">
+      <a href="index.html" onClick="{{ goHome }}" tabIndex="-1" aria-hidden="true" style="display:flex;align-items:center;gap:14px;cursor:pointer;flex:0 0 auto;text-decoration:none;color:inherit;">
         <img src="Site-logo1.svg" alt="Sahapathika Holidays" style="{{ logoStyle }}" />
         <span style="width:1px;height:34px;background:rgba(22,33,29,.15)"></span>
         <span style="font-size:8.5px;letter-spacing:.3em;color:#C4362C;font-weight:700;line-height:1.6;max-width:74px">SINCE<br />2015</span>
       </a>
 
       <nav style="display:flex;align-items:center;gap:4px;margin-left:8px" aria-label="Primary">
-        <a href="index.html" onClick="{{ goHome }}" data-a11y-btnlink style="{{ navHomeStyle }}"  onMouseEnter="{{ closeMenu }}">Home</a>
-        <button style="{{ navDestStyle }}" onMouseEnter="{{ openDest }}" onClick="{{ sxToggleDest }}" aria-expanded="{{ menuDest }}" aria-controls="sx-mega-dest">Destinations <span style="font-size:10px">&#x25BE;</span></button>
-        <a href="packages.html" onClick="{{ goPackages }}" data-a11y-btnlink style="{{ navPkgStyle }}"  onMouseEnter="{{ openPkg }}">Packages <span class="sx-nav-count">{{ sxPkgCount }}</span><span style="font-size:10px">&#x25BE;</span></a>
-        <a href="about.html" onClick="{{ goAbout }}" data-a11y-btnlink style="{{ navAboutStyle }}"  onMouseEnter="{{ closeMenu }}">About</a>
-        <a href="contact.html" onClick="{{ goContact }}" data-a11y-btnlink style="{{ navContactStyle }}"  onMouseEnter="{{ closeMenu }}">Contact</a>
+        <a href="index.html" onClick="{{ goHome }}" data-a11y-btnlink style="{{ navHomeStyle }}" aria-current="{{ isHome }}"  onMouseEnter="{{ closeMenu }}">Home</a>
+        <button style="{{ navDestStyle }}" onMouseEnter="{{ openDest }}" onClick="{{ sxToggleDest }}" aria-expanded="{{ menuDest }}" aria-controls="sx-mega-dest">Destinations <span style="font-size:10px" aria-hidden="true">&#x25BE;</span></button>
+        <a href="packages.html" onClick="{{ goPackages }}" data-a11y-btnlink style="{{ navPkgStyle }}" aria-current="{{ isPackages }}"  onMouseEnter="{{ openPkg }}">Packages <span class="sx-nav-count"><span class="a11y-sr">, </span>{{ sxPkgCount }}<span class="a11y-sr"> journeys</span></span><span style="font-size:10px" aria-hidden="true">&#x25BE;</span></a>
+        <a href="about.html" onClick="{{ goAbout }}" data-a11y-btnlink style="{{ navAboutStyle }}" aria-current="{{ isAbout }}"  onMouseEnter="{{ closeMenu }}">About</a>
+        <a href="contact.html" onClick="{{ goContact }}" data-a11y-btnlink style="{{ navContactStyle }}" aria-current="{{ isContact }}"  onMouseEnter="{{ closeMenu }}">Contact</a>
       </nav>
 
       <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
@@ -1587,10 +1587,10 @@
             </div>
           </div>
           <a class="sx-promo" href="packages.html?cat=Pilgrimage%20Yatra">
-            <span class="sx-promo-deva" lang="hi">॥ तीर्थ यात्रा ॥</span>
+            <span class="sx-promo-deva" lang="hi" aria-hidden="true">॥ तीर्थ यात्रा ॥</span>
             <strong>Plan a sacred yatra</strong>
             <span>Kashi, Ayodhya, Prayagraj, Puri &amp; Vaishno Devi — darshan-first itineraries, planned from Kerala.</span>
-            <em>Explore yatras →</em>
+            <em>Explore yatras <span aria-hidden="true">→</span></em>
           </a>
         </div>
       </div>
@@ -1618,14 +1618,14 @@
           <a class="sx-explore" href="packages.html">
             <span class="sx-explore-imgs" aria-hidden="true"><img src="packages_cards/kashmir(lake_boat).jpg" alt="" /><img src="packages_cards/varanasi(aarti).jpg" alt="" /><img src="packages_cards/manali.jpg" alt="" /></span>
             <span class="sx-explore-b">
-              <span class="sx-promo-deva" lang="hi">॥ सभी यात्राएँ ॥</span>
+              <span class="sx-promo-deva" lang="hi" aria-hidden="true">॥ सभी यात्राएँ ॥</span>
               <strong>Explore all {{ sxPkgCount }} packages</strong>
               <span>Search and filter by theme, region and trip length — every journey tailored to you.</span>
-              <em>View all packages →</em>
+              <em>View all packages <span aria-hidden="true">→</span></em>
             </span>
           </a>
         </div>
-        <div class="sx-mega-foot"><span>Can't find the right trip?</span><a href="contact.html">Customise a package →</a><a href="https://wa.me/919072769547?text=Hi%20Sahapathika%20Holidays%2C%20I%27d%20like%20help%20choosing%20a%20package." target="_blank" rel="noopener">Ask on WhatsApp →</a></div>
+        <div class="sx-mega-foot"><span>Can't find the right trip?</span><a href="contact.html">Customise a package <span aria-hidden="true">→</span></a><a href="https://wa.me/919072769547?text=Hi%20Sahapathika%20Holidays%2C%20I%27d%20like%20help%20choosing%20a%20package." target="_blank" rel="noopener">Ask on WhatsApp <span aria-hidden="true">→</span></a></div>
       </div>
     </sc-if>
     <button type="button" hidden style="display:none" aria-hidden="true" tabindex="-1" aria-label="Close menu" data-a11y-bridge="close-menu" onClick="{{ closeMenu }}"></button>
@@ -2035,8 +2035,8 @@
     <section class="px-hero sh-visible">
       <span class="px-mandala" aria-hidden="true"></span>
       <div class="px-wrap px-hero-in">
-        <nav class="px-crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><b>Packages</b></nav>
-        <div class="px-deva" lang="hi">॥ सभी यात्राएँ ॥</div>
+        <nav class="px-crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><b aria-current="page">Packages</b></nav>
+        <div class="px-deva" lang="hi" aria-hidden="true">॥ सभी यात्राएँ ॥</div>
         <h1 class="px-h1">Every journey we run, <em>in one place</em></h1>
         <p class="px-lead">{{ pxLead }}</p>
         <form class="px-search" onSubmit="{{ pxSubmit }}" role="search">
@@ -2077,32 +2077,32 @@
 
       <div class="px-wrap">
         <div class="px-meta">
-          <p><strong>{{ pxCount }}</strong> {{ pxCountLabel }}</p>
+          <p role="status"><strong>{{ pxCount }}</strong> {{ pxCountLabel }}</p>
           <div class="px-pills">
             <sc-for list="{{ pxActive }}" as="a" hint-placeholder-count="2"><button class="px-pill" onClick="{{ a.clear }}">{{ a.label }}<i aria-hidden="true">✕</i></button></sc-for>
             <sc-if value="{{ pxHasFilters }}" hint-placeholder-val="{{ false }}"><button class="px-reset" onClick="{{ pxReset }}">Clear all</button></sc-if>
           </div>
         </div>
 
-        <h2 class="a11y-sr">Packages</h2>
+        <h2 class="a11y-sr" id="px-results">Packages</h2>
         <div class="px-grid {{ pxSwap }}">
           <sc-for list="{{ pxResults }}" as="p" hint-placeholder-count="6">
             <article class="px-card" style="--i:{{ p.i }}">
-              <a class="px-card-media" href="{{ p.href }}">
+              <a class="px-card-media" href="{{ p.href }}" tabIndex="-1" aria-hidden="true">
                 <img src="{{ p.photo }}" alt="{{ p.title }}" loading="lazy" style="{{ p.pos }}" />
                 <span class="px-cat" style="{{ p.catBg }}">{{ p.cat }}</span>
-                <sc-if value="{{ p.isYatra }}" hint-placeholder-val="{{ false }}"><span class="px-yatra" lang="hi">॥ यात्रा ॥</span></sc-if>
+                <sc-if value="{{ p.isYatra }}" hint-placeholder-val="{{ false }}"><span class="px-yatra" lang="hi" aria-hidden="true">॥ यात्रा ॥</span></sc-if>
                 <span class="px-dur"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/><path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>{{ p.dur }}</span>
               </a>
               <div class="px-card-b">
-                <div class="px-card-reg"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z" stroke="currentColor" strokeWidth="2"/></svg>{{ p.region }}</div>
+                <div class="px-card-reg" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z" stroke="currentColor" strokeWidth="2"/></svg>{{ p.region }}</div>
                 <h3><a href="{{ p.href }}">{{ p.title }}</a></h3>
-                <div class="px-feats"><span>Hotel stays</span><span>Private vehicle</span><span>Sightseeing</span></div>
+                <p class="a11y-sr">{{ p.dur }}, {{ p.region }}, {{ p.cat }}.</p><div class="px-feats"><span>Hotel stays</span><span>Private vehicle</span><span>Sightseeing</span></div>
                 <div class="px-card-foot">
                   <div class="px-price"><small>Price</small><strong>On request</strong></div>
                   <div class="px-actions">
-                    <a class="px-wa" href="{{ p.wa }}" target="_blank" rel="noopener" aria-label="Get a quote on WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg></a>
-                    <a class="px-view" href="{{ p.href }}">View <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg></a>
+                    <a class="px-wa" href="{{ p.wa }}" target="_blank" rel="noopener" aria-label="Get a quote for {{ p.title }} on WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg></a>
+                    <a class="px-view" href="{{ p.href }}" tabIndex="-1" aria-hidden="true">View <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg></a>
                   </div>
                 </div>
               </div>
@@ -2121,16 +2121,16 @@
 
         <div class="px-more">
           <a class="px-more-card yatra" href="https://wa.me/919072769547?text=Hi%20Sahapathika%20Holidays%2C%20I%27d%20like%20to%20plan%20a%20pilgrimage%20(yatra)." target="_blank" rel="noopener">
-            <span class="px-deva" lang="hi">॥ तीर्थ यात्रा ॥</span>
+            <span class="px-deva" lang="hi" aria-hidden="true">॥ तीर्थ यात्रा ॥</span>
             <strong>Planning a yatra for the family?</strong>
             <span>Darshan-first itineraries, a gentle pace for elders, vegetarian meals and puja arrangements on request.</span>
-            <em>Plan my yatra →</em>
+            <em>Plan my yatra <span aria-hidden="true">→</span></em>
           </a>
           <a class="px-more-card" href="contact.html">
             <span class="px-more-k">Pan-India &amp; international</span>
             <strong>Somewhere not listed?</strong>
             <span>Rajasthan, Goa, the Northeast, Ladakh or abroad — we already plan these as custom trips.</span>
-            <em>Ask us to plan it →</em>
+            <em>Ask us to plan it <span aria-hidden="true">→</span></em>
           </a>
         </div>
 
@@ -2170,11 +2170,11 @@
   <main id="main-content" class="dx">
     <section class="dx-top sh-visible">
       <div class="dx-wrap">
-        <nav class="dx-crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span>/</span><a href="packages.html">Packages</a><span>/</span><b>{{ detail.title }}</b></nav>
+        <nav class="dx-crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><a href="packages.html">Packages</a><span aria-hidden="true">/</span><b aria-current="page">{{ detail.title }}</b></nav>
         <div class="dx-gallery">
-          <button class="dx-g dx-g1" onClick="{{ openGallery }}" aria-label="Open photo gallery"><img src="{{ detail.photo }}" alt="{{ detail.title }}" style="{{ dx.photoPos }}" /></button>
-          <button class="dx-g dx-g2" onClick="{{ openGallery }}" aria-label="Open photo gallery"><img src="{{ detail.photo2 }}" alt="" loading="lazy" /></button>
-          <button class="dx-g dx-g3" onClick="{{ openGallery }}" aria-label="Open photo gallery"><img src="{{ detail.photo3 }}" alt="" loading="lazy" /><span class="dx-g-more"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/></svg>All photos</span></button>
+          <button class="dx-g dx-g1" onClick="{{ openGallery }}" tabIndex="-1" aria-hidden="true"><img src="{{ detail.photo }}" alt="{{ detail.title }}" style="{{ dx.photoPos }}" /></button>
+          <button class="dx-g dx-g2" onClick="{{ openGallery }}" tabIndex="-1" aria-hidden="true"><img src="{{ detail.photo2 }}" alt="" loading="lazy" /></button>
+          <button class="dx-g dx-g3" onClick="{{ openGallery }}" aria-label="All photos, open gallery"><img src="{{ detail.photo3 }}" alt="" loading="lazy" /><span class="dx-g-more"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="2"/></svg>All photos</span></button>
         </div>
 
         <div class="dx-head">
@@ -2211,7 +2211,7 @@
         <div class="dx-main">
 
           <div class="dx-sec" id="dx-overview">
-            <div class="dx-deva" lang="hi">परिचय</div>
+            <div class="dx-deva" lang="hi" aria-hidden="true">परिचय</div>
             <h2 class="dx-h2">Overview</h2>
             <div class="dx-over {{ dx.moreCls }}"><p>{{ detail.overview }}</p></div>
             <button type="button" class="dx-more" onClick="{{ dx.toggleMore }}" aria-expanded="{{ dx.moreCls === 'open' }}">{{ dx.moreLabel }}</button>
@@ -2224,7 +2224,7 @@
             </div>
             <sc-if value="{{ dx.isYatra }}" hint-placeholder-val="{{ false }}">
               <div class="dx-yatra">
-                <span class="dx-deva" lang="hi">॥ तीर्थ यात्रा ॥</span>
+                <span class="dx-deva" lang="hi" aria-hidden="true">॥ तीर्थ यात्रा ॥</span>
                 <strong>Planned for pilgrims</strong>
                 <p>Tell us what this yatra needs and we'll plan the journey around it.</p>
                 <div class="dx-yatra-chips"><span>Darshan-first itinerary</span><span>Gentle pace for elders</span><span>Vegetarian meals</span><span>Puja &amp; ritual arrangements</span></div>
@@ -2235,7 +2235,7 @@
           <sc-if value="{{ dx.why.show }}" hint-placeholder-val="{{ true }}">
           <div class="dx-sec dx-why" id="dx-why">
             <sc-if value="{{ dx.why.hasChoose }}" hint-placeholder-val="{{ false }}">
-              <div class="dx-deva" lang="hi">॥ विशेषताएँ ॥</div>
+              <div class="dx-deva" lang="hi" aria-hidden="true">॥ विशेषताएँ ॥</div>
               <h2 class="dx-h2">{{ dx.why.choose.title }}</h2>
               <sc-if value="{{ dx.why.choose.hasIntro }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ dx.why.choose.intro }}</p></sc-if>
               <sc-if value="{{ dx.why.choose.hasItems }}" hint-placeholder-val="{{ true }}">
@@ -2246,7 +2246,7 @@
               <sc-if value="{{ !dx.why.choose.hasItems }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ dx.why.choose.blocks }}" as="b" hint-placeholder-count="2"><sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p class="dx-why-p">{{ b.t }}</p></sc-if><sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p dx-why-lead">{{ b.lead }}</p><ul class="dx-why-list"><sc-for list="{{ b.items }}" as="li" hint-placeholder-count="4"><li>{{ li.t }}</li></sc-for></ul><sc-if value="{{ b.hasAfter }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ b.after }}</p></sc-if></sc-if></sc-for></sc-if>
               <div class="dx-why-gap"></div>
             </sc-if>
-            <div class="dx-deva" lang="hi">॥ क्यों चुनें ॥</div>
+            <div class="dx-deva" lang="hi" aria-hidden="true">॥ क्यों चुनें ॥</div>
             <h2 class="dx-h2">{{ dx.why.book.title }}</h2>
             <sc-for list="{{ dx.why.book.intro }}" as="p" hint-placeholder-count="2"><p class="dx-why-p">{{ p.t }}</p></sc-for>
             <sc-if value="{{ !dx.why.book.hasPoints }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ dx.why.book.blocks }}" as="b" hint-placeholder-count="2"><sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p class="dx-why-p">{{ b.t }}</p></sc-if><sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p dx-why-lead">{{ b.lead }}</p><ul class="dx-why-list"><sc-for list="{{ b.items }}" as="li" hint-placeholder-count="4"><li>{{ li.t }}</li></sc-for></ul><sc-if value="{{ b.hasAfter }}" hint-placeholder-val="{{ false }}"><p class="dx-why-p">{{ b.after }}</p></sc-if></sc-if></sc-for></sc-if>
@@ -2265,7 +2265,7 @@
           <div class="dx-sec" id="dx-itinerary">
             <div class="dx-sec-head">
               <div>
-                <div class="dx-deva" lang="hi">यात्रा क्रम</div>
+                <div class="dx-deva" lang="hi" aria-hidden="true">यात्रा क्रम</div>
                 <div class="dx-eyebrow">Day by day</div>
                 <h2 class="dx-h2">{{ dx.itinTitle }}</h2>
               </div>
@@ -2293,13 +2293,13 @@
                 </div>
 
                 <article class="dx-day {{ dx.daySwap }}">
-                  <div class="dx-day-side">
+                  <div class="dx-day-side" aria-hidden="true">
                     <span class="dx-day-k">Day</span>
                     <span class="dx-day-n">{{ dx.cur.num }}</span>
                     <span class="dx-day-of">of {{ dx.nPad }}</span>
                   </div>
                   <div class="dx-day-main">
-                    <h3 aria-live="polite">{{ dx.cur.title }}</h3>
+                    <h3 aria-live="polite"><span class="a11y-sr">Day {{ dx.cur.n }} of {{ dx.nTotal }}: </span>{{ dx.cur.title }}</h3>
                     <div class="dx-day-meta">
                       <sc-if value="{{ dx.cur.hasStay }}" hint-placeholder-val="{{ true }}"><span class="dx-meta stay"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="7" cy="11" r="2" stroke="currentColor" strokeWidth="2"/></svg>Stay: {{ dx.cur.stay }}</span></sc-if>
                       <sc-if value="{{ dx.cur.hasMeals }}" hint-placeholder-val="{{ true }}"><span class="dx-meta meal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 3v7a3 3 0 0 0 3 3v8M10 3v7a3 3 0 0 1-3 3M7 3v5M17 21V3c-2 1-3 4-3 7h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>{{ dx.cur.meals }}</span></sc-if>
@@ -2319,9 +2319,9 @@
                 <ol class="dx-all">
                   <sc-for list="{{ dx.days }}" as="d" hint-placeholder-count="6">
                     <li class="dx-all-i">
-                      <span class="dx-all-n">{{ d.num }}</span>
+                      <span class="dx-all-n" aria-hidden="true">{{ d.num }}</span>
                       <div class="dx-all-b">
-                        <h4>{{ d.title }}</h4>
+                        <h4><span class="a11y-sr">Day {{ d.n }}: </span>{{ d.title }}</h4>
                         <div class="dx-day-meta">
                           <sc-if value="{{ d.hasStay }}" hint-placeholder-val="{{ true }}"><span class="dx-meta stay">Stay: {{ d.stay }}</span></sc-if>
                           <sc-if value="{{ d.hasMeals }}" hint-placeholder-val="{{ true }}"><span class="dx-meta meal">{{ d.meals }}</span></sc-if>
@@ -2345,7 +2345,7 @@
 
 
           <div class="dx-sec" id="dx-included">
-            <div class="dx-deva" lang="hi">सुविधाएँ</div>
+            <div class="dx-deva" lang="hi" aria-hidden="true">सुविधाएँ</div>
             <h2 class="dx-h2">What's included</h2>
             <div class="dx-inc">
               <div class="dx-inc-card in">
@@ -2364,13 +2364,13 @@
           </div>
 
           <div class="dx-sec" id="dx-map">
-            <div class="dx-deva" lang="hi">स्थान</div>
+            <div class="dx-deva" lang="hi" aria-hidden="true">स्थान</div>
             <h2 class="dx-h2">Where you'll be</h2>
             <div class="dx-mapbox"><iframe src="{{ detail.mapUrl }}" title="Map of the route" allowfullscreen loading="lazy"></iframe></div>
           </div>
 
           <div class="dx-sec" id="dx-faq">
-            <div class="dx-deva" lang="hi">प्रश्नोत्तर</div>
+            <div class="dx-deva" lang="hi" aria-hidden="true">प्रश्नोत्तर</div>
             <h2 class="dx-h2">Frequently asked</h2>
             <div class="dx-faq">
               <sc-for list="{{ dx.faqs }}" as="f" hint-placeholder-count="4">
@@ -2384,7 +2384,7 @@
 
           <div class="dx-sec">
             <div class="dx-review">
-              <div class="dx-review-ic">★</div>
+              <div class="dx-review-ic" aria-hidden="true">★</div>
               <div>
                 <strong>Travelled on this journey with us?</strong>
                 <span>We'd love to hear how it went — your notes help the next traveller decide.</span>
@@ -2396,7 +2396,7 @@
 
         <div class="dx-aside detail-aside" role="region" aria-label="Plan this trip">
           <div class="dx-book" id="dx-book">
-            <div class="dx-book-band"><span class="dx-book-deva" lang="sa">॥ अतिथि देवो भव ॥</span>
+            <div class="dx-book-band"><span class="dx-book-deva" lang="sa" aria-hidden="true">॥ अतिथि देवो भव ॥</span>
             <div class="dx-book-top">
               <div>
                 <small>Price</small>
@@ -2431,6 +2431,7 @@
                   <button class="dx-cal-flex" onClick="{{ dx.flexDate }}">I'm flexible with dates</button>
                 </div>
               </sc-if>
+              <label class="sh-date-type"><span>Or type your dates</span><input type="text" value="{{ dx.dateTyped }}" onChange="{{ dx.setDateTyped }}" placeholder="e.g. 12 to 18 December, or around Diwali" autoComplete="off" data-a11y-date-typed /></label>
             </div>
 
             <div class="dx-step">
@@ -2487,8 +2488,8 @@
         <div class="dx-rel-grid">
           <sc-for list="{{ dx.related }}" as="p" hint-placeholder-count="3">
             <a class="dx-rel" href="{{ p.href }}">
-              <span class="dx-rel-img"><img src="{{ p.photo }}" alt="" loading="lazy" /><span class="dx-rel-cat" style="{{ p.catBg }}">{{ p.cat }}</span></span>
-              <span class="dx-rel-b"><strong>{{ p.title }}</strong><small>{{ p.dur }} · {{ p.region }}</small><em>View journey →</em></span>
+              <span class="dx-rel-img"><img src="{{ p.photo }}" alt="" loading="lazy" /><span class="dx-rel-cat" style="{{ p.catBg }}" aria-hidden="true">{{ p.cat }}</span></span>
+              <span class="dx-rel-b"><strong>{{ p.title }}</strong><small>{{ p.dur }}<span class="a11y-sr">,</span><span aria-hidden="true"> ·</span> {{ p.region }}<span class="a11y-sr">, {{ p.cat }}.</span></small><em>View journey <span aria-hidden="true">→</span></em></span>
             </a>
           </sc-for>
         </div>
@@ -2616,10 +2617,10 @@
           <div class="cx-social">
             <div class="cx-social-h"><strong>Follow our journeys</strong><span>Yatra moments, travel tips and new packages</span></div>
             <div class="cx-social-grid">
-              <a class="cx-s cx-s-instagram" href="https://www.instagram.com/sahapathika_holidays/" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Instagram"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></i><span><strong>Instagram</strong><small>@sahapathika_holidays</small></span></a>
-              <a class="cx-s cx-s-facebook" href="https://www.facebook.com/sahapathika" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Facebook"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V15.03H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 3.03h-2.33v6.849C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></i><span><strong>Facebook</strong><small>/sahapathika</small></span></a>
-              <a class="cx-s cx-s-threads" href="https://www.threads.com/@sahapathika_holidays" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on Threads"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></i><span><strong>Threads</strong><small>@sahapathika_holidays</small></span></a>
-              <a class="cx-s cx-s-youtube" href="https://www.youtube.com/@sahapathikateam8537" target="_blank" rel="noopener" aria-label="Sahapathika Holidays on YouTube"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></i><span><strong>YouTube</strong><small>@sahapathikateam8537</small></span></a>
+              <a class="cx-s cx-s-instagram" href="https://www.instagram.com/sahapathika_holidays/" target="_blank" rel="noopener" aria-label="Instagram, @sahapathika_holidays"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></i><span><strong>Instagram</strong><small>@sahapathika_holidays</small></span></a>
+              <a class="cx-s cx-s-facebook" href="https://www.facebook.com/sahapathika" target="_blank" rel="noopener" aria-label="Facebook, sahapathika"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V15.03H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 3.03h-2.33v6.849C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg></i><span><strong>Facebook</strong><small>/sahapathika</small></span></a>
+              <a class="cx-s cx-s-threads" href="https://www.threads.com/@sahapathika_holidays" target="_blank" rel="noopener" aria-label="Threads, @sahapathika_holidays"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></i><span><strong>Threads</strong><small>@sahapathika_holidays</small></span></a>
+              <a class="cx-s cx-s-youtube" href="https://www.youtube.com/@sahapathikateam8537" target="_blank" rel="noopener" aria-label="YouTube, @sahapathikateam8537"><i><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></i><span><strong>YouTube</strong><small>@sahapathikateam8537</small></span></a>
             </div>
           </div>
 
@@ -3509,6 +3510,7 @@ class Component extends DCLogic {
          return;
       }
       
+      if (window.SHA11y && window.SHA11y.announce) window.SHA11y.announce('Opening ' + (page === 'detail' ? ((this.packages || []).find(x => extra && x.slug === extra.slug) || { title: 'the package' }).title : ({ home: 'the home page', packages: 'all packages', about: 'About us', contact: 'Contact us' })[page] || 'the page') + '…');
       this.setState({ wiping: true, menu: null, field: null });
       setTimeout(() => {
         window.location.href = url;
@@ -5519,12 +5521,14 @@ class Component extends DCLogic {
         dateText += ' → ' + en.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
       } else dateSub = 'Start date selected';
     }
+    const typedDates = (s.dxDateTyped || '').trim();
+    if (!s.date && typedDates) { dateMain = typedDates; dateSub = 'Dates typed in'; dateText = typedDates; }
     const stay = s.dxStay || '', type = s.dxType || '';
-    const filled = [!!s.date, true, !!stay, !!type].filter(Boolean).length;
+    const filled = [!!(s.date || typedDates), true, !!stay, !!type].filter(Boolean).length;
     const pax = s.adults + (s.adults === 1 ? ' adult' : ' adults') + (s.kids ? ', ' + s.kids + (s.kids === 1 ? ' child' : ' children') : '');
-    const summary = p.title + ' · ' + (dur || 'Flexible') + ' · ' + pax + ' · ' + (s.date ? 'from ' + dateText : 'dates flexible') + (stay ? ' · ' + stay + ' stays' : '') + (type ? ' · ' + type : '');
+    const summary = p.title + ' · ' + (dur || 'Flexible') + ' · ' + pax + ' · ' + (s.date ? 'from ' + dateText : (typedDates ? 'dates: ' + typedDates : 'dates flexible')) + (stay ? ' · ' + stay + ' stays' : '') + (type ? ' · ' + type : '');
     const waText = "Hi Sahapathika Holidays! I'd like a quote for the " + p.title + ' package' + (dur ? ' (' + dur + ')' : '') + '.\n' +
-      '• Start date: ' + (s.date ? dateText : 'Flexible') + '\n' +
+      '• Start date: ' + ((s.date || typedDates) ? dateText : 'Flexible') + '\n' +
       '• Travellers: ' + pax + '\n' +
       '• Stay style: ' + (stay || 'Open to suggestions') + '\n' +
       '• Travelling as: ' + (type || 'Not specified') + '\n' +
@@ -5562,7 +5566,7 @@ class Component extends DCLogic {
         isDayView: view === 'day', isAllView: view === 'all',
         viewDayCls: view === 'day' ? 'on' : '', viewAllCls: view === 'all' ? 'on' : '',
         viewDay: () => this.setState({ dxView: 'day' }), viewAll: () => this.setState({ dxView: 'all' }),
-        days, cur: curDay, nPad: (n < 10 ? '0' : '') + n,
+        days, cur: curDay, nTotal: String(n), nPad: (n < 10 ? '0' : '') + n,
         stopsStyle: 'grid-template-columns:repeat(' + Math.max(n, 1) + ', minmax(104px, 1fr))',
         trackStyle: 'left:' + (50 / Math.max(n, 1)) + '%;right:' + (50 / Math.max(n, 1)) + '%',
         fillStyle: 'left:' + (50 / Math.max(n, 1)) + '%;width:' + ((cur - 1) / Math.max(n, 1) * 100) + '%',
@@ -5578,14 +5582,15 @@ class Component extends DCLogic {
         durShort,
         dateCls: s.field === 'date' ? 'on' : (s.date ? 'set' : ''),
         dateMain, dateSub,
-        flexDate: () => this.setState({ date: null, field: null }),
-        stays: [['Budget', 'Value stays'], ['Comfort', '3★ – 4★'], ['Luxury', 'Premium']].map(o => ({ label: o[0], sub: o[1], cls: stay === o[0] ? 'on' : '', pick: () => this.setState({ dxStay: stay === o[0] ? '' : o[0] }) })),
+        dateTyped: s.dxDateTyped || '', setDateTyped: e => this.setState({ dxDateTyped: e.target.value }),
+        flexDate: () => this.setState({ date: null, field: null, dxDateTyped: '' }),
+        stays: [['Budget', 'Value stays'], ['Comfort', '3 to 4 star'], ['Luxury', 'Premium']].map(o => ({ label: o[0], sub: o[1], cls: stay === o[0] ? 'on' : '', pick: () => this.setState({ dxStay: stay === o[0] ? '' : o[0] }) })),
         types: ['Couple', 'Family', 'Friends', 'Group', 'Seniors', 'Solo'].map(o => ({ label: o, cls: type === o ? 'on' : '', pick: () => this.setState({ dxType: type === o ? '' : o }) })),
         progStyle: 'width:' + (filled / 4 * 100) + '%',
         progLabel: filled === 4 ? 'All set — send it over for an exact quote' : filled + ' of 4 details added · more details, sharper quote',
         summary,
         waLink: wa(waText),
-        mailLink: 'contact.html?pkg=' + encodeURIComponent(p.title) + '&dates=' + encodeURIComponent(s.date ? dateText : '') +
+        mailLink: 'contact.html?pkg=' + encodeURIComponent(p.title) + '&dates=' + encodeURIComponent((s.date || typedDates) ? dateText : '') +
           '&msg=' + encodeURIComponent('Enquiry for ' + p.title + ' — ' + pax + (stay ? ', ' + stay + ' stays' : '') + (type ? ', travelling as ' + type : '') + '.'),
         related
       }
@@ -6224,7 +6229,7 @@ class Component extends DCLogic {
           '<button type="button" class="sx-bn" data-sheet="dest" aria-haspopup="dialog">' + ic.dest + '<span>Destinations</span></button>' +
           '<a href="contact.html" class="sx-bn' + (active === 'contact' ? ' on' : '') + '">' + ic.contact + '<span>Contact</span></a>' +
         '</nav>' +
-        '<aside aria-label="Call us"><a id="sx-call" href="tel:+919072769547" aria-label="Call Sahapathika Holidays on +91 90727 69547">' + ic.phone + '<span>Call us</span></a></aside>' +
+        '<aside aria-label="Call us"><a id="sx-call" href="tel:+919072769547" aria-label="Call us, +91 90727 69547">' + ic.phone + '<span>Call us</span></a></aside>' +
         '<div id="sx-bsheet-bg" hidden></div>' +
         '<div id="sx-bsheet" role="dialog" aria-modal="true" aria-label="Browse" hidden>' +
           '<div class="sx-bs-grab"></div>' +
@@ -6236,14 +6241,14 @@ class Component extends DCLogic {
               '<div class="sx-bs-themes">' + themes.map(function (t) { return '<a href="packages.html?cat=' + t[1] + '"><i style="background:' + t[2] + '"></i>' + t[0] + '</a>'; }).join('') + '</div>' +
               '<div class="sx-bs-l">Plan by festival</div>' +
               '<div class="sx-bs-fests">' + fs.map(function (f) { var d = dist(f); return '<a href="package-' + f[4] + '.html"><span class="sx-bs-fd">' + f[2] + '</span><strong>' + f[1] + '</strong><small>' + f[3] + '</small>' + (d === 0 ? '<em>This season</em>' : (d <= 2 ? '<em class="soon">Coming up</em>' : '')) + '</a>'; }).join('') + '</div>' +
-              '<a class="sx-bs-custom" href="https://wa.me/919072769547?text=Hi%20Sahapathika%20Holidays%2C%20I%27d%20like%20help%20choosing%20a%20package." target="_blank" rel="noopener">Not sure? Ask a planner on WhatsApp →</a>' +
+              '<a class="sx-bs-custom" href="https://wa.me/919072769547?text=Hi%20Sahapathika%20Holidays%2C%20I%27d%20like%20help%20choosing%20a%20package." target="_blank" rel="noopener">Not sure? Ask a planner on WhatsApp <span aria-hidden="true">→</span></a>' +
             '</div>' +
           '</div>' +
           '<div class="sx-bs-panel" data-panel="dest">' +
             '<div class="sx-bs-h"><strong>Destinations</strong><button type="button" class="sx-bs-x" aria-label="Close">✕</button></div>' +
             '<div class="sx-bs-body">' +
               '<div class="sx-bs-dests">' + dests.map(function (d) { return '<a href="' + d[1] + '"><img src="' + d[2] + '" alt="" loading="lazy"><span>' + d[0] + '</span></a>'; }).join('') + '</div>' +
-              '<a class="sx-bs-custom" href="contact.html">Somewhere else? We plan custom trips across India &amp; abroad →</a>' +
+              '<a class="sx-bs-custom" href="contact.html">Somewhere else? We plan custom trips across India &amp; abroad <span aria-hidden="true">→</span></a>' +
             '</div>' +
           '</div>' +
         '</div>';

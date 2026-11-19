@@ -185,7 +185,7 @@ module.exports = [
     appliesTo: 'full',
     find: '<div class="px-grid {{ pxSwap }}">',
     replace: '<h2 class="a11y-sr">Packages</h2>\n        <div class="px-grid {{ pxSwap }}">',
-    applied: '<h2 class="a11y-sr">Packages</h2>',
+    applied: 'Packages</h2>\n        <div class="px-grid {{ pxSwap }}">', /* round 2 adds an id to the h2 */
     expect: 1
   },
   {
@@ -211,6 +211,7 @@ module.exports = [
     appliesTo: 'full',
     find: '\'<a id="sx-call" href="tel:+919072769547" aria-label="Call Sahapathika Holidays on +91 90727 69547">\' + ic.phone + \'<span>Call us</span></a>\' +',
     replace: '\'<aside aria-label="Call us"><a id="sx-call" href="tel:+919072769547" aria-label="Call Sahapathika Holidays on +91 90727 69547">\' + ic.phone + \'<span>Call us</span></a></aside>\' +',
+    applied: '<aside aria-label="Call us"><a id="sx-call"', /* round 2 renames the link inside */
     expect: 1
   },
 
@@ -506,6 +507,8 @@ module.exports = [
     appliesTo: 'full',
     find: '<h3>{{ dx.cur.title }}</h3>',
     replace: '<h3 aria-live="polite">{{ dx.cur.title }}</h3>',
+    applied: '<h3 aria-live="polite">',
+    markerFrom: 'r2-day-heading', /* round 2 adds a hidden "Day 3 of 6:" inside this heading */
     expect: NO_ITINERARY
   },
   {
@@ -926,3 +929,6 @@ function slotAlt(slotId, src, alt) {
     expect: 1
   };
 }
+
+/* Round 2 (blind and screen-reader users) */
+module.exports.push.apply(module.exports, require('./a11y-edits-r2.js'));

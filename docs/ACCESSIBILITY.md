@@ -6,12 +6,13 @@ This site aims at **WCAG 2.2 AA**. The public statement is at [accessibility.htm
 
 | File | What it does |
 |---|---|
-| `a11y/a11y.js` | Toolbar (launcher, panel, profiles, read aloud, reading aids). Skip-link behaviour, decorative-SVG hiding, and focus management for menus, popovers and dialogs. Reel pause buttons. Exposes `window.SHA11y = { trapFocus, announce, open, close }`. |
+| `a11y/a11y.js` | Toolbar (launcher, panel, profiles, read aloud, reading aids). Skip-link behaviour, including page-specific skip links (`EXTRA_SKIPS`: results, trip at a glance, itinerary, whole itinerary as a list, what's included, booking). Reads the booking summary back after each choice. Decorative-SVG hiding, and focus management for menus, popovers and dialogs. Reel pause buttons. Exposes `window.SHA11y = { trapFocus, announce, open, close }`. |
 | `a11y/a11y.css` | Focus ring, skip links, toolbar UI, and every toolbar setting (classes on `<html>`). Also small fixes the page styles can't express. |
 | `a11y/fonts/` | OpenDyslexic (SIL OFL 1.1; licence in `OpenDyslexic-OFL.txt`). Only downloaded when a visitor turns the dyslexia font on. |
 | `motion.js` | Mobile menu: links, `aria-expanded`, `inert` while closed, focus trap and return. Respects "Pause animations". |
 | `image-slot.js` | Passes the slot's `alt` attribute to its inner `<img>`. |
-| `tools/a11y-inject.js` + `tools/a11y-edits.js` | Every fix made inside the page templates and scripts. |
+| `tools/a11y-inject.js` + `tools/a11y-edits.js` | Every fix made inside the page templates and scripts. Round 2 (blind and screen-reader users) lives in `tools/a11y-edits-r2.js`, loaded by `a11y-edits.js`. |
+| `tools/a11y-noise.js` | Screen-reader noise check: Tab stops, repeated links, symbols and Hindi read out in English names, vague names, spoken name ≠ visible label. Load it in a rendered page and call `a11yNoise(document)`. |
 | `accessibility.html` | The accessibility statement. |
 | `docs/a11y-colour-changes.html` | Before/after colour pairs with contrast ratios. |
 
@@ -44,6 +45,11 @@ When the site's design changes (for example, a new section copied into every pag
 - **Forms.** Every field needs a label. Errors name the field, set `aria-invalid`, are linked with `aria-describedby`, and move focus to the field.
 - **Colour.** Text needs 4.5:1 against its background (3:1 if 24px+, or 19px+ bold). Icons and focus rings need 3:1. Use the tokens below. Check new pairs before using them.
 - **Video.** Must be pausable, and anything spoken must be captioned (the reels use burned-in captions). Respect `prefers-reduced-motion` and `window.__a11yReduceMotion`.
+- **Cards.** One keyboard stop per card. If a card has a photo link and a title link to the same page, the photo link gets `tabIndex="-1" aria-hidden="true"`. Facts shown only on the photo (length, theme) go in an `a11y-sr` line after the title.
+- **Whole-card links.** The title comes first in the link's text. Decorative kickers and photos whose alt would repeat the title are hidden (`aria-hidden="true"`, `alt=""`).
+- **Symbols.** Arrows, chevrons, stars and ornamental Hindi (॥ … ॥) go in `<span aria-hidden="true">`. If the symbol carries meaning, write it in words ("3 to 4 star").
+- **Names.** An `aria-label` starts with the words shown on screen ("All photos, open gallery", "Call us, +91 …"), so voice-control users can say what they see.
+- **Before/after.** Run `tools/a11y-noise.js` on the page you changed. The numbers should not go up.
 
 ## Colour tokens that pass
 

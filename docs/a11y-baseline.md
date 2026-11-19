@@ -255,3 +255,76 @@ Earlier toolbar tests clicked buttons from script. Scripted `.click()` ignores `
   - the panel fits the visible width;
   - Profiles, Reset, Close, Move and Minimise are all clickable.
 - **Result:** 0 failures, 0 script errors. The legal stub's "page middle" result was a test artifact: its content ends at 314 px, above the middle of the screen.
+
+### Round 2, Phase 1: a quiet, fast page for screen readers — 2026-11-19
+
+Round 1 made the site pass automated checks. This phase is about how much a blind visitor has to listen through to get anything done. Measured with `tools/a11y-noise.js` on all 31 full pages, at 1280 px and 375 px. "Before" is the previous commit (`c291ece`), served side by side and run with the same checker.
+
+**Noise in what screen readers announce (all 31 pages, 1280 px):**
+
+| | Before | After |
+|---|---|---|
+| A link followed by a link to the same page that says nothing new (photo, "View", title again) | 37 | 0 |
+| Names that read out symbols (▾ → ★ ॥) | 191 | 0 |
+| English names with ornamental Hindi mixed in | 26 | 0 |
+| Vague names ("View", "Read more") | 38 | 0 |
+| Spoken name doesn't start with the words on screen (WCAG 2.5.3) | 62 | 0 |
+
+At 375 px the "after" column is also all zeros (before: 37, 120, 17, 12, 31).
+
+**Tab stops:**
+
+| Page | Before (1280 / 375) | After (1280 / 375) |
+|---|---|---|
+| Home | 198 / 193 | 175 / 170 |
+| Packages | 159 / 130 | 107 / 104 |
+| Package page (Shimla Manali) | 85 / 85 | 88 / 88 |
+| Contact | 61 / 63 | 60 / 62 |
+
+- The package page gained 3 stops: the new jump links at the top (hidden until focused), less the two duplicate photo buttons.
+- Those jump links save far more than 3 presses on a package page:
+
+| On a package page | Before | After |
+|---|---|---|
+| Key presses to the booking card | 44 Tabs | 8 (6 Tabs, Enter, 1 Tab) |
+| Key presses to hear the whole itinerary | 26 (25 Tabs, Enter) | 5 (4 Tabs, Enter) |
+| Key presses to the WhatsApp quote button | 58 Tabs | 23 |
+
+- **Target not met:** home under 110 Tab stops. The 175 that remain are real, separate actions: 11 cards, each with a WhatsApp quote button; the trip planner; FAQs; the hero search. Removing more would take controls away from sighted keyboard users. Screen-reader users move around the home page by headings and landmarks, which are in place.
+
+**What changed** (edits in `tools/a11y-edits-r2.js`, behaviour in `a11y/a11y.js`):
+- **Package cards:**
+  - One stop per card: the title. The photo and "View" links stay clickable by mouse only.
+  - After the title, a hidden line reads the facts that were only on the photo: "6 Days 5 Nights, North India, Hill & Backwater."
+  - WhatsApp buttons name their package.
+- **Whole-card links** (destinations, yatras, themes, festivals, "You may also like"): the title is read first. Photos whose description repeated the title, and ornamental Hindi kickers, are hidden.
+- **Symbols and wording:**
+  - Header chevrons, end-of-link arrows, the review star, breadcrumb slashes and 19 decorative Hindi kickers are no longer read.
+  - "3★ – 4★" is now "3 to 4 star", in words on screen as well.
+  - "Packages 26" reads "Packages, 26 journeys". The journey tabs read "Kashmir, 4 journeys", and the hero search fields read "Destination: Any destination".
+- **Names match the screen:**
+  - "All photos, open gallery" (the two photo-only gallery buttons are mouse-only now).
+  - "Call us, +91 90727 69547".
+  - Contact social cards read "Instagram, @sahapathika_holidays".
+  - Home "Read more" is "Read more about us".
+- **Where am I:** header links and breadcrumbs mark the current page (`aria-current`). The header logo link, a repeat of "Home", is mouse-only.
+- **Jump points:**
+  - Package pages get skip links: trip at a glance, itinerary, "Read the whole itinerary as one list" (switches to the full plan and moves focus to it), what's included, booking.
+  - The packages page gets "Skip to results".
+- **Itinerary by ear:**
+  - The day-by-day heading says "Day 3 of 6: …" and is announced when the day changes.
+  - In the full plan, each day is a heading: "Day 1: Delhi to Shimla …".
+- **Packages results:** the count ("4 journeys match your search") is a status message, announced after each search, filter or sort change.
+- **Booking card:**
+  - An "Or type your dates" field as an equal alternative to the calendar. Typed dates go into the date box, the summary, the WhatsApp message and the email enquiry.
+  - The trip summary is read back after each choice ("Your trip: Shimla Manali, 6 Days 5 Nights, 2 adults, dates: around Diwali 2026").
+- **Page changes:** "Opening Shimla Manali…" is announced during the 200 ms page wipe.
+
+**Checked:**
+- axe-core 4.10.2: 0 violations on all 35 live pages (1280 px, after scrolling so reveal animations finish).
+- The injector re-run reports 0 files would change.
+- Real key presses and typing on a package page: skip links, full-plan jump and focus, typed dates into the summary and links, the announcement text.
+- Real typing in the packages search: the status text updates.
+- No new script errors. The console 404s are the template's `{{ … }}` image placeholders, which were there before.
+
+**Not checked yet:** how NVDA, TalkBack and VoiceOver actually speak these changes. That's Phase 5.

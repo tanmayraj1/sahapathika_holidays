@@ -840,15 +840,72 @@
     if (opener && !ui.contains(opener)) { e.preventDefault(); open(opener); return; }
     var a = e.target.closest && e.target.closest('.a11y-skip-link');
     if (!a) return;
-    var target = Array.prototype.filter.call(document.querySelectorAll('main'), isShown)[0];
-    if (!target) return;
     e.preventDefault();
+    /* "Read the whole itinerary": switch the itinerary to its full-plan view first */
+    if (a.hasAttribute('data-a11y-skip-fullplan')) {
+      var full = Array.prototype.filter.call(document.querySelectorAll('.dx-seg button'), function (b) { return /full plan/i.test(b.textContent); })[0];
+      if (full && full.getAttribute('aria-pressed') !== 'true') full.click();
+      setTimeout(function () { jumpTo(document.querySelector('.dx-all') || document.getElementById('dx-itinerary')); }, 150);
+      return;
+    }
+    var sel = a.getAttribute('data-a11y-skip-to');
+    jumpTo(sel ? document.querySelector(sel) : Array.prototype.filter.call(document.querySelectorAll('main'), isShown)[0]);
+  }
+  function jumpTo(target) {
+    if (!target) return;
     if (!target.hasAttribute('tabindex')) {
       target.setAttribute('tabindex', '-1');
       target.addEventListener('blur', function rm() { target.removeAttribute('tabindex'); target.removeEventListener('blur', rm); });
     }
-    target.scrollIntoView({ block: 'start', behavior: 'auto' });
+    /* a visually hidden heading has no box to scroll to: scroll its next sibling instead */
+    var box = target.classList.contains('a11y-sr') && target.nextElementSibling ? target.nextElementSibling : target;
+    box.scrollIntoView({ block: 'start', behavior: 'auto' });
     target.focus({ preventScroll: true });
+  }
+
+  /* Round 2: page-specific skip links. Long pages get jump points straight to what blind
+     visitors come for. Added once the page has rendered (only the current view exists),
+     between "Skip to main content" and "Accessibility options". */
+  var EXTRA_SKIPS = [
+    { sel: '#px-results', label: 'Skip to results' },
+    { sel: '#dx-overview', label: 'Skip to trip at a glance' },
+    { sel: '#dx-itinerary', label: 'Skip to itinerary' },
+    { sel: '.dx-seg', label: 'Read the whole itinerary as one list', fullPlan: true },
+    { sel: '#dx-included', label: 'Skip to what’s included' },
+    { sel: '#dx-book', label: 'Skip to booking' }
+  ];
+  function addPageSkips() {
+    var box = document.querySelector('.a11y-skip');
+    if (!box || box.hasAttribute('data-a11y-skips-done')) return;
+    var found = EXTRA_SKIPS.filter(function (s) { var el = document.querySelector(s.sel); return el && isShown(el); });
+    if (!found.length) return;
+    box.setAttribute('data-a11y-skips-done', '');
+    var before = box.querySelector('[data-a11y-open]');
+    found.forEach(function (s) {
+      var el = document.createElement(s.fullPlan ? 'button' : 'a');
+      el.className = 'a11y-skip-link a11y-skip-extra';
+      el.textContent = s.label;
+      if (s.fullPlan) { el.type = 'button'; el.setAttribute('data-a11y-skip-fullplan', ''); }
+      else { el.href = s.sel.charAt(0) === '#' ? s.sel : '#'; el.setAttribute('data-a11y-skip-to', s.sel); }
+      box.insertBefore(el, before);
+    });
+  }
+
+  /* Round 2: the booking card reads the trip summary back after each choice, so a blind
+     visitor hears the result ("2 adults, Comfort stays, dates: around Diwali") without
+     hunting for it. The adults/children counters already announce their own numbers. */
+  var summaryTimer = null;
+  function readTripSummary() {
+    clearTimeout(summaryTimer);
+    summaryTimer = setTimeout(function () {
+      var p = document.querySelector('.dx-summary p');
+      if (p && isShown(p)) announce('Your trip: ' + p.textContent.replace(/\s*·\s*/g, ', ').trim());
+    }, 300);
+  }
+  function onBookingChoice(e) {
+    var t = e.target instanceof Element ? e.target : null;
+    if (!t || !t.closest('.dx-book')) return;
+    if (e.type === 'change' ? t.hasAttribute('data-a11y-date-typed') : t.closest('.dx-chip, [data-a11y-day], .dx-cal-flex')) readTripSummary();
   }
 
   /* Decorative icons: an <svg> with no title and no role says nothing a screen reader can
@@ -869,7 +926,7 @@
     new MutationObserver(function () {
       if (queued) return;
       queued = true;
-      setTimeout(function () { queued = false; hideDecorativeSvgs(); }, 120);
+      setTimeout(function () { queued = false; hideDecorativeSvgs(); addPageSkips(); }, 120);
     }).observe(document.body, { childList: true, subtree: true });
   }
 
@@ -1094,7 +1151,11 @@
     });
     window.addEventListener('pagehide', function () { if (hasTTS) synth.cancel(); });
     document.addEventListener('click', onSkipClick);
+    document.addEventListener('click', onBookingChoice);
+    /* React's onChange fires on every key; the native change event fires once, on leaving the field */
+    document.addEventListener('change', onBookingChoice, true);
     watchPage();
+    addPageSkips();
     watchWidgets();
     syncBehaviours();
   }
