@@ -1,0 +1,17 @@
+{
+  "_about": "Accessibility facts per package, shown on the package page as 'Accessibility on this trip'. Fill only from the team's answers to docs/trip-accessibility-questionnaire.md. Never guess: leave a question out if the answer isn't known. A package with no answers shows nothing.",
+  "questions": [
+    { "key": "guide", "label": "A guide or escort who describes the sights" },
+    { "key": "briefings", "label": "Spoken briefings before each day" },
+    { "key": "stations", "label": "Help at airports and railway stations" },
+    { "key": "rooms", "label": "Showing you around your room on arrival" },
+    { "key": "itinerary", "label": "Itinerary in large print or as a text file" },
+    { "key": "guideDog", "label": "Guide dogs" },
+    { "key": "walking", "label": "Walking, steps and uneven ground" },
+    { "key": "stepFree", "label": "Step-free rooms and vehicle access" },
+    { "key": "pace", "label": "Pace and rest" },
+    { "key": "medical", "label": "Medical help along the route" },
+    { "key": "notes", "label": "Anything else to know" }
+  ],
+  "packages": {}
+}

@@ -2563,7 +2563,7 @@
           <sc-for list="{{ hxReels }}" as="r" hint-placeholder-count="2">
             <article class="hx-reel" style="--i:{{ $index }}">
               <button type="button" class="a11y-reel-pp" data-a11y-reel-pp aria-pressed="false" aria-label="Pause video: {{ r.title }}"><span aria-hidden="true"></span></button>
-              <div class="hx-reel-frame" role="button" tabIndex="0" aria-label="{{ r.aria }}">
+              <div class="hx-reel-frame" role="button" tabIndex="0" aria-label="{{ r.aria }}" aria-describedby="reel-desc-{{ $index }}">
                 <video class="hx-reel-v" src="{{ r.src }}" poster="{{ r.poster }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="metadata"></video>
                 <span class="hx-reel-shade" aria-hidden="true"></span>
                 <span class="hx-reel-tag">{{ r.tag }}</span>
@@ -2573,6 +2573,7 @@
                 <span class="hx-reel-bar" aria-hidden="true"><i></i></span>
               </div>
               <a class="hx-reel-cta" href="{{ r.href }}"><span>{{ r.cta }}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg></a>
+            <details class="sh-vdesc"><summary>Video description</summary><p id="reel-desc-{{ $index }}">{{ r.desc }}</p></details>
             </article>
           </sc-for>
           <a class="hx-reel hx-reel-more" href="{{ hxReelsWa }}" target="_blank" rel="noopener" style="--i:9">
@@ -3316,6 +3317,9 @@
               </sc-if>
             </sc-if>
 
+            <sc-if value="{{ detail.hasItinerary }}" hint-placeholder-val="{{ true }}">
+              <div class="sh-itin-tools"><button type="button" data-a11y-itin-text>Get this itinerary as text</button><a href="{{ dx.shareWa }}" target="_blank" rel="noopener">Send the link on WhatsApp</a></div>
+            </sc-if>
             <sc-if value="{{ detail.noItinerary }}" hint-placeholder-val="{{ false }}">
               <div class="dx-noitin">
                 <strong>Your day-by-day plan, tailored to you</strong>
@@ -3331,11 +3335,11 @@
             <h2 class="dx-h2">What's included</h2>
             <div class="dx-inc">
               <div class="dx-inc-card in">
-                <div class="dx-inc-h"><span>✓</span>Included</div>
+                <div class="dx-inc-h" role="heading" aria-level="3"><span aria-hidden="true">✓</span>Included</div>
                 <ul><sc-for list="{{ detail.includes }}" as="i" hint-placeholder-count="6"><li>{{ i.t }}</li></sc-for></ul>
               </div>
               <div class="dx-inc-card out">
-                <div class="dx-inc-h"><span>✕</span>Not included</div>
+                <div class="dx-inc-h" role="heading" aria-level="3"><span aria-hidden="true">✕</span>Not included</div>
                 <ul><sc-for list="{{ detail.excludes }}" as="i" hint-placeholder-count="5"><li>{{ i.t }}</li></sc-for></ul>
               </div>
             </div>
@@ -3344,6 +3348,8 @@
               <ul><sc-for list="{{ detail.notes }}" as="n" hint-placeholder-count="4"><li>{{ n.t }}</li></sc-for></ul>
             </div>
           </div>
+
+          <div class="dx-sec sh-trip-access" id="dx-access" hidden="{{ true }}"></div>
 
           <div class="dx-sec" id="dx-map">
             <div class="dx-deva" lang="hi" aria-hidden="true">स्थान</div>
@@ -3445,6 +3451,7 @@
 
             <a class="dx-btn dx-btn-wa" href="{{ dx.waLink }}" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>Get my quote on WhatsApp</a>
             <a class="dx-btn dx-btn-line dx-btn-full" href="{{ dx.mailLink }}">Send an email enquiry</a>
+            <a class="sh-access-link" href="{{ dx.mailLink }}#enq-access">Tell us about any access needs</a>
             <ul class="dx-assure">
               <li>No payment needed to enquire</li>
               <li>Govt. of India approved agency</li>
@@ -3581,6 +3588,7 @@
                   <sc-for list="{{ pkgOptions }}" as="o" hint-placeholder-count="11"><option value="{{ o.v }}">{{ o.v }}</option></sc-for>
                 </select>
               </label>
+              <fieldset id="enq-access" class="sh-access"><legend style="{{ labelStyle }}">Any access needs? <span class="sh-access-opt-l">(optional)</span></legend><div class="sh-access-opts"><sc-for list="{{ accessOpts }}" as="o" hint-placeholder-count="6"><label class="sh-access-opt"><input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}" /><span>{{ o.label }}</span></label></sc-for></div><p class="sh-access-note">Tell us, and we'll talk through what's possible on your trip.</p></fieldset>
               <label style="display:block;margin-bottom:24px"><span style="{{ labelStyle }}">Message</span><textarea value="{{ form.message }}" onChange="{{ setMessage }}" rows="4" placeholder="Group size, budget, anything you'd love to include…" style="{{ textareaStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)"></textarea></label>
               <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
                 <div role="alert" id="enq-error" style="display:flex;gap:10px;align-items:flex-start;background:#FDE8E4;color:#9A1F17;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.5;margin:-8px 0 16px">{{ errorMsg }}</div>
@@ -6486,9 +6494,9 @@ class Component extends DCLogic {
       hxPkgCount: P.length,
       /* Video stories — to add a video, put the .mp4 (and a poster .jpg) in /videos and add one line below */
       hxReels: [
-        { src: 'videos/moment-02.mp4', poster: 'videos/moment-02.jpg', tag: 'Kashi Yatra', lang: 'Malayalam', title: 'To Mahadev\'s own Kashi', sub: 'Ganga aarti on the ghats of Varanasi', href: 'package-varanasi-tour-packages-from-kerala.html', cta: 'Explore the Varanasi yatra' },
-        { src: 'videos/moment-01.mp4', poster: 'videos/moment-01.jpg', tag: 'Travel tip', lang: 'Travel tips', title: 'Mundu or dhoti?', sub: 'A quick guide from our team', href: 'packages.html?cat=Pilgrimage%20Yatra', cta: 'Browse pilgrimage yatras' },
-        { src: 'videos/moment-03.mp4', poster: 'videos/moment-03.jpg', tag: 'Kerala', lang: 'Kerala holidays', title: 'God\'s Own Country', sub: 'Backwaters, Jatayu Earth\'s Center, a banana-leaf sadhya and Munnar mists', href: 'packages.html?q=kerala', cta: 'Explore Kerala holidays' }
+        { src: 'videos/moment-02.mp4', poster: 'videos/moment-02.jpg', tag: 'Kashi Yatra', lang: 'Malayalam', title: 'To Mahadev\'s own Kashi', sub: 'Ganga aarti on the ghats of Varanasi', href: 'package-varanasi-tour-packages-from-kerala.html', cta: 'Explore the Varanasi yatra', desc: 'A young woman in a cream Kerala saree with a gold border and a blue blouse stands in front of a glass-fronted building. Smiling, with her hands joined, she sings to the camera. The whole video is this one shot.' },
+        { src: 'videos/moment-01.mp4', poster: 'videos/moment-01.jpg', tag: 'Travel tip', lang: 'Travel tips', title: 'Mundu or dhoti?', sub: 'A quick guide from our team', href: 'packages.html?cat=Pilgrimage%20Yatra', cta: 'Browse pilgrimage yatras', desc: 'A woman from our team, in a dark blazer, walks slowly towards the camera in front of a wall of green ivy, talking as she goes. The whole video is this one shot.' },
+        { src: 'videos/moment-03.mp4', poster: 'videos/moment-03.jpg', tag: 'Kerala', lang: 'Kerala holidays', title: 'God\'s Own Country', sub: 'Backwaters, Jatayu Earth\'s Center, a banana-leaf sadhya and Munnar mists', href: 'packages.html?q=kerala', cta: 'Explore Kerala holidays', desc: 'A presenter in a red T-shirt, sitting in a studio beside a plant and a red lamp, introduces a 7-night, 8-day fixed-departure Kerala tour. Between her lines the video shows: an aerial view of a road running through the backwaters; green paddy fields below hills; people walking a forest path in morning light; clouds rolling over the Munnar hills; the giant stone bird sculpture at Jatayu Earth\'s Center; the words \u201CKochi to\u201D over backwaters and paddy fields; a resort pool with the words \u201CDeluxe double, sharing stay\u201D; a banana-leaf sadhya meal; a canoe on a palm-lined canal; \u201C2 nights Munnar, Thekkady\u201D; \u201CAlleppey\u201D over misty hills; and a sunset over the backwaters. It ends on the Sahapathika Holidays logo with a \u201CBook now\u201D button.' }
       ].map(r => Object.assign({ aria: r.title + ' — video. Tap to turn sound on or off.' }, r)),
       hxReelsRef: el => { this.reelsRail = el; },
       hxReelsPrev: () => this.reelsRail && this.reelsRail.scrollBy({ left: -300, behavior: 'smooth' }),
@@ -6832,6 +6840,7 @@ class Component extends DCLogic {
         prev: () => this.dxGoDay(Math.max(1, cur - 1)), next: () => this.dxGoDay(Math.min(n, cur + 1)),
         prevCls: cur <= 1 ? 'off' : '', nextCls: cur >= n ? 'off' : '',
         prevLabel: cur > 1 ? 'Day ' + (cur - 1) : '', nextLabel: cur < n ? 'Day ' + (cur + 1) + ' · ' + (days[cur] ? days[cur].short : '') : '',
+        shareWa: 'https://wa.me/?text=' + encodeURIComponent(p.title + ' — day-by-day itinerary from Sahapathika Holidays: ' + (typeof location !== 'undefined' ? location.origin + location.pathname : '')),
         waItin: wa("Hi Sahapathika Holidays! Could you share the full day-by-day itinerary for the " + p.title + ' package?'),
 
         faqs: (info.faqs || []).map((f, i) => ({ q: f.q, a: f.a, cls: s.faq === i ? 'open' : '', toggle: () => this.setState({ faq: s.faq === i ? -1 : i }) })),
@@ -7347,6 +7356,10 @@ class Component extends DCLogic {
       setPkg: e => this.setState({ form: Object.assign({}, s.form, { pkg: e.target.value }) }),
       setWhatsapp: e => this.setState({ form: Object.assign({}, s.form, { whatsapp: e.target.checked }) }),
       setMessage: e => this.setState({ form: Object.assign({}, s.form, { message: e.target.value }) }),
+      accessOpts: ['Blind', 'Low vision', 'Deaf or hard of hearing', 'Wheelchair user or limited walking', 'Senior travellers who need a gentle pace', 'Something else (say in your message)'].map(l => ({
+        label: l, on: (s.form.access || []).indexOf(l) >= 0,
+        toggle: () => { const a = this.state.form.access || []; this.setState({ form: Object.assign({}, this.state.form, { access: a.indexOf(l) >= 0 ? a.filter(x => x !== l) : a.concat(l) }) }); }
+      })),
       pkgOptions: [{ v: 'Not sure yet — help me choose' }].concat(this.packages.map(p => ({ v: p.title }))),
             send: (ev) => {
         if (ev && ev.preventDefault) ev.preventDefault();
@@ -7376,6 +7389,7 @@ class Component extends DCLogic {
             dates: this.state.form.dates,
             package: this.state.form.pkg,
             message: this.state.form.message,
+            access_needs: (this.state.form.access || []).join(', ') || 'None given',
             whatsapp_opt_in: this.state.form.whatsapp ? 'Yes' : 'No',
             _subject: 'New website enquiry: ' + name.trim() + (pkg ? ' – ' + pkg : ''),
             _template: 'table'

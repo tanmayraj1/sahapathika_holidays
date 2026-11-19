@@ -129,9 +129,11 @@
       var f = focusables(container);
       if (!f.length) { e.preventDefault(); return; }
       var first = f[0], last = f[f.length - 1], a = document.activeElement;
-      var inside = container.contains(a);
-      if (e.shiftKey && (a === first || !inside)) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && (a === last || !inside)) { e.preventDefault(); first.focus(); }
+      /* not one of the dialog's controls (outside it, or a heading given focus on open):
+         the browser's own next stop could be outside, so choose it here */
+      var listed = f.indexOf(a) >= 0;
+      if (e.shiftKey && (a === first || !listed)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (a === last || !listed)) { e.preventDefault(); first.focus(); }
     }
     document.addEventListener('keydown', onKey, true);
     return function release(focusBack) {
@@ -369,7 +371,10 @@
 
   function open(returnTo) {
     if (!panel) return;
-    if (!returnTo || !returnTo.focus) returnTo = launcher && isShown(launcher) ? launcher : document.activeElement;
+    /* nothing had focus (Alt+A from the page itself): return to the launcher, not the page body */
+    if (!returnTo || !returnTo.focus || returnTo === document.body || returnTo === document.documentElement) {
+      returnTo = launcher && isShown(launcher) ? launcher : document.activeElement;
+    }
     showMain();
     panel.hidden = false; backdrop.hidden = false;
     launcher.setAttribute('aria-expanded', 'true');
@@ -926,8 +931,176 @@
     new MutationObserver(function () {
       if (queued) return;
       queued = true;
-      setTimeout(function () { queued = false; hideDecorativeSvgs(); addPageSkips(); }, 120);
+      setTimeout(function () { queued = false; hideDecorativeSvgs(); addPageSkips(); describeLinks(); jumpToHash(); renderTripAccess(); }, 120);
     }).observe(document.body, { childList: true, subtree: true });
+  }
+
+  /* Round 2: links say where they go when it isn't this site (WhatsApp, a phone call, a new
+     tab). Added as a description, so the link's own name stays what's on screen. React never
+     sets aria-describedby on these links, so a re-render leaves it in place. */
+  var LINK_HINTS = [
+    { id: 'a11y-hint-wa', text: 'Opens WhatsApp', test: function (a) { return /wa\.me\//.test(a.href); } },
+    { id: 'a11y-hint-tel', text: 'Starts a phone call', test: function (a) { return /^tel:/.test(a.getAttribute('href') || ''); } },
+    { id: 'a11y-hint-mail', text: 'Opens your email app', test: function (a) { return /^mailto:/.test(a.getAttribute('href') || ''); } },
+    { id: 'a11y-hint-tab', text: 'Opens in a new tab', test: function (a) { return a.target === '_blank'; } }
+  ];
+  function describeLinks() {
+    if (!document.getElementById('a11y-hint-wa')) {
+      LINK_HINTS.forEach(function (h) {
+        var s = document.createElement('span'); s.id = h.id; s.hidden = true; s.textContent = h.text; ui.appendChild(s);
+      });
+    }
+    var links = document.querySelectorAll('body a[href]:not([aria-describedby])');
+    for (var i = 0; i < links.length; i++) {
+      for (var j = 0; j < LINK_HINTS.length; j++) {
+        if (LINK_HINTS[j].test(links[i])) { links[i].setAttribute('aria-describedby', LINK_HINTS[j].id); break; }
+      }
+    }
+  }
+
+  /* Round 2: "Accessibility on this trip". Package pages carry an empty, hidden #dx-access
+     slot; it is filled from data/trip-access.json only when the team has answered the
+     questionnaire for this package (docs/trip-accessibility-questionnaire.md). */
+  var tripAccess = { data: null, done: false };
+  function loadTripAccess() {
+    var m = location.pathname.match(/package-([^/]+)\.html$/);
+    if (!m || !window.fetch) return;
+    fetch('data/trip-access.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      var entry = d && d.packages && d.packages[m[1]];
+      if (entry && entry.answers) { tripAccess.data = { questions: d.questions || [], entry: entry }; renderTripAccess(); }
+    }).catch(function () {});
+  }
+  function renderTripAccess() {
+    var slot = document.getElementById('dx-access');
+    if (tripAccess.done || !tripAccess.data || !slot) return;
+    var a = tripAccess.data.entry.answers, rows = '';
+    tripAccess.data.questions.forEach(function (q) {
+      if (a[q.key] && String(a[q.key]).trim()) rows += '<dt>' + esc(q.label) + '</dt><dd>' + esc(a[q.key]) + '</dd>';
+    });
+    if (!rows) return;
+    tripAccess.done = true;
+    var when = tripAccess.data.entry.reviewed ? new Date(tripAccess.data.entry.reviewed + 'T00:00') : null;
+    slot.innerHTML = '<h2 class="dx-h2">Accessibility on this trip</h2>' +
+      (when && !isNaN(when) ? '<p class="sh-ta-date">Checked by our team on ' + esc(when.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })) + '.</p>' : '') +
+      '<dl class="sh-ta-list">' + rows + '</dl>' +
+      '<p class="sh-ta-more">Need something that isn’t listed? <a href="contact.html#enq-access">Tell us about your access needs</a>.</p>';
+    slot.hidden = false;
+  }
+
+  /* Round 2: a link to "contact.html#enq-access" lands on the access-needs question. The
+     form renders after load, so the browser's own jump to the #id finds nothing. */
+  var hashDone = false;
+  function jumpToHash() {
+    if (hashDone || location.hash !== '#enq-access') return;
+    var el = document.getElementById('enq-access');
+    if (!el || !isShown(el)) return;
+    hashDone = true;
+    var box = el.querySelector('input') || el;
+    el.scrollIntoView({ block: 'center' });
+    box.focus({ preventScroll: true });
+  }
+
+  /* Round 2: "Get this itinerary as text". A plain version of the package: its facts, every
+     day as a heading, and what's included. It reads straight through in a screen reader,
+     prints on its own, and saves as a text file to keep offline. Shown in a dialog on the
+     page (no pop-up window, which many phones block). Built from the page itself: the
+     full-plan view holds every day, so it is switched on briefly and switched back. */
+  function textOf(el) { return el ? el.textContent.replace(/\s+/g, ' ').trim() : ''; }
+  var itin = { el: null, release: null };
+  function onItineraryText(e) {
+    var btn = e.target instanceof Element && e.target.closest('[data-a11y-itin-text]');
+    if (!btn) return;
+    var seg = Array.prototype.slice.call(document.querySelectorAll('.dx-seg button'));
+    var fullBtn = seg.filter(function (b) { return /full plan/i.test(b.textContent); })[0];
+    var dayBtn = seg.filter(function (b) { return /day by day/i.test(b.textContent); })[0];
+    var wasDay = fullBtn && fullBtn.getAttribute('aria-pressed') !== 'true';
+    if (wasDay) fullBtn.click();
+    setTimeout(function () {
+      var data = readItinerary();
+      if (wasDay && dayBtn) dayBtn.click();
+      showItinerary(data, btn);
+    }, 200);
+  }
+  function readItinerary() {
+    var title = textOf(document.querySelector('.dx-h1')) || document.title;
+    return {
+      title: title,
+      facts: Array.prototype.map.call(document.querySelectorAll('.dx-quick .dx-q-t'), function (q) {
+        return textOf(q.querySelector('small')) + ': ' + textOf(q.querySelector('strong'));
+      }),
+      days: Array.prototype.map.call(document.querySelectorAll('.dx-all .dx-all-b'), function (b) {
+        return {
+          h: textOf(b.querySelector('h4')),
+          meta: Array.prototype.map.call(b.querySelectorAll('.dx-meta'), function (m) {
+            var s = textOf(m); return m.classList.contains('meal') && !/^meals?\b/i.test(s) ? 'Meals: ' + s : s;
+          }),
+          paras: Array.prototype.map.call(b.querySelectorAll(':scope > p'), textOf)
+        };
+      }),
+      lists: Array.prototype.map.call(document.querySelectorAll('#dx-included .dx-inc-card, #dx-included .dx-notes'), function (c) {
+        return { h: textOf(c.querySelector('.dx-inc-h, .dx-notes-h')).replace(/^[✓✕]\s*/, ''), items: Array.prototype.map.call(c.querySelectorAll('li'), textOf) };
+      }),
+      contact: 'Sahapathika Holidays. Call or WhatsApp +91 90727 69547. Email sahapathika@gmail.com. ' + location.origin + location.pathname,
+      fileName: (title.replace(/[^\w]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'itinerary') + '-itinerary.txt'
+    };
+  }
+  function showItinerary(d, opener) {
+    var h = [], t = [];
+    h.push('<h2 id="sh-itin-h" tabindex="-1">' + esc(d.title) + ': itinerary</h2>');
+    t.push(d.title.toUpperCase() + ': ITINERARY', '');
+    if (d.facts.length) { h.push('<ul>' + d.facts.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>'); t = t.concat(d.facts, ''); }
+    h.push('<h3>Day by day</h3>'); t.push('DAY BY DAY', '');
+    d.days.forEach(function (day) {
+      h.push('<h4>' + esc(day.h) + '</h4>'); t.push(day.h);
+      day.meta.forEach(function (m) { h.push('<p><strong>' + esc(m) + '</strong></p>'); t.push(m); });
+      day.paras.forEach(function (p) { h.push('<p>' + esc(p) + '</p>'); t.push(p); });
+      t.push('');
+    });
+    d.lists.forEach(function (l) {
+      if (!l.items.length) return;
+      h.push('<h3>' + esc(l.h) + '</h3><ul>' + l.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>');
+      t.push(l.h.toUpperCase()); l.items.forEach(function (i) { t.push('- ' + i); }); t.push('');
+    });
+    h.push('<h3>Contact</h3><p>' + esc(d.contact) + '</p>'); t.push('CONTACT', d.contact);
+    var text = t.join('\n');
+
+    closeItinerary(false);
+    var el = document.createElement('div');
+    el.id = 'sh-itin';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-labelledby', 'sh-itin-h');
+    el.innerHTML = '<div class="sh-itin-bar" role="group" aria-label="Itinerary tools">' +
+      '<button type="button" data-act="print">Print</button>' +
+      '<button type="button" data-act="save">Save as a text file</button>' +
+      '<button type="button" data-act="close">Close</button></div>' +
+      '<div class="sh-itin-body">' + h.join('\n') + '</div>';
+    ui.appendChild(el);
+    itin.el = el;
+    document.body.inert = true;
+    document.documentElement.classList.add('sh-itin-open');
+    itin.release = trapFocus(el, opener);
+    el.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-act]'); if (!b) return;
+      var act = b.getAttribute('data-act');
+      if (act === 'close') closeItinerary();
+      else if (act === 'print') window.print();
+      else if (act === 'save') {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+        a.download = d.fileName; el.appendChild(a); a.click(); a.remove();
+        announce('Saved ' + d.fileName + ' to your downloads.');
+      }
+    });
+    el.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') { ev.stopPropagation(); closeItinerary(); } });
+    el.querySelector('#sh-itin-h').focus();
+  }
+  function closeItinerary(focusBack) {
+    if (!itin.el) return;
+    itin.el.remove(); itin.el = null;
+    document.body.inert = false;
+    document.documentElement.classList.remove('sh-itin-open');
+    if (itin.release) { itin.release(focusBack); itin.release = null; }
   }
 
   /* ───────────── Page widgets: keyboard and focus behaviour (Phase 3) ─────────────
@@ -1152,15 +1325,21 @@
     window.addEventListener('pagehide', function () { if (hasTTS) synth.cancel(); });
     document.addEventListener('click', onSkipClick);
     document.addEventListener('click', onBookingChoice);
+    document.addEventListener('click', onItineraryText);
     /* React's onChange fires on every key; the native change event fires once, on leaving the field */
     document.addEventListener('change', onBookingChoice, true);
     watchPage();
     addPageSkips();
+    loadTripAccess();
     watchWidgets();
     syncBehaviours();
   }
 
-  window.SHA11y = { trapFocus: trapFocus, announce: announce, open: open, close: close };
+  window.SHA11y = {
+    trapFocus: trapFocus, announce: announce, open: open, close: close,
+    /* for testing the trip-access section with sample data: SHA11y.previewTripAccess({ questions, entry }) */
+    previewTripAccess: function (d) { tripAccess.data = d; tripAccess.done = false; renderTripAccess(); }
+  };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();

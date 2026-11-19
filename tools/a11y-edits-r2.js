@@ -348,5 +348,135 @@ module.exports = [
       '      this.setState({ wiping: true, menu: null, field: null });',
     applied: "window.SHA11y.announce('Opening '",
     expect: 1
+  },
+
+  /* ── Round 2, Phase 2: content blind travellers can use ── */
+
+  /* Video descriptions (WCAG 1.2.5). Drafted from still frames of each video, without
+     sound: the team should check them against the videos (docs/a11y-baseline.md). */
+  reelDesc('Explore the Varanasi yatra',
+    'A young woman in a cream Kerala saree with a gold border and a blue blouse stands in front of a glass-fronted building. ' +
+    'Smiling, with her hands joined, she sings to the camera. The whole video is this one shot.'),
+  reelDesc('Browse pilgrimage yatras',
+    'A woman from our team, in a dark blazer, walks slowly towards the camera in front of a wall of green ivy, talking as she goes. ' +
+    'The whole video is this one shot.'),
+  reelDesc('Explore Kerala holidays',
+    'A presenter in a red T-shirt, sitting in a studio beside a plant and a red lamp, introduces a 7-night, 8-day fixed-departure Kerala tour. ' +
+    'Between her lines the video shows: an aerial view of a road running through the backwaters; green paddy fields below hills; ' +
+    'people walking a forest path in morning light; clouds rolling over the Munnar hills; the giant stone bird sculpture at Jatayu Earth\\\'s Center; ' +
+    'the words \\u201CKochi to\\u201D over backwaters and paddy fields; a resort pool with the words \\u201CDeluxe double, sharing stay\\u201D; ' +
+    'a banana-leaf sadhya meal; a canoe on a palm-lined canal; \\u201C2 nights Munnar, Thekkady\\u201D; \\u201CAlleppey\\u201D over misty hills; ' +
+    'and a sunset over the backwaters. It ends on the Sahapathika Holidays logo with a \\u201CBook now\\u201D button.'),
+  {
+    id: 'r2-reel-desc-block',
+    description: 'Each reel: a "Video description" disclosure under it, linked to the video',
+    find: '</article>\n          </sc-for>\n          <a class="hx-reel hx-reel-more"',
+    replace: '<details class="sh-vdesc"><summary>Video description</summary><p id="reel-desc-{{ $index }}">{{ r.desc }}</p></details>\n' +
+      '            </article>\n          </sc-for>\n          <a class="hx-reel hx-reel-more"',
+    applied: 'class="sh-vdesc"',
+    expect: HOME_ONLY(1)
+  },
+  {
+    id: 'r2-reel-describedby',
+    description: 'Each reel frame is described by its video description',
+    find: '<div class="hx-reel-frame" role="button" tabIndex="0" aria-label="{{ r.aria }}">',
+    replace: '<div class="hx-reel-frame" role="button" tabIndex="0" aria-label="{{ r.aria }}" aria-describedby="reel-desc-{{ $index }}">',
+    expect: HOME_ONLY(1)
+  },
+
+  /* Itinerary to take along: a plain text version, and a link to share on WhatsApp */
+  {
+    id: 'r2-itin-tools',
+    description: 'Package page: "Get this itinerary as text" and "Send the link on WhatsApp" under the itinerary',
+    find: '            <sc-if value="{{ detail.noItinerary }}" hint-placeholder-val="{{ false }}">',
+    replace: '            <sc-if value="{{ detail.hasItinerary }}" hint-placeholder-val="{{ true }}">\n' +
+      '              <div class="sh-itin-tools"><button type="button" data-a11y-itin-text>Get this itinerary as text</button>' +
+      '<a href="{{ dx.shareWa }}" target="_blank" rel="noopener">Send the link on WhatsApp</a></div>\n' +
+      '            </sc-if>\n' +
+      '            <sc-if value="{{ detail.noItinerary }}" hint-placeholder-val="{{ false }}">',
+    applied: 'data-a11y-itin-text',
+    expect: NO_ITINERARY
+  },
+  {
+    id: 'r2-itin-share-link',
+    description: 'Logic: WhatsApp share text for the itinerary link',
+    find: "        waItin: wa(",
+    replace: "        shareWa: 'https://wa.me/?text=' + encodeURIComponent(p.title + ' — day-by-day itinerary from Sahapathika Holidays: ' + (typeof location !== 'undefined' ? location.origin + location.pathname : '')),\n        waItin: wa(",
+    applied: "shareWa: 'https://wa.me/?text='",
+    expect: 1
+  },
+  {
+    id: 'r2-inc-headings',
+    description: '"Included" / "Not included" are headings; their ✓ ✕ marks are not read',
+    find: /<div class="dx-inc-h"><span>(✓|✕)<\/span>/g,
+    replace: '<div class="dx-inc-h" role="heading" aria-level="3"><span aria-hidden="true">$1</span>',
+    applied: '<div class="dx-inc-h" role="heading" aria-level="3">',
+    expect: 2
+  },
+
+  /* Tell us your access needs: enquiry form + a link from the booking card */
+  {
+    id: 'r2-access-field',
+    description: 'Enquiry form: optional "Any access needs?" checkboxes',
+    find: '<label style="display:block;margin-bottom:24px"><span style="{{ labelStyle }}">Message</span>',
+    replace: '<fieldset id="enq-access" class="sh-access"><legend style="{{ labelStyle }}">Any access needs? <span class="sh-access-opt-l">(optional)</span></legend>' +
+      '<div class="sh-access-opts"><sc-for list="{{ accessOpts }}" as="o" hint-placeholder-count="6"><label class="sh-access-opt"><input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}" /><span>{{ o.label }}</span></label></sc-for></div>' +
+      '<p class="sh-access-note">Tell us, and we\'ll talk through what\'s possible on your trip.</p></fieldset>\n' +
+      '              <label style="display:block;margin-bottom:24px"><span style="{{ labelStyle }}">Message</span>',
+    applied: 'id="enq-access"',
+    expect: 1
+  },
+  {
+    id: 'r2-access-logic',
+    description: 'Logic: access-needs options and toggles',
+    find: '      setMessage: e => this.setState({ form: Object.assign({}, s.form, { message: e.target.value }) }),',
+    replace: '      setMessage: e => this.setState({ form: Object.assign({}, s.form, { message: e.target.value }) }),\n' +
+      "      accessOpts: ['Blind', 'Low vision', 'Deaf or hard of hearing', 'Wheelchair user or limited walking', 'Senior travellers who need a gentle pace', 'Something else (say in your message)'].map(l => ({\n" +
+      '        label: l, on: (s.form.access || []).indexOf(l) >= 0,\n' +
+      '        toggle: () => { const a = this.state.form.access || []; this.setState({ form: Object.assign({}, this.state.form, { access: a.indexOf(l) >= 0 ? a.filter(x => x !== l) : a.concat(l) }) }); }\n' +
+      '      })),',
+    applied: 'accessOpts: [',
+    expect: 1
+  },
+  {
+    id: 'r2-access-send',
+    description: 'Logic: access needs are sent with the enquiry email',
+    find: '            message: this.state.form.message,\n',
+    replace: "            message: this.state.form.message,\n            access_needs: (this.state.form.access || []).join(', ') || 'None given',\n",
+    applied: 'access_needs: (this.state.form.access',
+    expect: 1
+  },
+  {
+    id: 'r2-access-link',
+    description: 'Booking card: "Tell us about any access needs" link to the enquiry form',
+    find: '<a class="dx-btn dx-btn-line dx-btn-full" href="{{ dx.mailLink }}">Send an email enquiry</a>',
+    replace: '<a class="dx-btn dx-btn-line dx-btn-full" href="{{ dx.mailLink }}">Send an email enquiry</a>\n' +
+      '            <a class="sh-access-link" href="{{ dx.mailLink }}#enq-access">Tell us about any access needs</a>',
+    applied: 'class="sh-access-link"',
+    expect: 1
+  },
+
+  /* "Accessibility on this trip": an empty, hidden slot after "What's included". a11y/a11y.js
+     fills and shows it from data/trip-access.json, only for packages the team has answered
+     the questionnaire for (docs/trip-accessibility-questionnaire.md). */
+  {
+    id: 'r2-trip-access-slot',
+    description: 'Package page: hidden "Accessibility on this trip" slot, filled from data/trip-access.json',
+    find: '          <div class="dx-sec" id="dx-map">',
+    replace: '          <div class="dx-sec sh-trip-access" id="dx-access" hidden="{{ true }}"></div>\n\n          <div class="dx-sec" id="dx-map">',
+    applied: 'id="dx-access"',
+    expect: 1
   }
 ];
+
+/* Adds a description to one reel's data, found by its unique call-to-action text */
+function reelDesc(cta, text) {
+  return {
+    id: 'r2-reel-desc-' + cta.split(' ').pop().toLowerCase(),
+    description: 'Reel data: video description for "' + cta + '"',
+    find: "cta: '" + cta + "' }",
+    replace: "cta: '" + cta + "', desc: '" + text + "' }",
+    applied: "cta: '" + cta + "', desc:",
+    expect: HOME_ONLY(1)
+  };
+}

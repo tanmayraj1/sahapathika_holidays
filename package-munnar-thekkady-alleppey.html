@@ -2284,6 +2284,9 @@
               </sc-if>
             </sc-if>
 
+            <sc-if value="{{ detail.hasItinerary }}" hint-placeholder-val="{{ true }}">
+              <div class="sh-itin-tools"><button type="button" data-a11y-itin-text>Get this itinerary as text</button><a href="{{ dx.shareWa }}" target="_blank" rel="noopener">Send the link on WhatsApp</a></div>
+            </sc-if>
             <sc-if value="{{ detail.noItinerary }}" hint-placeholder-val="{{ false }}">
               <div class="dx-noitin">
                 <strong>Your day-by-day plan, tailored to you</strong>
@@ -2299,11 +2302,11 @@
             <h2 class="dx-h2">What's included</h2>
             <div class="dx-inc">
               <div class="dx-inc-card in">
-                <div class="dx-inc-h"><span>✓</span>Included</div>
+                <div class="dx-inc-h" role="heading" aria-level="3"><span aria-hidden="true">✓</span>Included</div>
                 <ul><sc-for list="{{ detail.includes }}" as="i" hint-placeholder-count="6"><li>{{ i.t }}</li></sc-for></ul>
               </div>
               <div class="dx-inc-card out">
-                <div class="dx-inc-h"><span>✕</span>Not included</div>
+                <div class="dx-inc-h" role="heading" aria-level="3"><span aria-hidden="true">✕</span>Not included</div>
                 <ul><sc-for list="{{ detail.excludes }}" as="i" hint-placeholder-count="5"><li>{{ i.t }}</li></sc-for></ul>
               </div>
             </div>
@@ -2312,6 +2315,8 @@
               <ul><sc-for list="{{ detail.notes }}" as="n" hint-placeholder-count="4"><li>{{ n.t }}</li></sc-for></ul>
             </div>
           </div>
+
+          <div class="dx-sec sh-trip-access" id="dx-access" hidden="{{ true }}"></div>
 
           <div class="dx-sec" id="dx-map">
             <div class="dx-deva" lang="hi" aria-hidden="true">स्थान</div>
@@ -2413,6 +2418,7 @@
 
             <a class="dx-btn dx-btn-wa" href="{{ dx.waLink }}" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>Get my quote on WhatsApp</a>
             <a class="dx-btn dx-btn-line dx-btn-full" href="{{ dx.mailLink }}">Send an email enquiry</a>
+            <a class="sh-access-link" href="{{ dx.mailLink }}#enq-access">Tell us about any access needs</a>
             <ul class="dx-assure">
               <li>No payment needed to enquire</li>
               <li>Govt. of India approved agency</li>
@@ -2538,6 +2544,7 @@
                   <sc-for list="{{ pkgOptions }}" as="o" hint-placeholder-count="11"><option value="{{ o.v }}">{{ o.v }}</option></sc-for>
                 </select>
               </label>
+              <fieldset id="enq-access" class="sh-access"><legend style="{{ labelStyle }}">Any access needs? <span class="sh-access-opt-l">(optional)</span></legend><div class="sh-access-opts"><sc-for list="{{ accessOpts }}" as="o" hint-placeholder-count="6"><label class="sh-access-opt"><input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}" /><span>{{ o.label }}</span></label></sc-for></div><p class="sh-access-note">Tell us, and we'll talk through what's possible on your trip.</p></fieldset>
               <label style="display:block;margin-bottom:24px"><span style="{{ labelStyle }}">Message</span><textarea value="{{ form.message }}" onChange="{{ setMessage }}" rows="4" placeholder="Group size, budget, anything you'd love to include…" style="{{ textareaStyle }}" style-focus="border-color:#E5483D;box-shadow:0 0 0 4px rgba(229,72,61,.14)"></textarea></label>
               <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
                 <div role="alert" id="enq-error" style="display:flex;gap:10px;align-items:flex-start;background:#FDE8E4;color:#9A1F17;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.5;margin:-8px 0 16px">{{ errorMsg }}</div>
@@ -5485,6 +5492,7 @@ class Component extends DCLogic {
         prev: () => this.dxGoDay(Math.max(1, cur - 1)), next: () => this.dxGoDay(Math.min(n, cur + 1)),
         prevCls: cur <= 1 ? 'off' : '', nextCls: cur >= n ? 'off' : '',
         prevLabel: cur > 1 ? 'Day ' + (cur - 1) : '', nextLabel: cur < n ? 'Day ' + (cur + 1) + ' · ' + (days[cur] ? days[cur].short : '') : '',
+        shareWa: 'https://wa.me/?text=' + encodeURIComponent(p.title + ' — day-by-day itinerary from Sahapathika Holidays: ' + (typeof location !== 'undefined' ? location.origin + location.pathname : '')),
         waItin: wa("Hi Sahapathika Holidays! Could you share the full day-by-day itinerary for the " + p.title + ' package?'),
 
         faqs: (info.faqs || []).map((f, i) => ({ q: f.q, a: f.a, cls: s.faq === i ? 'open' : '', toggle: () => this.setState({ faq: s.faq === i ? -1 : i }) })),
@@ -5998,6 +6006,10 @@ class Component extends DCLogic {
       setDates: e => this.setState({ form: Object.assign({}, s.form, { dates: e.target.value }) }),
       setPkg: e => this.setState({ form: Object.assign({}, s.form, { pkg: e.target.value }) }),
       setMessage: e => this.setState({ form: Object.assign({}, s.form, { message: e.target.value }) }),
+      accessOpts: ['Blind', 'Low vision', 'Deaf or hard of hearing', 'Wheelchair user or limited walking', 'Senior travellers who need a gentle pace', 'Something else (say in your message)'].map(l => ({
+        label: l, on: (s.form.access || []).indexOf(l) >= 0,
+        toggle: () => { const a = this.state.form.access || []; this.setState({ form: Object.assign({}, this.state.form, { access: a.indexOf(l) >= 0 ? a.filter(x => x !== l) : a.concat(l) }) }); }
+      })),
       pkgOptions: [{ v: 'Not sure yet — help me choose' }].concat(this.packages.map(p => ({ v: p.title }))),
             send: (ev) => {
         if (ev && ev.preventDefault) ev.preventDefault();
@@ -6027,6 +6039,7 @@ class Component extends DCLogic {
             dates: this.state.form.dates,
             package: this.state.form.pkg,
             message: this.state.form.message,
+            access_needs: (this.state.form.access || []).join(', ') || 'None given',
             _subject: 'New website enquiry: ' + name.trim() + (pkg ? ' – ' + pkg : ''),
             _template: 'table'
           })

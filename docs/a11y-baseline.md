@@ -328,3 +328,45 @@ At 375 px the "after" column is also all zeros (before: 37, 120, 17, 12, 31).
 - No new script errors. The console 404s are the template's `{{ … }}` image placeholders, which were there before.
 
 **Not checked yet:** how NVDA, TalkBack and VoiceOver actually speak these changes. That's Phase 5.
+
+### Round 2, Phase 2: content blind travellers can use — 2026-11-19
+
+**What changed** (edits in `tools/a11y-edits-r2.js`, behaviour in `a11y/a11y.js`):
+- **Video descriptions (WCAG 1.2.5).**
+  - Each reel has a "Video description" disclosure under it, linked to the video with `aria-describedby`, so a screen reader reads it with the video.
+  - The descriptions were drafted from 18 still frames per video, **without sound**. The team should check them against the videos.
+  - The Kerala reel is a montage of places and on-screen text, so it gets the longest description. The other two are single shots of a presenter.
+- **"Get this itinerary as text"** on every package with a day-by-day plan:
+  - It opens a plain reading view in a dialog: facts, then each day as a heading with stay and meals, then included, not included and good-to-know lists, then contact details.
+  - **Print** prints only that view. **Save as a text file** downloads `<package>-itinerary.txt` and announces it.
+  - A dialog was used because a new window was blocked by the browser during testing, as it is on many phones.
+  - Next to it, **"Send the link on WhatsApp"** shares the package link.
+- **"Any access needs?"** in the enquiry form:
+  - Six optional checkboxes: blind; low vision; deaf or hard of hearing; wheelchair user or limited walking; senior travellers who need a gentle pace; something else.
+  - The answers are sent in the enquiry email as `access_needs`.
+  - The booking card links straight to the question ("Tell us about any access needs"). The script moves focus to it once the form renders.
+- **"Accessibility on this trip"** on package pages:
+  - Filled from `data/trip-access.json`, which is empty until the team answers `docs/trip-accessibility-questionnaire.md`.
+  - Hidden while a package has no answers.
+  - The **"Accessible & senior-friendly" filter** on the packages page is not built yet: it needs at least 3 answered packages to be useful.
+- **Links say where they go.** Links to WhatsApp, phone numbers, email and new tabs get a description: "Opens WhatsApp", "Starts a phone call", "Opens your email app", "Opens in a new tab".
+- **"Included" / "Not included"** are now headings, and their ✓ ✕ marks are not read out.
+- **Toolbar fixes found while testing:**
+  - Focus trap: Tab from a dialog's heading could escape to the toolbar launcher. It now goes to the dialog's first control.
+  - Alt+A, then Escape, with nothing focused now returns focus to the launcher instead of the page body.
+
+**Checked:**
+- **Itinerary dialog** (real clicks and keys):
+  - Opens with focus on its heading; Tab stays inside.
+  - Escape closes it and returns focus to the button.
+  - The page is inert while it's open.
+- **Saved text file:** checked by intercepting the download. It has every day, stay and meals.
+- **Enquiry form** (real key presses): Space ticks the boxes, and the submitted payload includes the access needs. The network was stubbed, so no email was sent.
+- **Trip-access section:** hidden with empty data, and correct with clearly marked test data (not saved).
+- **Toolbar panel:** 85 Tab and Shift+Tab presses all stayed inside the panel.
+- **axe-core 4.10.2:** 0 violations on home, packages, contact, about, a package page and the Varanasi guide page.
+- **Noise check:** still 0 in every category, at 1280 px and 375 px.
+
+**Still to do:**
+- The team reviews the video descriptions and fills in the trip questionnaire.
+- Real screen-reader testing (Phase 5).
