@@ -491,6 +491,17 @@ module.exports = [
     replace: REM_MARK + '\n</head>',
     applied: REM_MARK,
     expect: 1
+  },
+
+  /* ── Round 2, Phase 5: found by the self-test ── */
+  {
+    id: 'r2-stub-back-arrow',
+    description: 'Legal pages and statements: the "← Back to Home" arrow is not read aloud',
+    appliesTo: 'stub',
+    find: 'margin-bottom:32px;">&larr; ',
+    replace: 'margin-bottom:32px;"><span aria-hidden="true">&larr;</span> ',
+    applied: '<span aria-hidden="true">&larr;</span> ',
+    expect: 1
   }
 ];
 

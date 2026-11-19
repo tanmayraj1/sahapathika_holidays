@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accessibility self-test</title>
+<!--
+  Accessibility regression suite (round 2, Phase 5). Local use only: tools/ is not deployed.
+
+    python -m http.server 8080      (from the site folder)
+    open http://localhost:8080/tools/a11y-selftest.html
+
+  For each chosen page and width it loads the page in a hidden frame and runs:
+    1. axe-core 4.10.2 (WCAG 2.0/2.1/2.2 A + AA and best practice), after scrolling so
+       reveal animations finish;
+    2. the screen-reader noise check (tools/a11y-noise.js);
+    3. toolbar hit-testing: every setting at every level and every profile, checking with
+       elementFromPoint (what a real click or tap reaches) that the page, the launcher and
+       the panel's buttons can still be clicked.
+  Network calls to the enquiry/newsletter service are blocked inside the frames, so nothing
+  is ever submitted. Pass = 0 axe violations, 0 noise in every category, 0 hit-test failures.
+-->
+<style>
+  :root { --ink: #16211D; --muted: #4A4F4C; --line: #C9C4BA; --bg: #FAF6EF; --ok: #1E6B45; --bad: #A82E25; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.8rem; margin: 0 0 6px; }
+  p.lead { color: var(--muted); margin: 0 0 20px; }
+  fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin: 0 0 14px; }
+  legend { font-weight: 700; padding: 0 6px; }
+  label { margin-right: 18px; white-space: nowrap; }
+  button { font: 700 1rem system-ui, sans-serif; padding: 10px 18px; border-radius: 10px; border: 2px solid var(--ink); background: var(--ink); color: #fff; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: progress; }
+  button.secondary { background: #fff; color: var(--ink); }
+  :focus-visible { outline: 3px solid #C4362C; outline-offset: 2px; }
+  #status { margin: 14px 0; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #ECE7DE; vertical-align: top; }
+  th { background: #F1ECE3; }
+  .ok { color: var(--ok); font-weight: 700; }
+  .bad { color: var(--bad); font-weight: 700; }
+  details summary { cursor: pointer; }
+  pre { white-space: pre-wrap; font-size: .85rem; margin: 6px 0 0; }
+  #frames { position: fixed; left: -10000px; top: 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Accessibility self-test</h1>
+  <p class="lead">Runs axe, the screen-reader noise check and toolbar hit-testing on the live pages of this site. See <code>docs/ACCESSIBILITY.md</code>. To test particular pages, add them to the address: <code>?pages=privacy.html,terms.html</code>.</p>
+
+  <fieldset>
+    <legend>Pages</legend>
+    <label><input type="radio" name="set" value="quick" checked> Quick: one page of each type (8)</label>
+    <label><input type="radio" name="set" value="all"> All live pages (37)</label>
+  </fieldset>
+  <fieldset>
+    <legend>Widths</legend>
+    <label><input type="checkbox" name="w" value="1280" checked> Desktop, 1280 px</label>
+    <label><input type="checkbox" name="w" value="375" checked> Phone, 375 px</label>
+  </fieldset>
+  <fieldset>
+    <legend>Checks</legend>
+    <label><input type="checkbox" name="c" value="axe" checked> axe</label>
+    <label><input type="checkbox" name="c" value="noise" checked> Screen-reader noise</label>
+    <label><input type="checkbox" name="c" value="hit" checked> Toolbar hit-testing</label>
+  </fieldset>
+  <p><button type="button" id="run">Run tests</button> <button type="button" id="stop" class="secondary" disabled>Stop</button></p>
+
+  <p id="status" role="status" aria-live="polite">Not run yet.</p>
+
+  <h2>Results</h2>
+  <table>
+    <caption class="visually-hidden" style="position:absolute;left:-10000px">Results per page and width</caption>
+    <thead><tr><th scope="col">Page</th><th scope="col">Width</th><th scope="col">axe</th><th scope="col">Noise</th><th scope="col">Hit-tests</th><th scope="col">Details</th></tr></thead>
+    <tbody id="rows"><tr><td colspan="6">No results yet.</td></tr></tbody>
+  </table>
+</main>
+<div id="frames" aria-hidden="true"></div>
+
+<script src="a11y-noise.js"></script>
+<script>
+(function () {
+  'use strict';
+  var ALL = ['about.html', 'accessibility-hi.html', 'accessibility-ml.html', 'accessibility.html', 'contact.html', 'cookies.html', 'index.html',
+    'package-ayurveda.html', 'package-beach-and-backwater-tour.html', 'package-enchanting-captivating-kerala.html',
+    'package-himachal-devi-yatra-with-vaishno-devi-mansa-devi.html', 'package-himachal-pradesh.html',
+    'package-kashi-gaya-prayag-ayodhya-pitru-moksha-yatra.html', 'package-kashi-prayag-chitrakoot-ayodhya-divya-yatra.html',
+    'package-kashi-prayag-chitrakoot-ayodhya-yatra.html', 'package-kashmir-5-days-srinagar-sonmarg-gulmarg-pahalgam-j.html',
+    'package-kashmir-6-days-srinagar-sonmarg-gulmarg-pahalgam.html', 'package-kashmir-honeymoon.html', 'package-kashmir-with-vaishno-devi.html',
+    'package-kerala-ayurveda-wellness-retreat.html', 'package-kerala-short-honeymoon-tour.html', 'package-kerala-temple-tour.html',
+    'package-kovalam-varkala-tour.html', 'package-lucknow-naimisharanya-ayodhya-prayagraj-varanasi-y.html',
+    'package-mathura-vrindavan-braj-agra-yatra.html', 'package-munnar-thekkady-alleppey.html', 'package-north-kerala-heritage-tour.html',
+    'package-puri-jagannath-konark-chilika-bhubaneswar.html', 'package-scenic-beautiful-kerala.html', 'package-shimla-kullu-manali.html',
+    'package-shimla-manali-amritsar.html', 'package-shimla-manali.html', 'package-varanasi-tour-packages-from-kerala.html',
+    'package-waterfalls-hills-backwaters.html', 'packages.html', 'privacy.html', 'terms.html'];
+  var QUICK = ['index.html', 'packages.html', 'package-shimla-manali.html', 'package-varanasi-tour-packages-from-kerala.html',
+    'contact.html', 'about.html', 'accessibility-ml.html', 'privacy.html'];
+  var AXE = 'https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js';
+  var NOISE_KEYS = ['repeats', 'symbols', 'deva', 'vague', 'glued', 'mismatch'];
+  var stopped = false;
+
+  function $(s) { return document.querySelector(s); }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function say(t) { $('#status').textContent = t; }
+
+  function loadFrame(page, width) {
+    return new Promise(function (resolve) {
+      var f = document.createElement('iframe');
+      f.style.cssText = 'width:' + width + 'px;height:800px;border:0';
+      f.title = page;
+      $('#frames').appendChild(f);
+      f.onload = function () {
+        var w = f.contentWindow;
+        /* never send anything to the enquiry / newsletter service from a test */
+        var real = w.fetch;
+        w.fetch = function (u) { return /formsubmit/.test(String(u)) ? Promise.resolve(new w.Response('{}')) : real.apply(this, arguments); };
+        w.__errors = [];
+        w.addEventListener('error', function (e) { w.__errors.push(String(e.message)); });
+        resolve(f);
+      };
+      /* start every page from default toolbar settings */
+      try { localStorage.removeItem('sh-a11y-v1'); sessionStorage.removeItem('sh-a11y-hidden'); } catch (e) { /* ignore */ }
+      f.src = '../' + page + '?selftest=' + Date.now();
+    });
+  }
+
+  async function settle(f) {
+    var w = f.contentWindow, d = f.contentDocument;
+    await sleep(2000);
+    for (var y = 0; y < d.documentElement.scrollHeight; y += 800) { w.scrollTo(0, y); await sleep(40); }
+    await sleep(800);
+    w.scrollTo(0, 0);
+    await sleep(200);
+  }
+
+  async function runAxe(f) {
+    var w = f.contentWindow, d = f.contentDocument;
+    if (!w.axe) await new Promise(function (res, rej) { var s = d.createElement('script'); s.src = AXE; s.onload = res; s.onerror = rej; d.head.appendChild(s); });
+    var r = await w.axe.run(d, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] } });
+    return r.violations.map(function (v) { return v.id + ' ×' + v.nodes.length + ': ' + v.nodes.slice(0, 2).map(function (n) { return n.target.join(' '); }).join(' | '); });
+  }
+
+  /* ── toolbar hit-testing ── */
+  function hits(d, el) {
+    if (!el) return false;
+    var r = el.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    var x = Math.min(Math.max(r.left + r.width / 2, 1), d.defaultView.innerWidth - 1);
+    var y = Math.min(Math.max(r.top + r.height / 2, 1), d.defaultView.innerHeight - 1);
+    var h = d.elementFromPoint(x, y);
+    return !!h && (h === el || el.contains(h));
+  }
+  /* What a click in the middle of the screen reaches must belong to the page, not to the
+     toolbar (a stray overlay, backdrop or bar). Short pages end above the middle, where the
+     click lands on the page background (<html>): that still counts as the page. */
+  function pageClickable(d) {
+    var w = d.defaultView, h = d.elementFromPoint(w.innerWidth / 2, w.innerHeight / 2);
+    return !!h && !h.closest('#a11y-ui');
+  }
+  async function clickHit(d, el) {
+    if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+    await sleep(30);
+    if (!hits(d, el)) return false;
+    el.click();
+    await sleep(60);
+    return true;
+  }
+  async function runHits(f) {
+    var d = f.contentDocument, fails = [];
+    var ui = d.getElementById('a11y-ui');
+    if (!ui) return ['toolbar missing'];
+    if (d.querySelectorAll('#a11y-ui').length !== 1) fails.push('toolbar present ' + d.querySelectorAll('#a11y-ui').length + ' times');
+    var launcher = d.getElementById('a11y-launch');
+    function q(s) { return d.querySelector('#a11y-ui ' + s); }
+    async function check(state) {
+      /* with the panel closed: page and launcher reachable */
+      if (!d.getElementById('a11y-panel').hidden) await clickHit(d, q('[data-act="close"]'));
+      if (!pageClickable(d)) fails.push(state + ': page centre not clickable');
+      if (!hits(d, launcher)) fails.push(state + ': launcher not clickable');
+      /* reopen: the panel's own buttons reachable */
+      if (!(await clickHit(d, launcher))) return;
+      ['[data-act="close"]', '[data-act="reset"]', '[data-act="side"]', '[data-act="hide"]'].forEach(function (s) {
+        var b = q(s); if (b) b.scrollIntoView({ block: 'nearest' });
+        if (!hits(d, b)) fails.push(state + ': ' + s + ' not clickable');
+      });
+    }
+    await check('default');
+    var tiles = Array.prototype.slice.call(d.querySelectorAll('#a11y-ui .a11y-tile')).map(function (t) { return t.getAttribute('data-key'); })
+      .filter(function (k) { return k !== 'readPage' && k !== 'structure'; });
+    for (var i = 0; i < tiles.length; i++) {
+      if (stopped) break;
+      var key = tiles[i], levels = d.querySelector('#a11y-ui [data-key="' + key + '"] .a11y-dots') ? d.querySelectorAll('#a11y-ui [data-key="' + key + '"] .a11y-dots i').length : 1;
+      for (var lv = 1; lv <= levels; lv++) {
+        if (!(await clickHit(d, q('[data-key="' + key + '"]')))) { fails.push(key + ' level ' + lv + ': tile not clickable'); break; }
+        await check(key + (levels > 1 ? ' level ' + lv : ''));
+      }
+      await clickHit(d, q('[data-act="reset"]'));
+    }
+    var profiles = Array.prototype.slice.call(d.querySelectorAll('#a11y-ui .a11y-profile')).map(function (b) { return b.getAttribute('data-profile'); });
+    for (var j = 0; j < profiles.length; j++) {
+      if (stopped) break;
+      if (!(await clickHit(d, q('[data-profile="' + profiles[j] + '"]')))) { fails.push(profiles[j] + ' profile: not clickable'); continue; }
+      await check(profiles[j] + ' profile');
+    }
+    await clickHit(d, q('[data-act="reset"]'));
+    /* minimised: the restore tab must bring the button back */
+    await clickHit(d, q('[data-act="hide"]'));
+    var tab = d.getElementById('a11y-restore');
+    if (!hits(d, tab)) fails.push('minimised: restore tab not clickable');
+    else { tab.click(); await sleep(60); if (!hits(d, launcher)) fails.push('restored: launcher not clickable'); }
+    if (!d.getElementById('a11y-panel').hidden) await clickHit(d, q('[data-act="close"]'));
+    return fails;
+  }
+
+  function addRow(page, width, res) {
+    var rows = $('#rows');
+    if (rows.querySelector('td[colspan]')) rows.innerHTML = '';
+    var tr = document.createElement('tr');
+    function cell(v) { if (v == null) return '<td>—</td>'; return '<td class="' + (v.length === 0 ? 'ok">Pass' : 'bad">' + v.length + ' issue' + (v.length > 1 ? 's' : '')) + '</td>'; }
+    var noiseIssues = res.noise ? NOISE_KEYS.filter(function (k) { return res.noise.counts[k]; }).map(function (k) { return k + ': ' + res.noise.items[k].slice(0, 5).join(' | '); }) : null;
+    var detail = [];
+    if (res.axe && res.axe.length) detail.push('axe:\n' + res.axe.join('\n'));
+    if (noiseIssues && noiseIssues.length) detail.push('noise:\n' + noiseIssues.join('\n'));
+    if (res.hit && res.hit.length) detail.push('hit-tests:\n' + res.hit.join('\n'));
+    if (res.errors && res.errors.length) detail.push('script errors:\n' + res.errors.join('\n'));
+    if (res.noise) detail.push('Tab stops: ' + res.noise.counts.tabStops + ', links: ' + res.noise.counts.links);
+    tr.innerHTML = '<th scope="row"><a href="../' + esc(page) + '">' + esc(page) + '</a></th><td>' + width + ' px</td>' +
+      cell(res.axe) + cell(noiseIssues) + cell(res.hit) +
+      '<td><details><summary>Show</summary><pre>' + esc(detail.join('\n\n') || 'Nothing to report.') + '</pre></details></td>';
+    rows.appendChild(tr);
+  }
+
+  async function run() {
+    stopped = false;
+    $('#run').disabled = true; $('#stop').disabled = false;
+    $('#rows').innerHTML = '<tr><td colspan="6">Running…</td></tr>';
+    /* ?pages=a.html,b.html tests just those pages */
+    var only = new URLSearchParams(location.search).get('pages');
+    var pages = only ? only.split(',').filter(function (p) { return ALL.indexOf(p) >= 0; })
+      : document.querySelector('input[name="set"]:checked').value === 'all' ? ALL : QUICK;
+    var widths = Array.prototype.map.call(document.querySelectorAll('input[name="w"]:checked'), function (i) { return +i.value; });
+    var checks = {}; Array.prototype.forEach.call(document.querySelectorAll('input[name="c"]:checked'), function (i) { checks[i.value] = true; });
+    var total = pages.length * widths.length, n = 0, bad = 0;
+    for (var p = 0; p < pages.length && !stopped; p++) {
+      for (var w = 0; w < widths.length && !stopped; w++) {
+        n++;
+        say('Testing ' + n + ' of ' + total + ': ' + pages[p] + ' at ' + widths[w] + ' px…');
+        var f = await loadFrame(pages[p], widths[w]), res = {};
+        try {
+          await settle(f);
+          if (checks.noise && window.a11yNoise) res.noise = window.a11yNoise(f.contentDocument);
+          if (checks.axe) res.axe = await runAxe(f);
+          if (checks.hit) res.hit = await runHits(f);
+          res.errors = f.contentWindow.__errors;
+        } catch (e) { res.hit = (res.hit || []).concat(['test error: ' + e.message]); }
+        var failed = (res.axe && res.axe.length) || (res.hit && res.hit.length) || (res.noise && NOISE_KEYS.some(function (k) { return res.noise.counts[k]; }));
+        if (failed) bad++;
+        addRow(pages[p], widths[w], res);
+        f.remove();
+      }
+    }
+    try { localStorage.removeItem('sh-a11y-v1'); sessionStorage.removeItem('sh-a11y-hidden'); } catch (e) { /* ignore */ }
+    say((stopped ? 'Stopped after ' + n + ' of ' + total + '. ' : 'Finished: ' + total + ' runs. ') + (bad ? bad + ' with issues.' : 'All passed.'));
+    $('#run').disabled = false; $('#stop').disabled = true;
+  }
+
+  $('#run').addEventListener('click', run);
+  $('#stop').addEventListener('click', function () { stopped = true; say('Stopping after the current page…'); });
+})();
+</script>
+</body>
+</html>

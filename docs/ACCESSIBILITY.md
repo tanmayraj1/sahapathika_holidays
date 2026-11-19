@@ -76,9 +76,15 @@ When the site's design changes (for example, a new section copied into every pag
 
 ## Re-testing
 
-1. Serve the folder (`python -m http.server 8080`). The browser caches CSS and JS, so force a reload after edits.
-2. On each page, load axe-core 4.10.2 from cdnjs and run `axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa','best-practice'] } })`. Scroll the page first, so reveal animations have finished.
-3. Walk the page with the keyboard only:
+1. Serve the folder: `python -m http.server 8080`. The browser caches CSS and JS, so force a reload after edits.
+2. Open `http://localhost:8080/tools/a11y-selftest.html` and press **Run tests**:
+   - **Quick** runs 8 page types; **All** runs every live page.
+   - For each page and width it runs axe-core 4.10.2 (WCAG 2.2 A/AA plus best practice), the screen-reader noise check, and toolbar hit-testing: every setting at every level, every profile, and minimise/restore, checked with `elementFromPoint`.
+   - Pass means 0 axe violations, 0 noise and 0 hit-test failures.
+   - Form submissions are blocked inside the test, so nothing is emailed.
+3. Walk a changed page with the keyboard only:
    - **Tab:** the skip link comes first and the focus ring is always visible.
    - **Escape:** closes any menu or dialog and returns focus to the control that opened it.
-4. Test with a real screen reader (NVDA + Chrome on Windows, VoiceOver + Safari on Mac/iPhone). This is still to do. Update the statement's "Known limitations" when it is done.
+4. After bigger changes, run the six tasks in `docs/screen-reader-test-script.md` with NVDA, TalkBack and VoiceOver.
+5. **Testing with blind users:** see `docs/blind-user-testing-plan.md`. Update the statement's "Known limitations" (all three languages) when it is done.
+6. **Not published:** `docs/`, `tools/` and `.impeccable/` are listed in `.vercelignore`, so Vercel does not publish them. The self-test only runs locally.

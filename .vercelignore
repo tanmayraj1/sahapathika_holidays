@@ -1,0 +1,7 @@
+# Internal files that should not be published with the site.
+# docs/       plans, audit logs, test scripts, the questionnaire for the team
+# tools/      the accessibility injector, checkers and self-test (run locally)
+# .impeccable design-checker settings
+docs/
+tools/
+.impeccable/

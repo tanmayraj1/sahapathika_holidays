@@ -95,6 +95,8 @@
 
   function a11yNoise(doc) {
     var win = doc.defaultView;
+    /* "Hindi mixed into English names" only means something on an English page */
+    var englishPage = /^en\b/i.test(doc.documentElement.getAttribute('lang') || 'en');
     var sel = 'a[href],button,input:not([type=hidden]),select,textarea,summary,[tabindex]';
     var stops = [].slice.call(doc.querySelectorAll(sel)).filter(function (el) {
       if (el.disabled) return false;
@@ -118,7 +120,7 @@
       }
       prev = el; prevName = name;
       if (SYMBOLS.test(name)) items.symbols.push(name);
-      if (DEVA.test(name) && /[a-z]/i.test(name)) items.deva.push(name);
+      if (englishPage && DEVA.test(name) && /[a-z]/i.test(name)) items.deva.push(name);
       if (VAGUE.test(name)) items.vague.push(name);
       if (GLUED.test(name.replace(GLUED_OK, ' '))) items.glued.push(name);
       if (name.length > 90) items.long.push(name);

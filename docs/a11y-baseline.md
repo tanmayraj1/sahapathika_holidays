@@ -439,3 +439,31 @@ At 375 px the "after" column is also all zeros (before: 37, 120, 17, 12, 31).
 - **Hit-testing:** the panel (including the magnifier tile) and the phone bottom bar are clickable at 375 px with 200% text.
 
 **Not changed:** large headings sized with `clamp(…px, …vw, …px)` don't grow with the font-size setting. They are already large, and they still scale with browser zoom.
+
+### Round 2, Phase 5: checks that keep it working — 2026-11-19
+
+**Added:**
+- **`tools/a11y-selftest.html`:** the regression suite. One page runs, for each chosen page and width:
+  - axe-core 4.10.2;
+  - the screen-reader noise check;
+  - toolbar hit-testing: every setting at every level, every profile, minimise and restore, checked with `elementFromPoint`.
+
+  You can test quick (8 page types), all (37 live pages), or `?pages=a.html,b.html`. Form submissions are blocked inside it.
+- **`docs/screen-reader-test-script.md`:** six tasks for the team to run with NVDA, TalkBack and VoiceOver, with the expected route and key-press counts, and a record sheet.
+- **`docs/blind-user-testing-plan.md`:** how to recruit 3–5 blind and low-vision testers (via NAB India, Kerala Federation of the Blind, past customers), what to pay and offer, a 60-minute session plan, and what to do with the findings.
+- **`.vercelignore`:** `docs/`, `tools/` and `.impeccable/` are no longer published with the site.
+
+**Found and fixed by the self-test:**
+- The "← Back to Home" arrow was still read aloud on the three legal pages (`r2-stub-back-arrow`).
+- Two problems were in the checks themselves:
+  - The hit-test counted the empty background below a short page as "not clickable". It now fails only when something of the toolbar covers the page.
+  - The noise check flagged Hindi on the Hindi statement. It now checks for mixed Hindi only on English pages.
+
+**Results:**
+- **Quick set with hit-testing** (8 page types × 1280 / 375 px, plus the three legal pages and both statements): all pass.
+- **All 37 live pages × 1280 / 375 px with axe and the noise check:** 74 runs, all pass.
+
+**Not done here:**
+- **NVDA walkthrough:** NVDA isn't installed on this machine, so the six tasks are written up for the team instead. The expected key-press counts in the script were measured with real Tab presses in Chrome.
+- **Real Windows contrast theme:** still to be checked by eye.
+- **Testing with blind users:** see the plan.
