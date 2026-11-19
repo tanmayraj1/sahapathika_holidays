@@ -125,6 +125,7 @@ module.exports = [
     appliesTo: 'stub',
     find: '<html>',
     replace: '<html lang="en">',
+    applied: '<html lang="', /* any declared language counts (the statement is also in ml and hi) */
     expect: 1
   },
   {

@@ -9,6 +9,9 @@
  *   - The UI (#a11y-ui) is appended to <html>, outside <body>, so the page's
  *     React re-renders never touch it and page-level overrides never restyle it.
  *   - Shortcut: Alt+A opens / closes the panel.
+ *   - Languages: English, Malayalam, Hindi. UI strings go through tr('English text');
+ *     translations live in a11y/lang/<code>.json, keyed by the English text, and are
+ *     only downloaded when that language is chosen.
  *
  * Exposes window.SHA11y = { trapFocus, announce, open, close } for page fixes.
  */
@@ -28,7 +31,9 @@
     contrast: 0, saturation: 0, text: 0, spacing: 0, lineHeight: 0, align: 0, cursor: 0,
     links: false, hideImages: false, pause: false, readable: false, dyslexia: false,
     guide: false, mask: false, labels: false, focus: false, clickRead: false,
-    profiles: [], side: 'left'
+    profiles: [], side: 'left',
+    lang: '',  /* '' = follow the browser language (en, ml or hi) */
+    rate: 1    /* read-aloud speed: index into RATES */
   };
 
   var LEVELS = {
@@ -47,6 +52,44 @@
     return s;
   }
 
+  /* ───────────── Languages ───────────── */
+
+  var LANGS = [
+    { code: 'en', name: 'English', statement: 'accessibility.html' },
+    { code: 'ml', name: 'മലയാളം', statement: 'accessibility-ml.html' },
+    { code: 'hi', name: 'हिन्दी', statement: 'accessibility-hi.html' }
+  ];
+  var STR = {};          /* English text -> translation, for the current language */
+  var LANG = 'en';
+  var stringCache = { en: {} };
+
+  /* Translate an English UI string; {name} placeholders are filled from vars. */
+  function tr(s, vars) {
+    var out = (STR && STR[s]) || s;
+    if (vars) for (var k in vars) out = out.split('{' + k + '}').join(vars[k]);
+    return out;
+  }
+  function chosenLang() {
+    if (state.lang) return state.lang;
+    /* a Malayalam or Hindi page (the translated statements) opens the panel in that language */
+    var pageLang = String(root.getAttribute('lang') || '').slice(0, 2).toLowerCase();
+    if (pageLang === 'ml' || pageLang === 'hi') return pageLang;
+    var list = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
+    for (var i = 0; i < list.length; i++) {
+      var c = String(list[i]).slice(0, 2).toLowerCase();
+      if (c === 'ml' || c === 'hi') return c;
+      if (c === 'en') return 'en';
+    }
+    return 'en';
+  }
+  function loadStrings(code, done) {
+    if (stringCache[code]) { LANG = code; STR = stringCache[code]; done(true); return; }
+    if (!window.fetch) { done(false); return; }
+    fetch('a11y/lang/' + code + '.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) { stringCache[code] = d; LANG = code; STR = d; done(true); })
+      .catch(function () { done(false); });
+  }
+
   function load() {
     var s = copyDefaults();
     try {
@@ -57,6 +100,8 @@
         if (Array.isArray(d) ? Array.isArray(v) : typeof v === typeof d) s[k] = v;
       }
       for (var lk in LEVELS) if (s[lk] < 0 || s[lk] > LEVELS[lk].length) s[lk] = 0;
+      if (!(s.rate >= 0 && s.rate <= 3)) s.rate = 1;
+      if (['', 'en', 'ml', 'hi'].indexOf(s.lang) < 0) s.lang = '';
     } catch (e) { /* private mode, blocked storage or bad JSON: use defaults */ }
     return s;
   }
@@ -164,12 +209,12 @@
     var r = el.getAttribute('role');
     if (r) return r;
     var t = el.tagName;
-    if (t === 'A') return 'link';
-    if (t === 'BUTTON') return 'button';
-    if (t === 'SELECT') return 'list box';
-    if (t === 'TEXTAREA') return 'text area';
-    if (t === 'INPUT') return ({ checkbox: 'checkbox', radio: 'radio button', submit: 'button', button: 'button' })[el.type] || 'text field';
-    if (/^H[1-6]$/.test(t)) return 'heading level ' + t[1];
+    if (t === 'A') return tr('link');
+    if (t === 'BUTTON') return tr('button');
+    if (t === 'SELECT') return tr('list box');
+    if (t === 'TEXTAREA') return tr('text area');
+    if (t === 'INPUT') return tr(({ checkbox: 'checkbox', radio: 'radio button', submit: 'button', button: 'button' })[el.type] || 'text field');
+    if (/^H[1-6]$/.test(t)) return tr('heading level {n}', { n: t[1] });
     return '';
   }
 
@@ -231,7 +276,7 @@
   ];
 
   var SECTIONS = [
-    { title: 'Read aloud', note: 'Uses your device’s own voices. If you already use a screen reader, keep using it — this is for reading support.', tiles: [
+    { title: 'Read aloud', note: 'Uses your device’s own voices. Select some text first to hear just that part. If you already use a screen reader, keep using it — this is for reading support.', tiles: [
       { key: 'readPage', label: 'Read page', action: true },
       { key: 'clickRead', label: 'Click to read' }
     ] },
@@ -276,56 +321,63 @@
     if (n) { dots = '<span class="a11y-dots" aria-hidden="true">'; for (var i = 0; i < n; i++) dots += '<i></i>'; dots += '</span>'; }
     return '<button type="button" class="a11y-tile" data-key="' + t.key + '"' + (t.action && t.key === 'structure' ? '' : ' aria-pressed="false"') + '>' +
       svg(ICONS[t.key] || '') +
-      '<span class="a11y-tile-name">' + esc(t.label) + '</span>' +
+      '<span class="a11y-tile-name">' + esc(tr(t.label)) + '</span>' +
       (n ? '<span class="a11y-tile-level" aria-hidden="true"></span>' : '') + dots + '</button>';
   }
 
   function build() {
     ui = document.createElement('div');
     ui.id = 'a11y-ui';
+    ui.setAttribute('lang', LANG);   /* screen readers switch voice for the panel */
     var sections = SECTIONS.map(function (s) {
       /* role=group divs, not <section>: motion.js animates every <section> on the page */
       return '<div class="a11y-section" role="group" aria-labelledby="a11y-h-' + s.title.replace(/\W/g, '') + '">' +
-        '<h3 id="a11y-h-' + s.title.replace(/\W/g, '') + '">' + esc(s.title) + '</h3>' +
-        (s.note ? '<p class="a11y-note">' + esc(s.note) + '</p>' : '') +
+        '<h3 id="a11y-h-' + s.title.replace(/\W/g, '') + '">' + esc(tr(s.title)) + '</h3>' +
+        (s.note ? '<p class="a11y-note">' + esc(tr(s.note)) + '</p>' : '') +
         '<div class="a11y-tiles">' + s.tiles.map(tileHTML).join('') + '</div></div>';
     }).join('');
     var profiles = PROFILES.map(function (pr) {
-      return '<button type="button" class="a11y-profile" data-profile="' + pr.id + '" aria-pressed="false">' + svg(ICONS[pr.id]) + '<span>' + esc(pr.label) + '</span></button>';
+      return '<button type="button" class="a11y-profile" data-profile="' + pr.id + '" aria-pressed="false">' + svg(ICONS[pr.id]) + '<span>' + esc(tr(pr.label)) + '</span></button>';
     }).join('');
+    var langs = LANGS.map(function (l) {
+      return '<button type="button" data-lang="' + l.code + '" lang="' + l.code + '" aria-pressed="' + (l.code === LANG) + '">' + esc(l.name) + '</button>';
+    }).join('');
+    var statement = LANGS.filter(function (l) { return l.code === LANG; })[0].statement;
 
     ui.innerHTML =
-      '<button type="button" id="a11y-launch" aria-label="Accessibility options" title="Accessibility options (Alt+A)" aria-keyshortcuts="Alt+A" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel">' + svg(ICONS.access, ' stroke-width="1.6"') + '</button>' +
-      '<button type="button" id="a11y-restore" aria-label="Show the accessibility button" title="Show the accessibility button">' + svg(ICONS.access, ' stroke-width="1.8"') + '</button>' +
+      '<button type="button" id="a11y-launch" aria-label="' + esc(tr('Accessibility options')) + '" title="' + esc(tr('Accessibility options')) + ' (Alt+A)" aria-keyshortcuts="Alt+A" aria-haspopup="dialog" aria-expanded="false" aria-controls="a11y-panel">' + svg(ICONS.access, ' stroke-width="1.6"') + '</button>' +
+      '<button type="button" id="a11y-restore" aria-label="' + esc(tr('Show the accessibility button')) + '" title="' + esc(tr('Show the accessibility button')) + '">' + svg(ICONS.access, ' stroke-width="1.8"') + '</button>' +
       '<div id="a11y-backdrop" hidden></div>' +
       '<div id="a11y-panel" role="dialog" aria-modal="true" aria-labelledby="a11y-title" aria-describedby="a11y-desc" tabindex="-1" hidden>' +
-        '<div class="a11y-head"><div class="a11y-head-text"><h2 id="a11y-title">Accessibility</h2><p id="a11y-desc">Adjust this site to suit how you see, read and browse. Shortcut: Alt+A.</p></div>' +
-        '<button type="button" class="a11y-icon-btn" data-act="close" aria-label="Close accessibility options">' + svg(ICONS.close) + '</button></div>' +
+        '<div class="a11y-head"><div class="a11y-head-text"><h2 id="a11y-title">' + esc(tr('Accessibility')) + '</h2><p id="a11y-desc">' + esc(tr('Adjust this site to suit how you see, read and browse. Shortcut: Alt+A.')) + '</p></div>' +
+        '<button type="button" class="a11y-icon-btn" data-act="close" aria-label="' + esc(tr('Close accessibility options')) + '">' + svg(ICONS.close) + '</button></div>' +
+        '<div class="a11y-langs" role="group" aria-label="' + esc(tr('Language')) + '">' + langs + '</div>' +
         '<div class="a11y-body" id="a11y-main-view">' +
-          '<div class="a11y-section" role="group" aria-labelledby="a11y-h-profiles"><h3 id="a11y-h-profiles">Profiles</h3>' +
-          '<p class="a11y-note">One tap turns on a set of adjustments. You can fine-tune any of them below.</p>' +
+          '<div class="a11y-section" role="group" aria-labelledby="a11y-h-profiles"><h3 id="a11y-h-profiles">' + esc(tr('Profiles')) + '</h3>' +
+          '<p class="a11y-note">' + esc(tr('One tap turns on a set of adjustments. You can fine-tune any of them below.')) + '</p>' +
           '<div class="a11y-profiles">' + profiles + '</div></div>' + sections +
         '</div>' +
         '<div class="a11y-body" id="a11y-struct-view" hidden>' +
-          '<button type="button" class="a11y-btn" data-act="back" style="margin-top:14px;width:100%">' + svg(ICONS.back, ' style="width:16px;height:16px;vertical-align:-3px;margin-right:6px"') + 'Back to all options</button>' +
-          '<div class="a11y-tabs" role="group" aria-label="Show"><button type="button" data-list="headings" aria-pressed="true">Headings</button><button type="button" data-list="landmarks" aria-pressed="false">Regions</button><button type="button" data-list="links" aria-pressed="false">Links</button></div>' +
+          '<button type="button" class="a11y-btn" data-act="back" style="margin-top:14px;width:100%">' + svg(ICONS.back, ' style="width:16px;height:16px;vertical-align:-3px;margin-right:6px"') + esc(tr('Back to all options')) + '</button>' +
+          '<div class="a11y-tabs" role="group" aria-label="' + esc(tr('Show')) + '"><button type="button" data-list="headings" aria-pressed="true">' + esc(tr('Headings')) + '</button><button type="button" data-list="landmarks" aria-pressed="false">' + esc(tr('Regions')) + '</button><button type="button" data-list="links" aria-pressed="false">' + esc(tr('Links')) + '</button></div>' +
           '<p class="a11y-note" id="a11y-struct-count" aria-live="polite"></p>' +
           '<ul class="a11y-list" id="a11y-struct-list"></ul>' +
         '</div>' +
         '<div class="a11y-foot">' +
-          '<button type="button" class="a11y-btn a11y-btn-primary" data-act="reset">Reset all</button>' +
+          '<button type="button" class="a11y-btn a11y-btn-primary" data-act="reset">' + esc(tr('Reset all')) + '</button>' +
           '<button type="button" class="a11y-btn" data-act="side"></button>' +
-          '<button type="button" class="a11y-btn" data-act="hide">Minimise button</button>' +
-          (STATEMENT_URL ? '<a href="' + STATEMENT_URL + '">Accessibility statement</a>' : '') +
+          '<button type="button" class="a11y-btn" data-act="hide">' + esc(tr('Minimise button')) + '</button>' +
+          (statement ? '<a href="' + statement + '">' + esc(tr('Accessibility statement')) + '</a>' : '') +
         '</div>' +
       '</div>' +
-      '<div id="a11y-player" role="region" aria-label="Read aloud controls" hidden>' +
-        '<button type="button" data-say="prev" aria-label="Previous paragraph">' + svg(ICONS.prev) + '</button>' +
-        '<button type="button" data-say="toggle" aria-label="Pause reading">' + svg(ICONS.pauseSmall) + '</button>' +
-        '<button type="button" data-say="next" aria-label="Next paragraph">' + svg(ICONS.next) + '</button>' +
-        '<button type="button" data-say="rate" aria-label="Reading speed 1 times">1×</button>' +
+      '<div id="a11y-player" role="region" aria-label="' + esc(tr('Read aloud controls')) + '" aria-describedby="a11y-player-keys" hidden>' +
+        '<button type="button" data-say="prev" aria-label="' + esc(tr('Previous paragraph')) + '">' + svg(ICONS.prev) + '</button>' +
+        '<button type="button" data-say="toggle" aria-label="' + esc(tr('Pause reading')) + '">' + svg(ICONS.pauseSmall) + '</button>' +
+        '<button type="button" data-say="next" aria-label="' + esc(tr('Next paragraph')) + '">' + svg(ICONS.next) + '</button>' +
+        '<button type="button" data-say="rate" aria-label="' + esc(tr('Reading speed {r} times', { r: RATES[speech.rateIdx] })) + '">' + RATES[speech.rateIdx] + '×</button>' +
         '<span class="a11y-player-label" aria-live="off"></span>' +
-        '<button type="button" data-say="stop" aria-label="Stop reading">' + svg(ICONS.stop) + '</button>' +
+        '<button type="button" data-say="stop" aria-label="' + esc(tr('Stop reading')) + '">' + svg(ICONS.stop) + '</button>' +
+        '<span id="a11y-player-keys" hidden>' + esc(tr('Left and right arrow keys: previous and next paragraph. Escape: stop.')) + '</span>' +
       '</div>' +
       '<div id="a11y-guide" hidden></div>' +
       '<div id="a11y-mask-top" class="a11y-maskbar" hidden></div><div id="a11y-mask-bottom" class="a11y-maskbar" hidden></div>' +
@@ -349,14 +401,46 @@
 
     ui.querySelector('#a11y-restore').addEventListener('click', function () {
       setMinimised(false);
-      announce('Accessibility button restored.');
+      announce(tr('Accessibility button restored.'));
       launcher.focus();
     });
     launcher.addEventListener('click', function () { isOpen() ? close() : open(launcher); });
     backdrop.addEventListener('click', function () { close(); });
     panel.addEventListener('click', onPanelClick);
     player.addEventListener('click', onPlayerClick);
+    player.addEventListener('keydown', onPlayerKey);
+    structView.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-goto]'); if (b) gotoItem(+b.getAttribute('data-goto'));
+    });
     renderAll();
+  }
+
+  /* Switch language: rebuild the toolbar in place, keeping focus on the language buttons. */
+  function setLang(code) {
+    loadStrings(code, function (ok) {
+      if (!ok) { announce(tr('Sorry, that language could not be loaded. Please check your connection.')); return; }
+      state.lang = code; save();
+      rebuild(true);
+      announce(tr('Language: English'));
+    });
+  }
+  function rebuild(focusLang) {
+    var wasOpen = isOpen();
+    if (speech.active) stopReading();
+    closeItinerary(false);
+    if (wasOpen) close(false);
+    var keep = Array.prototype.slice.call(ui.querySelectorAll('[id^="a11y-hint-"]'));
+    var minimised = ui.classList.contains('a11y-hidden-launch');
+    ui.remove();
+    build();
+    keep.forEach(function (h) { ui.appendChild(h); });
+    ui.classList.toggle('a11y-hidden-launch', minimised);
+    syncBehaviours();
+    if (wasOpen) {
+      open(launcher);
+      var b = focusLang && panel.querySelector('[data-lang="' + LANG + '"]');
+      if (b) b.focus();
+    }
   }
 
   /* Minimised launcher: remembered for this visit (sessionStorage), always restorable */
@@ -397,9 +481,9 @@
   /* ───────────── Changing settings ───────────── */
 
   function describe(key) {
-    var v = state[key], label = TILE_LABEL[key] || key;
-    if (LEVELS[key]) return v ? label + ': ' + LEVELS[key][v - 1] : label + ' off';
-    return label + (v ? ' on' : ' off');
+    var v = state[key], label = tr(TILE_LABEL[key] || key);
+    if (LEVELS[key]) return v ? label + ': ' + tr(LEVELS[key][v - 1]) : tr('{x} off', { x: label });
+    return tr(v ? '{x} on' : '{x} off', { x: label });
   }
 
   function setValue(key, value) {
@@ -426,7 +510,7 @@
     if (i === -1) {
       state.profiles.push(id);
       for (var k in pr.preset) setValue(k, pr.preset[k]);
-      announce(pr.label + ' profile on');
+      announce(tr('{x} profile on', { x: tr(pr.label) }));
     } else {
       state.profiles.splice(i, 1);
       for (var k2 in pr.preset) {
@@ -436,7 +520,7 @@
         });
         if (!stillWanted && state[k2] === pr.preset[k2]) state[k2] = DEFAULTS[k2];
       }
-      announce(pr.label + ' profile off');
+      announce(tr('{x} profile off', { x: tr(pr.label) }));
     }
     commit();
   }
@@ -447,7 +531,7 @@
     state = copyDefaults();
     state.side = side;
     commit();
-    announce('All accessibility settings reset');
+    announce(tr('All accessibility settings reset'));
   }
 
   function commit() {
@@ -461,15 +545,15 @@
     if (!ui) return;
     ui.classList.toggle('a11y-right', state.side === 'right');
     ui.querySelectorAll('.a11y-tile').forEach(function (b) {
-      var key = b.getAttribute('data-key'), label = TILE_LABEL[key];
+      var key = b.getAttribute('data-key'), label = tr(TILE_LABEL[key]);
       if (key === 'structure') return;
       if (key === 'readPage') { b.setAttribute('aria-pressed', speech.active ? 'true' : 'false'); return; }
       var v = state[key], on = !!v;
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
       if (LEVELS[key]) {
         var n = LEVELS[key].length;
-        b.querySelector('.a11y-tile-level').textContent = v ? LEVELS[key][v - 1] : 'Off';
-        b.setAttribute('aria-label', label + (v ? ', ' + LEVELS[key][v - 1] + ', level ' + v + ' of ' + n : ', off'));
+        b.querySelector('.a11y-tile-level').textContent = v ? tr(LEVELS[key][v - 1]) : tr('Off');
+        b.setAttribute('aria-label', v ? tr('{x}, {level}, level {v} of {n}', { x: label, level: tr(LEVELS[key][v - 1]), v: v, n: n }) : tr('{x}, off', { x: label }));
         b.querySelectorAll('.a11y-dots i').forEach(function (d, i) { d.classList.toggle('on', i < v); });
       }
     });
@@ -477,7 +561,7 @@
       b.setAttribute('aria-pressed', state.profiles.indexOf(b.getAttribute('data-profile')) !== -1 ? 'true' : 'false');
     });
     var side = ui.querySelector('[data-act="side"]');
-    if (side) side.textContent = state.side === 'right' ? 'Move button left' : 'Move button right';
+    if (side) side.textContent = tr(state.side === 'right' ? 'Move button left' : 'Move button right');
   }
 
   function onPanelClick(e) {
@@ -486,16 +570,17 @@
     if (t.hasAttribute('data-key')) { onTile(t.getAttribute('data-key')); return; }
     if (t.hasAttribute('data-profile')) { toggleProfile(t.getAttribute('data-profile')); return; }
     if (t.hasAttribute('data-list')) { renderStructure(t.getAttribute('data-list')); return; }
+    if (t.hasAttribute('data-lang')) { setLang(t.getAttribute('data-lang')); return; }
     var act = t.getAttribute('data-act');
     if (act === 'close') close();
     else if (act === 'reset') resetAll();
-    else if (act === 'side') { state.side = state.side === 'right' ? 'left' : 'right'; save(); renderAll(); announce('Accessibility button moved ' + state.side); }
+    else if (act === 'side') { state.side = state.side === 'right' ? 'left' : 'right'; save(); renderAll(); announce(tr(state.side === 'right' ? 'Accessibility button moved right' : 'Accessibility button moved left')); }
     else if (act === 'hide') {
       /* Minimise, never remove: the button shrinks to a slim edge tab that brings it back
          (a fully hidden button stranded touch users — Alt+A needs a keyboard). */
       setMinimised(true);
       close(false);
-      announce('Accessibility button minimised to a small tab at the edge of the screen.');
+      announce(tr('Accessibility button minimised to a small tab at the edge of the screen.'));
       var tab = ui.querySelector('#a11y-restore');
       if (tab) tab.focus();
     }
@@ -523,11 +608,11 @@
         if (text && inPage(h)) items.push({ el: h, badge: 'H' + h.tagName[1], text: text, indent: (+h.tagName[1] - 1) * 10 });
       });
     } else if (kind === 'landmarks') {
-      var names = { HEADER: 'Header', NAV: 'Navigation', MAIN: 'Main content', FOOTER: 'Footer', ASIDE: 'Sidebar', FORM: 'Form' };
+      var names = { HEADER: tr('Header'), NAV: tr('Navigation'), MAIN: tr('Main content'), FOOTER: tr('Footer'), ASIDE: tr('Sidebar'), FORM: tr('Form') };
       document.querySelectorAll('body header, body nav, body main, body footer, body aside, body [role="region"][aria-label], body section[aria-label], body form[aria-label]').forEach(function (l) {
         if (!inPage(l)) return;
         var label = l.getAttribute('aria-label') || '';
-        items.push({ el: l, badge: '', text: (names[l.tagName] || 'Region') + (label ? ' — ' + label : '') });
+        items.push({ el: l, badge: '', text: (names[l.tagName] || tr('Region')) + (label ? ' — ' + label : '') });
       });
     } else {
       var seen = {};
@@ -543,8 +628,9 @@
     list.innerHTML = items.map(function (it, i) {
       return '<li><button type="button" data-goto="' + i + '"' + (it.indent ? ' style="padding-left:' + (12 + it.indent) + 'px"' : '') + '>' + (it.badge ? '<b>' + it.badge + '</b>' : '') + '<span>' + esc(it.text.slice(0, 120)) + '</span></button></li>';
     }).join('');
-    var label = { headings: 'headings', landmarks: 'regions', links: 'links' }[kind];
-    structView.querySelector('#a11y-struct-count').textContent = items.length ? items.length + ' ' + label + ' on this page. Choose one to jump to it.' : 'No ' + label + ' found on this page.';
+    var count = { headings: '{n} headings on this page. Choose one to jump to it.', landmarks: '{n} regions on this page. Choose one to jump to it.', links: '{n} links on this page. Choose one to jump to it.' }[kind];
+    var none = { headings: 'No headings found on this page.', landmarks: 'No regions found on this page.', links: 'No links found on this page.' }[kind];
+    structView.querySelector('#a11y-struct-count').textContent = items.length ? tr(count, { n: items.length }) : tr(none);
   }
 
   function gotoItem(i) {
@@ -562,12 +648,21 @@
   var synth = window.speechSynthesis;
   var hasTTS = !!(synth && window.SpeechSynthesisUtterance);
   var RATES = [0.75, 1, 1.25, 1.5];
-  var speech = { active: false, paused: false, blocks: [], i: 0, rateIdx: 1, token: 0, lit: null };
+  var speech = { active: false, paused: false, blocks: [], i: 0, rateIdx: state.rate, token: 0, lit: null };
+  var VOICE_LANGS = { en: ['en-in', 'en-gb', 'en-us', 'en'], hi: ['hi-in', 'hi'], ml: ['ml-in', 'ml'] };
+  var LANG_NAMES = { en: 'English', hi: 'Hindi', ml: 'Malayalam' };
+  var voiceWarned = {};
+  /* Which voice a piece of text needs, by its script */
+  function scriptLang(text) {
+    if (/[\u0D00-\u0D7F]/.test(text)) return 'ml';
+    if (/[\u0900-\u097F]/.test(text)) return 'hi';
+    return 'en';
+  }
 
   function pickVoice(lang) {
     if (!hasTTS) return null;
     var vs = synth.getVoices() || [];
-    var prefs = lang === 'hi' ? ['hi-in', 'hi'] : ['en-in', 'en-gb', 'en-us', 'en'];
+    var prefs = VOICE_LANGS[lang] || VOICE_LANGS.en;
     for (var i = 0; i < prefs.length; i++) {
       for (var j = 0; j < vs.length; j++) if (String(vs[j].lang).replace('_', '-').toLowerCase().indexOf(prefs[i]) === 0) return vs[j];
     }
@@ -587,7 +682,7 @@
   }
 
   function speak(text, done) {
-    if (!hasTTS) { announce('Read aloud is not supported in this browser.'); return; }
+    if (!hasTTS) { announce(tr('Read aloud is not supported in this browser.')); return; }
     var token = ++speech.token;
     synth.cancel();
     var list = chunks(text), k = 0;
@@ -596,10 +691,15 @@
       if (k >= list.length) { if (done) done(); return; }
       var part = list[k++];
       var u = new SpeechSynthesisUtterance(part);
-      var hi = /[ऀ-ॿ]/.test(part);
-      var v = pickVoice(hi ? 'hi' : 'en');
+      var code = scriptLang(part);
+      var v = pickVoice(code);
       if (v) u.voice = v;
-      u.lang = v ? v.lang : (hi ? 'hi-IN' : 'en-IN');
+      u.lang = v ? v.lang : code + '-IN';
+      /* voices load late on some devices: only warn once there is a voice list to judge by */
+      if (!v && code !== 'en' && !voiceWarned[code] && (synth.getVoices() || []).length) {
+        voiceWarned[code] = true;
+        announce(tr('This device has no {language} voice, so this part may not be read correctly. You can add one in your phone or computer’s speech or text-to-speech settings.', { language: tr(LANG_NAMES[code]) }));
+      }
       u.rate = RATES[speech.rateIdx];
       u.onend = function () { nextChunk(); };
       u.onerror = function (ev) { if (ev && (ev.error === 'interrupted' || ev.error === 'canceled')) return; nextChunk(); };
@@ -613,24 +713,34 @@
   function collectBlocks(scope) {
     var blocks = [], byEl = new Map(), disp = new Map();
     function display(el) { if (!disp.has(el)) disp.set(el, getComputedStyle(el).display); return disp.get(el); }
-    var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+    /* Reads text and photo descriptions; skips menus (nav), hidden parts, and text meant
+       only for screen readers (.a11y-sr), which sighted listeners would hear twice. */
+    var SKIP = 'script,style,noscript,template,x-dc,nav,.a11y-sr,[aria-hidden="true"],[hidden],#a11y-ui';
+    var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {
       acceptNode: function (n) {
+        if (n.nodeType === 1) {
+          /* photos: <img alt>, and <image-slot alt> (its <img> sits in a shadow root) */
+          if (n.tagName !== 'IMG' && n.tagName !== 'IMAGE-SLOT') return NodeFilter.FILTER_SKIP;
+          return (n.getAttribute('alt') || '').trim() && !n.closest(SKIP) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
         if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
         var pe = n.parentElement;
-        if (!pe || pe.closest('script,style,noscript,template,x-dc,[aria-hidden="true"],[hidden],#a11y-ui')) return NodeFilter.FILTER_REJECT;
+        if (!pe || pe.closest(SKIP)) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
     var n;
     while ((n = walker.nextNode())) {
-      var el = n.parentElement;
+      var isImg = n.nodeType === 1;
+      var el = isImg ? n : n.parentElement;
       while (el && el !== scope && !BLOCK_DISPLAY.test(display(el))) el = el.parentElement;
       if (!el) continue;
       var rect = el.getBoundingClientRect();
       if (rect.height < 2 || !isShown(el)) continue;
       var b = byEl.get(el);
       if (!b) { b = { el: el, parts: [] }; byEl.set(el, b); blocks.push(b); }
-      b.parts.push(n.nodeValue);
+      /* "Photo:" stays in the page's language (English), so the description is read in one voice */
+      b.parts.push(isImg ? 'Photo: ' + n.getAttribute('alt').trim() + '.' : n.nodeValue);
     }
     return blocks.map(function (b) { return { el: b.el, text: b.parts.join(' ').replace(/\s+/g, ' ').trim() }; })
       .filter(function (b) { return /[\p{L}\p{N}]/u.test(b.text); });
@@ -643,10 +753,18 @@
   }
 
   function startReading() {
-    if (!hasTTS) { announce('Read aloud is not supported in this browser.'); return; }
-    var scope = Array.prototype.filter.call(document.querySelectorAll('main'), isShown)[0] || document.body;
-    speech.blocks = collectBlocks(scope);
-    if (!speech.blocks.length) { announce('Nothing to read on this page.'); return; }
+    if (!hasTTS) { announce(tr('Read aloud is not supported in this browser.')); return; }
+    /* text the visitor selected on the page: read just that */
+    var sel = window.getSelection && window.getSelection();
+    var picked = sel && !sel.isCollapsed && sel.rangeCount && !ui.contains(sel.anchorNode) ? String(sel).replace(/\s+/g, ' ').trim() : '';
+    if (picked) {
+      var host = sel.getRangeAt(0).commonAncestorContainer;
+      speech.blocks = [{ el: host.nodeType === 1 ? host : host.parentElement, text: picked }];
+    } else {
+      var scope = Array.prototype.filter.call(document.querySelectorAll('main'), isShown)[0] || document.body;
+      speech.blocks = collectBlocks(scope);
+    }
+    if (!speech.blocks.length) { announce(tr('Nothing to read on this page.')); return; }
     speech.active = true; speech.paused = false; speech.i = 0;
     close(false);
     player.hidden = false;
@@ -657,7 +775,7 @@
 
   function readCurrent() {
     var b = speech.blocks[speech.i];
-    if (!b) { stopReading(); announce('Finished reading the page.'); return; }
+    if (!b) { stopReading(); announce(tr('Finished reading.')); return; }
     light(b.el);
     b.el.scrollIntoView({ block: 'center', behavior: state.pause ? 'auto' : 'smooth' });
     player.querySelector('.a11y-player-label').textContent = (speech.i + 1) + ' / ' + speech.blocks.length;
@@ -669,7 +787,7 @@
     speech.paused = paused;
     var t = player.querySelector('[data-say="toggle"]');
     t.innerHTML = svg(paused ? ICONS.play : ICONS.pauseSmall);
-    t.setAttribute('aria-label', paused ? 'Resume reading' : 'Pause reading');
+    t.setAttribute('aria-label', tr(paused ? 'Resume reading' : 'Pause reading'));
   }
 
   function stopReading() {
@@ -686,7 +804,7 @@
   function onPlayerClick(e) {
     var b = e.target.closest('button'); if (!b) return;
     var act = b.getAttribute('data-say');
-    if (act === 'stop') { stopReading(); announce('Stopped reading'); }
+    if (act === 'stop') { stopReading(); announce(tr('Stopped reading')); }
     else if (act === 'toggle') {
       if (speech.paused) { setToggle(false); synth.resume(); if (!synth.speaking) readCurrent(); }
       else { setToggle(true); synth.pause(); }
@@ -695,10 +813,20 @@
     else if (act === 'prev') { speech.i = Math.max(speech.i - 1, 0); readCurrent(); }
     else if (act === 'rate') {
       speech.rateIdx = (speech.rateIdx + 1) % RATES.length;
+      state.rate = speech.rateIdx; save();   /* remembered for next time */
       var r = RATES[speech.rateIdx];
-      b.textContent = r + '×'; b.setAttribute('aria-label', 'Reading speed ' + r + ' times');
+      b.textContent = r + '×'; b.setAttribute('aria-label', tr('Reading speed {r} times', { r: r }));
       if (!speech.paused) readCurrent();
     }
+  }
+
+  /* Arrow keys in the read-aloud bar: previous / next paragraph */
+  function onPlayerKey(e) {
+    if (!speech.active || e.altKey || e.ctrlKey || e.metaKey) return;
+    var act = e.key === 'ArrowLeft' ? 'prev' : e.key === 'ArrowRight' ? 'next' : '';
+    if (!act) return;
+    e.preventDefault();
+    var b = player.querySelector('[data-say="' + act + '"]'); if (b) b.click();
   }
 
   /* Click to read: reads what you click (or tab to) */
@@ -1302,6 +1430,8 @@
   function start() {
     if (document.getElementById('a11y-ui')) return;
     build();
+    var want = chosenLang();
+    if (want !== 'en') loadStrings(want, function (ok) { if (ok) rebuild(false); });
     document.addEventListener('keydown', onKey, true);
     document.addEventListener('pointermove', onPointerMove, { passive: true });
     document.addEventListener('touchmove', onTouchMove, { passive: true });
@@ -1319,9 +1449,6 @@
     }, true);
     document.addEventListener('click', onClickRead, true);
     document.addEventListener('focusin', onFocusRead);
-    structView.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-goto]'); if (b) gotoItem(+b.getAttribute('data-goto'));
-    });
     window.addEventListener('pagehide', function () { if (hasTTS) synth.cancel(); });
     document.addEventListener('click', onSkipClick);
     document.addEventListener('click', onBookingChoice);

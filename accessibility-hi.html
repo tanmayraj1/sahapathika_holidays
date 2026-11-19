@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>सुगम्यता विवरण | Sahapathika Holidays</title>
+<meta name="description" content="Sahapathika Holidays की वेबसाइट दृष्टिहीन, कीबोर्ड इस्तेमाल करने वाले और बड़े अक्षर चाहने वाले लोगों समेत सभी के लिए कैसे उपयोगी है, और किसी बाधा के बारे में हमें कैसे बताएँ।">
+<link rel="canonical" href="https://sahapathika-holidays.vercel.app/accessibility-hi.html">
+<link rel="alternate" hreflang="en" href="https://sahapathika-holidays.vercel.app/accessibility.html">
+<link rel="alternate" hreflang="ml" href="https://sahapathika-holidays.vercel.app/accessibility-ml.html">
+<link rel="alternate" hreflang="hi" href="https://sahapathika-holidays.vercel.app/accessibility-hi.html">
+<!-- Translation of accessibility.html (19 November 2026). Keep in step with the English page.
+     Drafted without a native speaker: have it reviewed by a Hindi speaker on the team. -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300..800&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #FAF6EF; color: #1B1A17; font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', system-ui, sans-serif; }
+  a { color: #C4362C; text-decoration: none; }
+  .container { max-width: 800px; margin: 120px auto; padding: 0 24px; }
+  h1 { font-weight: 600; font-size: clamp(30px, 4vw, 44px); line-height: 1.3; margin-bottom: 24px; }
+  p { line-height: 1.75; font-size: 16px; color: #3A4A44; margin-bottom: 16px; }
+  .container p a, .container li a { text-decoration: underline; text-underline-offset: 3px; }
+  h2 { font-weight: 600; font-size: 25px; line-height: 1.35; margin: 44px 0 12px; color: #16211D; }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { line-height: 1.75; font-size: 16px; color: #3A4A44; margin-bottom: 6px; }
+  .updated { font-size: 14px; color: #6B655C; margin-top: -8px; }
+  .langs { font-size: 15px; margin-top: -4px; }
+  .keys { width: 100%; border-collapse: collapse; margin: 8px 0 16px; background: #fff; border-radius: 14px; overflow: hidden; }
+  .keys th, .keys td { text-align: left; padding: 10px 14px; border-bottom: 1px solid rgba(22,33,29,.1); font-size: 15px; line-height: 1.6; color: #3A4A44; vertical-align: top; }
+  .keys th { font-weight: 700; color: #16211D; background: #F4EFE6; }
+  kbd { font: 700 13px/1 'Plus Jakarta Sans', system-ui, sans-serif; padding: 3px 7px; border-radius: 6px; border: 1px solid rgba(22,33,29,.25); background: #fff; color: #16211D; white-space: nowrap; }
+  .contact { background: #DCEEE7; border-radius: 18px; padding: 20px 22px; margin: 12px 0 0; }
+  .contact p { margin: 0 0 8px; color: #16211D; }
+  .contact p:last-child { margin-bottom: 0; }
+  .contact a { color: #A82E25; font-weight: 700; }
+  .open-toolbar { font: 700 15px 'Noto Sans Devanagari', system-ui, sans-serif; padding: 12px 18px; border-radius: 12px; border: 0; background: #16211D; color: #fff; cursor: pointer; }
+</style>
+<link rel="stylesheet" href="./a11y/a11y.css">
+<script src="./a11y/a11y.js"></script>
+<!-- a11y: colour contrast v1 -->
+</head>
+<body>
+<div class="a11y-skip"><a class="a11y-skip-link" href="#main-content">मुख्य सामग्री पर जाएँ</a><button type="button" class="a11y-skip-link" data-a11y-open>सुगम्यता विकल्प (Alt+A)</button></div>
+  <main id="main-content" class="container">
+    <a href="index.html" style="display:inline-block; margin-bottom:32px;">&larr; होम पेज पर वापस जाएँ</a>
+    <h1>सुगम्यता विवरण</h1>
+    <p class="updated">पिछली समीक्षा: 19 नवंबर 2026</p>
+    <p class="langs">अन्य भाषाओं में: <a href="accessibility.html" lang="en" hreflang="en">English</a> · <a href="accessibility-ml.html" lang="ml" hreflang="ml">മലയാളം</a></p>
+
+    <p>Sahapathika Holidays चाहता है कि हर कोई हमारे साथ यात्रा की योजना बना सके — दृष्टिहीन या कम दृष्टि वाले लोग, माउस के बजाय कीबोर्ड इस्तेमाल करने वाले लोग, और वे लोग भी जिन्हें बड़े अक्षर, शांत पेज या पढ़ने में सहायता चाहिए।</p>
+
+    <h2>हमारा मानक</h2>
+    <p>हमारा लक्ष्य <a href="https://www.w3.org/TR/WCAG22/" rel="noopener" lang="en">Web Content Accessibility Guidelines (WCAG) 2.2</a> के AA स्तर को पूरा करना है। हमारे आकलन में वेबसाइट अभी <strong>आंशिक रूप से अनुरूप</strong> है: ज़्यादातर शर्तें पूरी होती हैं, और ज्ञात अपवाद नीचे दिए गए हैं।</p>
+
+    <h2>हमने क्या किया है</h2>
+    <ul>
+      <li>हर पेज पर <strong>“मुख्य सामग्री पर जाएँ”</strong> लिंक, साफ़ पेज संरचना (शीर्षक, क्षेत्र) और कीबोर्ड इस्तेमाल करने वालों के लिए दिखाई देने वाली फ़ोकस रेखा है।</li>
+      <li>मेनू, खोज, तारीख़ चुनने वाला कैलेंडर, फ़िल्टर, सामान्य प्रश्न, फ़ोटो व्यूअर और अन्य पैनल कीबोर्ड से चलते हैं, और स्क्रीन रीडर को बताते हैं कि वे खुले हैं, बंद हैं या चुने गए हैं।</li>
+      <li>अर्थ रखने वाली फ़ोटो का लिखित विवरण है; सजावटी चित्र और आइकन स्क्रीन रीडर से छिपे हैं।</li>
+      <li>पूछताछ फ़ॉर्म और न्यूज़लेटर में लेबल हैं, वे बताते हैं कि किस फ़ील्ड को ठीक करना है, और संदेश भेजे जाने पर सूचना देते हैं।</li>
+      <li>वीडियो रोके जा सकते हैं, और हमारे यात्रा वीडियो में स्क्रीन पर कैप्शन दिखते हैं। कम गति (reduced motion) चुनने वाले विज़िटर के लिए पृष्ठभूमि वीडियो लोड नहीं होता।</li>
+      <li>टेक्स्ट और बटन के रंग WCAG कंट्रास्ट अनुपात 4.5 : 1 पूरा करते हैं (बड़े अक्षरों और आइकन के लिए 3 : 1)।</li>
+    </ul>
+
+    <h2>स्क्रीन रीडर के साथ तेज़</h2>
+    <ul>
+      <li>हर पैकेज कार्ड एक ही स्टॉप है: उसका नाम, फिर यात्रा की अवधि, क्षेत्र और श्रेणी। फ़ोटो और “View” लिंक दोहराए नहीं जाते।</li>
+      <li>सजावटी चिह्न (तीर, तारे, सजावटी हिन्दी अक्षर) पढ़े नहीं जाते।</li>
+      <li>पैकेज पेजों पर यात्रा सारांश, यात्रा कार्यक्रम, शामिल सुविधाओं और बुकिंग कार्ड तक सीधे जाने के लिंक हैं। एक लिंक पूरा यात्रा कार्यक्रम एक सूची के रूप में खोलता है, जिसमें हर दिन एक शीर्षक है।</li>
+      <li>पैकेज पेज पर हर खोज या फ़िल्टर बदलने के बाद मिलने वाली यात्राओं की संख्या बताई जाती है।</li>
+      <li>बुकिंग कार्ड में आप कैलेंडर के बजाय अपनी यात्रा की तारीख़ें टाइप कर सकते हैं, और हर चुनाव के बाद आपकी यात्रा का सारांश पढ़कर सुनाया जाता है।</li>
+      <li>दिन-ब-दिन योजना वाले हर पैकेज में <strong>“Get this itinerary as text”</strong> बटन है: एक सादा संस्करण जिसमें हर दिन एक शीर्षक है, जिसे आप प्रिंट कर सकते हैं या ऑफ़लाइन पढ़ने के लिए टेक्स्ट फ़ाइल के रूप में सेव कर सकते हैं।</li>
+      <li>हमारे हर यात्रा वीडियो का स्क्रीन पर दिखने वाली चीज़ों का लिखित <strong>वीडियो विवरण</strong> है।</li>
+      <li>WhatsApp, फ़ोन कॉल, ईमेल ऐप या नया टैब खोलने वाले लिंक यह बताते हैं।</li>
+      <li>पूछताछ फ़ॉर्म में <strong>“Any access needs?”</strong> (सुगम्यता से जुड़ी ज़रूरतें) नाम का एक वैकल्पिक प्रश्न है, ताकि बुकिंग से पहले हम आपकी यात्रा के बारे में आपसे बात कर सकें।</li>
+    </ul>
+
+    <h2>हर पेज पर सुगम्यता विकल्प</h2>
+    <p>सुगम्यता पैनल खोलने के लिए नीचे बाईं ओर गोल <strong>सुगम्यता</strong> बटन दबाएँ, या <kbd>Alt</kbd> + <kbd>A</kbd> दबाएँ। पेज बदलने पर भी आपकी पसंद याद रहती है। पैनल <strong>अंग्रेज़ी, मलयालम और हिन्दी</strong> में उपलब्ध है: पैनल के ऊपर अपनी भाषा चुनें।</p>
+    <p><button type="button" class="open-toolbar" data-a11y-open>सुगम्यता विकल्प खोलें</button></p>
+    <ul>
+      <li><strong>प्रोफ़ाइल</strong> — दृष्टिहीन, कम दृष्टि, रंग-अंधता, डिस्लेक्सिया, दौरे से सुरक्षित, ADHD के अनुकूल, समझने और सीखने में सहायता, या हाथों की गतिशीलता और कीबोर्ड के लिए एक टैप।</li>
+      <li><strong>पढ़कर सुनाएँ</strong> — पूरा पेज, आपका चुना हुआ टेक्स्ट, या जिस हिस्से पर आप क्लिक करें या टैब से पहुँचें, उसे आपके डिवाइस की अपनी आवाज़ों में पढ़ता है। फ़ोटो के विवरण भी पढ़े जाते हैं और मेनू छोड़ दिए जाते हैं। अंग्रेज़ी, मलयालम और हिन्दी टेक्स्ट, डिवाइस में आवाज़ होने पर, उसी भाषा की आवाज़ में पढ़ा जाता है; न होने पर पैनल बताता है कि आवाज़ कैसे जोड़ें। आपकी पढ़ने की गति याद रहती है।</li>
+      <li><strong>दृष्टि</strong> — कंट्रास्ट मोड, बड़ा टेक्स्ट, रंगों की गहराई, हाइलाइट किए गए लिंक, बड़ा कर्सर, चित्र छिपाना, एनिमेशन रोकना।</li>
+      <li><strong>पढ़ना</strong> — पढ़ने में आसान फ़ॉन्ट, डिस्लेक्सिया के अनुकूल फ़ॉन्ट (OpenDyslexic), अक्षरों के बीच दूरी, पंक्तियों के बीच दूरी, टेक्स्ट संरेखण, पढ़ने की पट्टी और रीडिंग मास्क।</li>
+      <li><strong>नेविगेशन</strong> — पेज के शीर्षकों, क्षेत्रों और लिंक की सूची (सीधे जाने के लिए), गहरी फ़ोकस रेखा, और आइकन बटन के लेबल।</li>
+    </ul>
+    <p>ये विकल्प एक अतिरिक्त सहायता हैं। ये स्क्रीन रीडर या आपके ब्राउज़र के ज़ूम की जगह नहीं लेते; वे भी इस साइट पर काम करते हैं।</p>
+
+    <h2>कीबोर्ड शॉर्टकट</h2>
+    <table class="keys">
+      <thead><tr><th scope="col">कुंजियाँ</th><th scope="col">क्या करती हैं</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd></td><td>अगले / पिछले लिंक या नियंत्रण पर जाएँ</td></tr>
+        <tr><td><kbd>Enter</kbd> या <kbd>Space</kbd></td><td>बटन दबाएँ, मेनू या फ़ोटो खोलें</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>मेनू, सूची, कैलेंडर, फ़ोटो व्यूअर या पैनल बंद करें और जहाँ थे वहीं लौटें</td></tr>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></td><td>कैलेंडर में दिनों के बीच जाएँ; फ़ोटो व्यूअर में पिछली / अगली फ़ोटो</td></tr>
+        <tr><td><kbd>Alt</kbd> + <kbd>A</kbd></td><td>सुगम्यता विकल्प खोलें या बंद करें</td></tr>
+        <tr><td><kbd>←</kbd> <kbd>→</kbd> (पढ़कर सुनाने की पट्टी)</td><td>पेज पढ़कर सुनाते समय पिछला / अगला अनुच्छेद</td></tr>
+        <tr><td><kbd>Esc</kbd> (पढ़कर सुनाते समय)</td><td>पढ़ना बंद करें</td></tr>
+      </tbody>
+    </table>
+
+    <h2>ज्ञात सीमाएँ</h2>
+    <ul>
+      <li>कुछ टेक्स्ट फ़ोटो के ऊपर गहरे पैनलों पर है। इन्हें हमने आँखों से जाँचा है; स्वचालित टूल इन्हें माप नहीं सकते।</li>
+      <li>Contact पेज पर ऑफ़िस के नक्शे Google Maps से हैं और पूरी तरह सुगम न हों, ऐसा हो सकता है। हर ऑफ़िस का पता टेक्स्ट में भी लिखा है।</li>
+      <li>हमारे Privacy, Terms और Cookie पेज अभी तैयार किए जा रहे हैं।</li>
+      <li>वेबसाइट की यात्रा जानकारी अंग्रेज़ी में है। सुगम्यता पैनल और यह विवरण मलयालम और हिन्दी में भी उपलब्ध हैं।</li>
+      <li>हमने स्वचालित टूल और कीबोर्ड से जाँच की है। दिव्यांग उपयोगकर्ताओं द्वारा स्क्रीन रीडर (जैसे NVDA और VoiceOver) से जाँच अभी बाकी है; वह होने पर हम यह पेज अपडेट करेंगे।</li>
+    </ul>
+
+    <h2>किसी बाधा के बारे में हमें बताएँ</h2>
+    <p>अगर इस वेबसाइट पर कुछ भी इस्तेमाल करना कठिन हो, या आपको जानकारी किसी दूसरे रूप में चाहिए, तो कृपया हमें बताएँ। हम एक कार्य-दिवस के भीतर जवाब देते हैं, और फ़ोन, ईमेल या WhatsApp पर आपके साथ पूरी यात्रा की योजना भी बना सकते हैं।</p>
+    <div class="contact">
+      <p>ईमेल: <a href="mailto:sahapathika@gmail.com">sahapathika@gmail.com</a></p>
+      <p>फ़ोन: <a href="tel:+919072769547">+91 90727 69547</a></p>
+      <p>WhatsApp: <a href="https://wa.me/919072769547" rel="noopener">हमसे चैट करें</a></p>
+    </div>
+  </main>
+</body>
+</html>

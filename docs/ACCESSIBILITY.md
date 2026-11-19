@@ -13,7 +13,8 @@ This site aims at **WCAG 2.2 AA**. The public statement is at [accessibility.htm
 | `image-slot.js` | Passes the slot's `alt` attribute to its inner `<img>`. |
 | `tools/a11y-inject.js` + `tools/a11y-edits.js` | Every fix made inside the page templates and scripts. Round 2 (blind and screen-reader users) lives in `tools/a11y-edits-r2.js`, loaded by `a11y-edits.js`. |
 | `tools/a11y-noise.js` | Screen-reader noise check: Tab stops, repeated links, symbols and Hindi read out in English names, vague names, spoken name ≠ visible label. Load it in a rendered page and call `a11yNoise(document)`. |
-| `accessibility.html` | The accessibility statement. |
+| `accessibility.html` | The accessibility statement. Also in Malayalam (`accessibility-ml.html`) and Hindi (`accessibility-hi.html`): keep all three in step. |
+| `a11y/lang/ml.json`, `a11y/lang/hi.json` | Toolbar strings in Malayalam and Hindi, keyed by the English text. Only downloaded when that language is chosen. Check them with `node tools/a11y-strings.js a11y/a11y.js a11y/lang/ml.json`. |
 | `data/trip-access.json` | "Accessibility on this trip" answers per package. Empty until the team fills in `docs/trip-accessibility-questionnaire.md`. A package's section appears only once it has an answer. Preview with sample data in the console: `SHA11y.previewTripAccess({ questions, entry: { reviewed, answers } })`. |
 | `docs/a11y-colour-changes.html` | Before/after colour pairs with contrast ratios. |
 
@@ -53,6 +54,8 @@ When the site's design changes (for example, a new section copied into every pag
 - **Symbols.** Arrows, chevrons, stars and ornamental Hindi (॥ … ॥) go in `<span aria-hidden="true">`. If the symbol carries meaning, write it in words ("3 to 4 star").
 - **Names.** An `aria-label` starts with the words shown on screen ("All photos, open gallery", "Call us, +91 …"), so voice-control users can say what they see.
 - **Before/after.** Run `tools/a11y-noise.js` on the page you changed. The numbers should not go up.
+- **Toolbar text.** Every word the toolbar shows or says goes through `tr('English text')`; use `{name}` placeholders for numbers and names. Add the string to both language files and run `tools/a11y-strings.js`. Don't put letter-spacing or capitals on text that may be Malayalam or Hindi: letter-spacing breaks those scripts apart.
+- **Languages.** The toolbar uses the visitor's choice; failing that, the page's language (the translated statements); failing that, the browser's language. Read aloud picks a voice by script (Malayalam, Devanagari, else English) and says so once if the device has no voice for it.
 
 ## Colour tokens that pass
 

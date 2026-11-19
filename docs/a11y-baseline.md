@@ -370,3 +370,36 @@ At 375 px the "after" column is also all zeros (before: 37, 120, 17, 12, 31).
 **Still to do:**
 - The team reviews the video descriptions and fills in the trip questionnaire.
 - Real screen-reader testing (Phase 5).
+
+### Round 2, Phase 3: toolbar in Malayalam and Hindi, better read-aloud — 2026-11-19
+
+**What changed** (`a11y/a11y.js`, `a11y/a11y.css`, `a11y/lang/`):
+- **Languages.**
+  - The panel has an English / മലയാളം / हिन्दी switch under its title. All 115 toolbar strings come from `a11y/lang/ml.json` and `hi.json`, keyed by the English text and downloaded only when chosen.
+  - The panel carries `lang="ml"` or `lang="hi"`, so screen readers switch voice.
+  - Switching rebuilds the panel in place, keeps focus on the language button, and announces "ഭാഷ: മലയാളം" or "भाषा: हिन्दी".
+  - The choice is remembered. Without a choice, the toolbar follows the page's language (the translated statements), then the browser's.
+- **Malayalam and Hindi layout.** Panel headings drop the letter-spacing and capitals (letter-spacing splits Malayalam conjuncts). Long words wrap inside their buttons, and the footer puts two buttons per row.
+- **Read aloud.**
+  - Picks a voice by script: Malayalam (U+0D00–0D7F), Devanagari or English. If the device has no voice for that language, it says so once, in the panel's language, with where to add one.
+  - Reads only the selected text when there is a selection.
+  - Reads photo descriptions (`<img alt>` and `<image-slot alt>`), always with an English "Photo:" prefix, so an English description isn't read in a Hindi voice.
+  - Skips menus (`nav`) and screen-reader-only text.
+  - ← / → in the read-aloud bar move between paragraphs; Escape stops. The speed is remembered.
+- **Statement.**
+  - New `accessibility-ml.html` and `accessibility-hi.html`, with `hreflang` links between all three and sitemap entries.
+  - The English statement now mentions the languages, the new read-aloud features and keys, and that travel information is in English only.
+- **Tool.** `tools/a11y-strings.js` lists the strings and checks each language file for missing or unused strings and broken `{placeholders}`. Both files pass.
+
+**Checked:**
+- **Language switch** (real clicks): English → Malayalam → Hindi. Focus stays on the switch, the announcement is made, the setting is saved, and the statement link follows the language.
+- **Read aloud** (speech recorded instead of spoken):
+  - Malayalam selected text gets `ml-IN`, and the missing-voice notice fires once (this browser only has English voices).
+  - Photo descriptions are read in English. Menus are skipped.
+  - The speed is saved (1.5× after two presses). Player labels and the key hint are in Hindi.
+- **axe-core 4.10.2:** 0 violations on the three statement pages, and on the open panel in each language.
+- **Hit-testing at 375 px and 1280 px in Malayalam:** language buttons, close, reset, move, minimise, statement link, profiles and read page are all clickable and on screen, with no sideways scroll.
+
+**Still to do:**
+- **Native-speaker review** of `a11y/lang/ml.json`, `a11y/lang/hi.json` and both statement pages. They were drafted without one. Long Malayalam words break mid-word in the narrow profile buttons; a reviewer may prefer shorter labels.
+- **Real voice test** on a phone with Malayalam and Hindi voices installed (Phase 5).
